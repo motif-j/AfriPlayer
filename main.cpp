@@ -1,6 +1,6 @@
 #include <QApplication>
 #include <FelgoApplication>
-
+#include <QtQml>
 #include <QQmlApplicationEngine>
 
 // uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
@@ -23,6 +23,8 @@ int main(int argc, char *argv[])
     // This does not work if using Felgo Live, only for Felgo Cloud Builds and local builds
     felgo.setLicenseKey(PRODUCT_LICENSE_KEY);
 
+    qmlRegisterSingletonType(QUrl("qrc:///qml/libraries/Constants.qml"),"com.afriktek.qplayer",1,0,"Constants");
+    qmlRegisterSingletonType(QUrl("qrc:///qml/libraries/JColors.qml"),"com.afriktek.qplayer",1,0,"JColors");
     // use this during development
     // for PUBLISHING, use the entry point below
     felgo.setMainQmlFileName(QStringLiteral("qml/Main.qml"));

@@ -20,6 +20,8 @@ PRODUCT_LICENSE_KEY = ""
 qmlFolder.source = qml
 DEPLOYMENTFOLDERS += qmlFolder # comment for publishing
 
+
+
 assetsFolder.source = assets
 DEPLOYMENTFOLDERS += assetsFolder
 
@@ -58,3 +60,16 @@ win32 {
 macx {
     ICON = macx/app_icon.icns
 }
+
+DISTFILES += \
+    qml/libraries/Constants.qml \
+    qml/libraries/JColors.qml \
+    qml/logics/AppLogics.qml \
+    qml/pages/MainPage.qml \
+    qml/ui/HomeHeader.qml \
+    qml/ui/HomeTracksView.qml \
+    qml/ui/ItemSqTrack.qml \
+    qml/views/MainLeftView.qml \
+    qml/views/MainRightView.qml \
+    qml/views/MainView.qml \
+    qml/views/MainCenterView.qml
