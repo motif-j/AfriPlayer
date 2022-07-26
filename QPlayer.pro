@@ -67,6 +67,7 @@ DISTFILES += \
     qml/logics/AppLogics.qml \
     qml/pages/MainPage.qml \
     qml/ui/HomeHeader.qml \
+    qml/ui/HomePlaylistView.qml \
     qml/ui/HomeTracksView.qml \
     qml/ui/ItemSqTrack.qml \
     qml/views/MainLeftView.qml \

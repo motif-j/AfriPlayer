@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.3
 import Felgo 3.0
 import QtQuick.Layouts 1.3
 import com.afriktek.qplayer 1.0
@@ -29,7 +29,7 @@ Page{
             }
 
             IconButton{
-                icon: IconType.arrowright
+                icon: IconType.chevronright
                 Layout.fillWidth: true
                 Layout.preferredWidth: dp(50)
                 Layout.maximumWidth: dp(50)
@@ -53,7 +53,7 @@ Page{
 
             delegate:AppPaper{
 
-               property int  ind:index
+                property int  ind:index
 
                 anchors.topMargin: dp(10)
                 width: dp(175)
@@ -92,10 +92,10 @@ Page{
                         Layout.fillWidth: true
                         text: qsTr("Artist Name")
                         fontSize: sp(13)
-                         leftPadding: dp(5)
-                         bottomPadding: dp(5)
-                         maximumLineCount: 1
-                         elide:Text.ElideRight
+                        leftPadding: dp(5)
+                        bottomPadding: dp(5)
+                        maximumLineCount: 1
+                        elide:Text.ElideRight
 
                     }
                 }
@@ -121,44 +121,68 @@ Page{
 
             //Left space
 
-                   Column {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.minimumWidth: parent.width*0.45
-                    Layout.preferredWidth:  parent.width*0.45
-                    anchors.leftMargin: dp(5)
+            Column {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.minimumWidth: parent.width*0.45
+                Layout.preferredWidth:  parent.width*0.45
+                anchors.leftMargin: dp(5)
 
 
-                    Views.HomeHeader{
-                        anchors.margins: dp(5)
-                        title:"Tracks"
-                    }
-
-                    AppListView{
-                        width: parent.width
-                        model:20
-
-                        delegate: Views.HomeHeader{
-                            title: "text "+index
-                        }
-                    }
-
-
+                Views.HomeHeader{
+                    anchors.margins: dp(5)
+                    title:"Tracks"
+                    bold:true
                 }
+
+                AppListView{
+                    width: parent.width
+                    height:parent.height
+                    model:20
+                    clip: true
+                    desktopScrollEnabled: true
+
+                    delegate: Views.HomeTracksView{
+                        width:parent.width
+                    }
+                }
+
+
+            }
 
             //Right space
 
-                Rectangle {
-                    color: 'plum'
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.minimumWidth: parent.width*0.5
-                    Layout.preferredWidth:  parent.width*0.5
-                    Text {
-                        anchors.centerIn: parent
-                        text: parent.width + 'x' + parent.height
+            Column {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.minimumWidth: parent.width*0.5
+                Layout.preferredWidth:  parent.width*0.5
+                anchors.leftMargin: dp(5)
+
+
+                Views.HomeHeader{
+                    anchors.margins: dp(5)
+                    title:"Playlists"
+                    bold:true
+                }
+
+                AppListView{
+                    width: parent.width
+                    height:parent.height
+                    model:20
+                    spacing: dp(5)
+                    clip: true
+                    desktopScrollEnabled: true
+
+                    delegate: Views.HomePlaylistView{
+                        width:parent.width
+                        height: dp(150)
+
                     }
                 }
+
+
+            }
 
         }
 
