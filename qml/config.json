@@ -1,0 +1,8 @@
+{
+    "title": "QPlayer",
+    "identifier": "com.afriktek.qplayer",
+    "orientation": "landscape",
+    "versioncode": 1,
+    "versionname": "1.0",
+    "stage": "test"
+}
