@@ -7,101 +7,55 @@ import "../ui" as Views
 
 
 Page{
+
+    property int  columnCount: Theme.isPortrait?1:2
+
     title: "Main Page"
     useSafeArea: false
-    anchors.topMargin: dp(45)
+    anchors.topMargin: dp(50)
+    id:page
 
-
-    ColumnLayout{
+    AppFlickable{
         anchors.fill: parent
-        spacing: dp(10)
+        contentWidth: baseGrid.width
+        contentHeight: baseGrid.height
 
-        RowLayout{
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignTop
 
+        GridLayout{
+            id:baseGrid
+            width: page.width
+            columns: columnCount
+            columnSpacing:dp(10)
+            rowSpacing: dp(10)
+            //Recently played tracks
 
             Views.HomeHeader{
-                title: "Recently Played"
-                Layout.fillWidth: true
+                title: "Daily Mix"
+                bold:true
+                Layout.columnSpan: baseGrid.columns>1?2:1
+
                 //Layout.alignment: Qt.AlignHCenter
 
             }
 
-            IconButton{
-                icon: IconType.chevronright
+
+
+
+            AppListView{
                 Layout.fillWidth: true
-                Layout.preferredWidth: dp(50)
-                Layout.maximumWidth: dp(50)
-                Layout.alignment: Qt.AlignHCenter
-            }
+                width: page.width
+                Layout.columnSpan:baseGrid.columns>1?2:1
+                Layout.preferredHeight: dp(200)
+                Layout.alignment: Qt.AlignTop
+                orientation: ListView.Horizontal
+                spacing: dp(5)
+                desktopScrollEnabled: true
 
-        }
+                model:10
 
-        //Recently played tracks
+                delegate:Views.ItemSqTrack{
 
-        AppListView{
-            Layout.fillWidth: true
-
-            Layout.preferredHeight: dp(210)
-            Layout.alignment: Qt.AlignTop
-            orientation: AppListView.Horizontal
-            spacing: dp(10)
-            desktopScrollEnabled: true
-
-
-            model:10
-
-            delegate:AppPaper{
-
-                property int  ind:index
-
-                anchors.topMargin: dp(10)
-                width: dp(175)
-                height: dp(205)
-                radius: dp(5)
-
-                id:delPaper
-
-                ColumnLayout{
-                    width: dp(175)
-                    height:delPaper.height
-
-                    RoundedImage{
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.preferredHeight: delPaper.height
-                        Layout.maximumHeight: delPaper.height
-
-                        source: "qrc:/assets/qt.png"
-                        fillMode: Image.Stretch
-
-                    }
-                    AppText{
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        text: qsTr("Song title ")
-                        fontSize: sp(15)
-                        leftPadding: dp(5)
-                        maximumLineCount: 1
-
-                        elide:Text.ElideRight
-
-                    }
-                    AppText{
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                        text: qsTr("Artist Name")
-                        fontSize: sp(13)
-                        leftPadding: dp(5)
-                        bottomPadding: dp(5)
-                        maximumLineCount: 1
-                        elide:Text.ElideRight
-
-                    }
                 }
-
-
                 RippleMouseArea{
                     anchors.fill: parent
                     onClicked: {
@@ -110,87 +64,117 @@ Page{
                 }
             }
 
-        }
-        //Bottom Items
+            //
 
-        RowLayout{
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignTop
-            spacing: dp(5)
-
-
-            //Left space
-
-            Column {
+            Rectangle{
                 Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.minimumWidth: parent.width*0.45
-                Layout.preferredWidth:  parent.width*0.45
-                anchors.leftMargin: dp(5)
+                height: dp(380)
 
 
-                Views.HomeHeader{
-                    anchors.margins: dp(5)
-                    title:"Tracks"
-                    bold:true
-                }
+                color: Theme.backgroundColor
+                //Playing Que
 
                 AppListView{
                     width: parent.width
-                    height:parent.height
-                    model:20
+                    height: parent.height
+
+
+                    model:5
                     clip: true
                     desktopScrollEnabled: true
+                    header: Views.HomeHeader{
+                        anchors.margins: dp(5)
+                        title:"Now Playing Que "+columnCount
+                        bold:true
+
+                    }
+                    footer:Rectangle{
+
+                        AppButton{
+                            flat:true
+                            text: "view all"
+
+                        }
+
+
+                    }
+
 
                     delegate: Views.HomeTracksView{
                         width:parent.width
                     }
                 }
-
-
             }
-
-            //Right space
-
-            Column {
+            Rectangle{
                 Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.minimumWidth: parent.width*0.5
-                Layout.preferredWidth:  parent.width*0.5
-                anchors.leftMargin: dp(5)
+                height: dp(380)
+                color: Theme.backgroundColor
 
+                //AI based playlist
 
-                Views.HomeHeader{
-                    anchors.margins: dp(5)
-                    title:"Playlists"
-                    bold:true
-                }
-
-                AppListView{
+                GridLayout {
+                    height: parent.height
                     width: parent.width
-                    height:parent.height
-                    model:20
-                    spacing: dp(5)
-                    clip: true
-                    desktopScrollEnabled: true
 
-                    delegate: Views.HomePlaylistView{
-                        width:parent.width
-                        height: dp(150)
+                    id: grid
+                    columns: 2
+                    columnSpacing: dp(2)
+
+                    Views.HomeHeader{
+                        anchors.margins: dp(5)
+                        title:"Automated Playlists"
+                        bold:true
+                        Layout.fillWidth: true
+                        Layout.columnSpan: 2
+                    }
+
+                    Views.HomePlaylistView{
+
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredHeight: dp(150)
+                        Layout.maximumHeight: dp(150)
+                    }
+                    Views.HomePlaylistView{
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredHeight: dp(150)
+                        Layout.maximumHeight: dp(150)
 
                     }
+                    Views.HomePlaylistView{
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredHeight: dp(150)
+                        Layout.maximumHeight: dp(150)
+                    }
+                    Views.HomePlaylistView{
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredHeight: dp(150)
+                        Layout.maximumHeight: dp(150)
+                    }
+
+
+                    //Bottom Spacer
+                    Rectangle{
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: dp(50)
+                        Layout.columnSpan: 2
+                        color: Theme.backgroundColor
+
+                    }
+
                 }
+
+
 
 
             }
 
+
+
         }
-
-
-
     }
-
-
-
 }
+

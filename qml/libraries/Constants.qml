@@ -8,4 +8,5 @@ QtObject{
 
     readonly property color transparentColor: "#00000000"
 
+
 }

@@ -46,16 +46,13 @@ RowLayout{
 
     IconButton{
         Layout.alignment: Qt.AlignHCenter
-        Layout.preferredWidth: dp(50)
-         Layout.preferredHeight: dp(50)
+        Layout.preferredWidth: dp(40)
+        Layout.preferredHeight: dp(40)
         icon: IconType.play
+
     }
 
-    IconButton{
-        Layout.alignment: Qt.AlignHCenter
-        Layout.preferredWidth: dp(30)
-        icon: IconType.chevroncircleright
-    }
+
 
 }
 

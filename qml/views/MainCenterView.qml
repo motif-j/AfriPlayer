@@ -8,25 +8,123 @@ import "../pages"
 Item {
 
 
-    AppPaper{
+
+    Rectangle{
         anchors.fill: parent
-        elevated: true
+
         radius: dp(5)
-        anchors.margins: dp(5)
-        shadowColor:"#00000000"
+
+        color: JColors.backgroundColor
+        anchors.leftMargin: dp(2)
+        anchors.rightMargin: dp(2)
 
 
         //Children of the Main Page
         //set margins >=5 to cater for the 5dp radius
 
-        NavigationStack{
-            anchors.margins: dp(10)
 
-            MainPage{
-                anchors.fill: parent
+        Navigation{
+            navigationMode: navigationModeDrawer
+            drawerFixed: fixDrawer()
+            drawerMinifyEnabled: fixDrawer()?true:false
+            headerView: Rectangle{
+                height: dp(100)
+
+
+            }
+
+
+
+            NavigationItem{
+                title:"Home"
+                icon: IconType.home
+
+                NavigationStack{
+
+
+                    MainPage{
+                        anchors.fill: parent
+
+                    }
+                }
+
+            }
+
+
+            NavigationItem{
+                title:"Tracks"
+                icon: IconType.music
+
+                NavigationStack{
+
+
+                    TracksPage{
+                        anchors.fill: parent
+
+                    }
+                }
+
+            }
+            NavigationItem{
+                title:"Search"
+                icon: IconType.search
+
+                NavigationStack{
+
+                    SearchPage{
+                        anchors.fill: parent
+
+                    }
+                }
+
+            }
+            NavigationItem{
+                title:"Favorites"
+                icon: IconType.heart
+
+                NavigationStack{
+
+                   FavoriteTracksPage{
+                        anchors.fill: parent
+
+                    }
+                }
+
+            }
+
+            NavigationItem{
+                title:"Playlists"
+                icon: IconType.list
+
+                NavigationStack{
+
+                   FavoriteTracksPage{
+                        anchors.fill: parent
+
+                    }
+                }
 
             }
         }
+
+    }
+
+    function fixDrawer(){
+        let isDesktop=Theme.isDesktop
+        let isPotrait=Theme.isPortrait
+
+        if(isPotrait){
+            return false
+        }else{
+
+            if(isDesktop){
+                return true
+            }else{
+                return false
+
+            }
+        }
+
 
 
     }

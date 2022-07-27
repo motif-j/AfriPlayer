@@ -64,12 +64,17 @@ macx {
 DISTFILES += \
     qml/libraries/Constants.qml \
     qml/libraries/JColors.qml \
+    qml/libraries/JIconType.qml \
     qml/logics/AppLogics.qml \
+    qml/pages/FavoriteTracksPage.qml \
     qml/pages/MainPage.qml \
+    qml/pages/SearchPage.qml \
+    qml/pages/TracksPage.qml \
     qml/ui/HomeHeader.qml \
     qml/ui/HomePlaylistView.qml \
     qml/ui/HomeTracksView.qml \
     qml/ui/ItemSqTrack.qml \
+    qml/ui/JIconButton.qml \
     qml/views/MainLeftView.qml \
     qml/views/MainRightView.qml \
     qml/views/MainView.qml \

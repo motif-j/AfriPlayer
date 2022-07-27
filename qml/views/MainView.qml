@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Felgo 3.0
 import QtQuick.Layouts 1.3
+import com.afriktek.qplayer 1.0
 
 
 
@@ -9,7 +10,7 @@ import QtQuick.Layouts 1.3
 
 Rectangle{
     anchors.fill: parent
-    color: "gray"
+    color: JColors.backgroundColor
 
 
 
@@ -17,17 +18,10 @@ Rectangle{
     RowLayout {
         id: layout
         anchors.fill: parent
-        spacing: 0
+        spacing: dp(2)
 
-        MainLeftView{
 
-            Layout.fillWidth: true
-            Layout.minimumWidth: 50
-            Layout.preferredWidth: parent.width*0.120
-            Layout.maximumWidth: parent.width*0.120
-            Layout.minimumHeight: parent.height
 
-        }
         MainCenterView {
 
             Layout.fillWidth: true
@@ -38,8 +32,8 @@ Rectangle{
         MainRightView {
 
             Layout.fillWidth: true
-            Layout.preferredWidth: parent.width*0.20
-            Layout.maximumWidth: parent.width*0.20
+            Layout.preferredWidth: parent.width*0.15
+            Layout.maximumWidth: parent.width*0.15
             Layout.minimumHeight: parent.height
 
         }
