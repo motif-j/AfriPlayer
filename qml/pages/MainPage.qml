@@ -47,6 +47,7 @@ Page{
             Layout.alignment: Qt.AlignTop
             orientation: AppListView.Horizontal
             spacing: dp(10)
+            desktopScrollEnabled: true
 
 
             model:10
