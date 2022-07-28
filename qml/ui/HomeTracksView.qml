@@ -37,9 +37,10 @@ RowLayout{
 
         }
         AppText{
-            text:"Song Title"
+            text:"artist"
             bottomPadding: dp(5)
             fontSize: sp(14)
+            color: Theme.secondaryTextColor
 
         }
     }
@@ -49,6 +50,7 @@ RowLayout{
         Layout.preferredWidth: dp(40)
         Layout.preferredHeight: dp(40)
         icon: IconType.play
+
 
     }
 

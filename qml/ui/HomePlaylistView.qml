@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.3
 
 Rectangle{
 
+    property string title: ""
     clip: true
     color: Theme.backgroundColor
 
@@ -16,13 +17,10 @@ Rectangle{
 
             AppText{
                 anchors.centerIn: parent
-                text: "Playlist 1"
+                text: title
                 color: "orange"
                 font.bold: true
             }
-
-
-
 
     }
 }

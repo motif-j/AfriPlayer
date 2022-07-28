@@ -2,9 +2,11 @@ import Felgo 3.0
 import QtQuick 2.0
 import "views"
 import com.afriktek.qplayer 1.0
+import "components"
 
 
 App {
+
     // You get free licenseKeys from https://felgo.com/licenseKey
     // With a licenseKey you can:
     //  * Publish your games & apps for the app stores
@@ -17,6 +19,7 @@ App {
         Theme.colors.textColor="#ffffff"
         Theme.colors.secondaryTextColor=JColors.bluegray50
         Theme.colors.secondaryBackgroundColor=JColors.sideBarColor
+        Theme.colors.tintColor=JColors.pink500
 
         Theme.navigationBar.backgroundColor=JColors.backgroundColor
         Theme.navigationBar.titleColor="#ffffff"
@@ -27,20 +30,27 @@ App {
         Theme.navigationAppDrawer.activeTextColor=JColors.pink500
 
 
+        Theme.navigationTabBar.backgroundColor=JColors.sideBarColor
+        Theme.navigationTabBar.titleColor=JColors.purple100
+        Theme.navigationTabBar.titlePressedColor=JColors.pink500
 
 
-       // Theme.iconFont=iconFont
+
+
+
+        // Theme.iconFont=iconFont
 
     }
-   // FontLoader{
-     //   id:iconFont
-       // name:"FontAwesome"
-        //./source:"qrc:/assets/font_icon.otf"
-   // }
+    // FontLoader{
+    //   id:iconFont
+    // name:"FontAwesome"
+    //./source:"qrc:/assets/font_icon.otf"
+    // }
 
 
+    MainView{
 
-   MainView{
+    }
 
-   }
+
 }

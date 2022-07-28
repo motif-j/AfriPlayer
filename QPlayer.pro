@@ -62,6 +62,8 @@ macx {
 }
 
 DISTFILES += \
+    qml/components/PlayerBar2.qml \
+    qml/components/PlayerBarController.qml \
     qml/libraries/Constants.qml \
     qml/libraries/JColors.qml \
     qml/libraries/JIconType.qml \
@@ -73,8 +75,13 @@ DISTFILES += \
     qml/ui/HomeHeader.qml \
     qml/ui/HomePlaylistView.qml \
     qml/ui/HomeTracksView.qml \
+    qml/ui/ItemPlaylist2.qml \
     qml/ui/ItemSqTrack.qml \
     qml/ui/JIconButton.qml \
+    qml/ui/MainTracksUi.qml \
+    qml/ui/PlayingOverlay.qml \
+    qml/ui/PlayingQueue.qml \
+    qml/ui/QueTrack.qml \
     qml/views/MainLeftView.qml \
     qml/views/MainRightView.qml \
     qml/views/MainView.qml \

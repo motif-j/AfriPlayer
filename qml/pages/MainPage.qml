@@ -10,9 +10,11 @@ Page{
 
     property int  columnCount: Theme.isPortrait?1:2
 
-    title: "Main Page"
+    title: ""
     useSafeArea: false
     anchors.topMargin: dp(50)
+    anchors.leftMargin: dp(10)
+
     id:page
 
     AppFlickable{
@@ -27,10 +29,11 @@ Page{
             columns: columnCount
             columnSpacing:dp(10)
             rowSpacing: dp(10)
+
             //Recently played tracks
 
             Views.HomeHeader{
-                title: "Daily Mix"
+                title: "Hello"
                 bold:true
                 Layout.columnSpan: baseGrid.columns>1?2:1
 
@@ -40,12 +43,11 @@ Page{
 
 
 
-
             AppListView{
                 Layout.fillWidth: true
                 width: page.width
                 Layout.columnSpan:baseGrid.columns>1?2:1
-                Layout.preferredHeight: dp(200)
+                Layout.preferredHeight: dp(225)
                 Layout.alignment: Qt.AlignTop
                 orientation: ListView.Horizontal
                 spacing: dp(5)
@@ -53,13 +55,14 @@ Page{
 
                 model:10
 
-                delegate:Views.ItemSqTrack{
+                delegate:Views.ItemPlaylist2{
 
                 }
+
                 RippleMouseArea{
                     anchors.fill: parent
                     onClicked: {
-                        console.debug("Clicked" +ind)
+                        console.debug("Clicked" +index)
                     }
                 }
             }
@@ -84,18 +87,8 @@ Page{
                     desktopScrollEnabled: true
                     header: Views.HomeHeader{
                         anchors.margins: dp(5)
-                        title:"Now Playing Que "+columnCount
+                        title:"Recently Played"
                         bold:true
-
-                    }
-                    footer:Rectangle{
-
-                        AppButton{
-                            flat:true
-                            text: "view all"
-
-                        }
-
 
                     }
 
@@ -122,13 +115,14 @@ Page{
 
                     Views.HomeHeader{
                         anchors.margins: dp(5)
-                        title:"Automated Playlists"
+                        title:"My Playlists"
                         bold:true
                         Layout.fillWidth: true
                         Layout.columnSpan: 2
                     }
 
                     Views.HomePlaylistView{
+                        title:"Favorite Tracks"
 
                         Layout.fillWidth: true
                         Layout.fillHeight: true
@@ -136,6 +130,7 @@ Page{
                         Layout.maximumHeight: dp(150)
                     }
                     Views.HomePlaylistView{
+                        title:"Most Played"
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.preferredHeight: dp(150)
@@ -143,12 +138,14 @@ Page{
 
                     }
                     Views.HomePlaylistView{
+                        title:"Least Played"
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.preferredHeight: dp(150)
                         Layout.maximumHeight: dp(150)
                     }
                     Views.HomePlaylistView{
+                        title:"Newest"
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.preferredHeight: dp(150)

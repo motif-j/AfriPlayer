@@ -10,31 +10,34 @@ import com.afriktek.qplayer 1.0
 
 Rectangle{
     anchors.fill: parent
-    color: JColors.backgroundColor
+    color: Theme.backgroundColor
 
 
 
     //The Row layout subdivides the view into three portions
-    RowLayout {
+    GridLayout {
         id: layout
         anchors.fill: parent
-        spacing: dp(2)
-
-
+        columns: Theme.isPortrait?1:2
+        columnSpacing: dp(5)
 
         MainCenterView {
 
             Layout.fillWidth: true
 
-            Layout.minimumHeight: parent.height
+            Layout.fillHeight: true
+
         }
 
         MainRightView {
 
             Layout.fillWidth: true
-            Layout.preferredWidth: parent.width*0.15
-            Layout.maximumWidth: parent.width*0.15
-            Layout.minimumHeight: parent.height
+
+            Layout.fillHeight: true
+            visible: Theme.isPortrait?false:true
+
+            Layout.minimumWidth: dp(220)
+            Layout.maximumWidth: dp(280)
 
         }
     }

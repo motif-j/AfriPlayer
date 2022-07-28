@@ -24,7 +24,7 @@ Item {
 
 
         Navigation{
-            navigationMode: navigationModeDrawer
+            navigationMode: fixDrawer()?navigationModeDrawer:navigationModeTabs
             drawerFixed: fixDrawer()
             drawerMinifyEnabled: fixDrawer()?true:false
             headerView: Rectangle{
@@ -79,8 +79,8 @@ Item {
 
             }
             NavigationItem{
-                title:"Favorites"
-                icon: IconType.heart
+                title:"Playlists"
+                icon: IconType.list
 
                 NavigationStack{
 
@@ -93,8 +93,8 @@ Item {
             }
 
             NavigationItem{
-                title:"Playlists"
-                icon: IconType.list
+                title:"Settings"
+                icon: IconType.gear
 
                 NavigationStack{
 
