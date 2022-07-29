@@ -2,6 +2,7 @@
 CONFIG += felgo
 QT +=core
 QT +=gui
+QT +=sql
 # uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
 # for the remaining steps to build a custom Live Code Reload app see here: https://felgo.com/custom-code-reload-app/
 # CONFIG += felgo-live
@@ -42,8 +43,12 @@ DEPLOYMENTFOLDERS += assetsFolder
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
-    jlcd.cpp \
-    lcdletter.cpp
+    db_jmalkiadbinterface.cpp \
+    dm_tracksdataentry.cpp \
+    md_jalbum.cpp \
+    md_jartist.cpp \
+    md_jtrack.cpp \
+    mythread.cpp
 
 
 android {
@@ -93,5 +98,9 @@ DISTFILES += \
     qml/views/MainCenterView.qml
 
 HEADERS += \
-    jlcd.h \
-    lcdletter.h
+    db_jmalkiadbinterface.h \
+    dm_tracksdataentry.h \
+    md_jalbum.h \
+    md_jartist.h \
+    md_jtrack.h \
+    mythread.h

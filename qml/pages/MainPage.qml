@@ -42,9 +42,17 @@ Page{
 
             }
 
+            TracksDataEntry{
+                id:dynamicModel
+                onCountChanged: (count)=>{
+                                    console.debug("Hey "+dynamicModel.count)
 
+
+                                }
+            }
 
             AppListView{
+                id:view
                 Layout.fillWidth: true
                 width: page.width
                 Layout.columnSpan:baseGrid.columns>1?2:1
@@ -54,15 +62,28 @@ Page{
                 spacing: dp(5)
                 desktopScrollEnabled: true
 
-                model:10
+                model:dynamicModel
 
                 delegate:Views.ItemPlaylist2{
-                    title:qsTr("Random Mix "+index)
+                    title:qsTr(model.display)
 
                     onPlaylistClicked:(plTitle)=>{
-                                          navigateUp(plTitle)
+                                          dynamicModel.add("blue")
+
+                                          // dynamic.add("blue")
+                                          //navigateUp(plTitle)
                                       }
 
+                }
+                add:Transition {
+
+                    NumberAnimation {
+
+                        property: "x"
+                        duration: 500
+                        easing.type: Easing.InOutQuad
+                        from:-view.width
+                    }
                 }
 
 

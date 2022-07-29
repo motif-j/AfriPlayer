@@ -2,7 +2,12 @@
 #include <FelgoApplication>
 #include <QtQml>
 #include <QQmlApplicationEngine>
-#include "jlcd.h"
+
+#include "mythread.h"
+#include "db_jmalkiadbinterface.h"
+#include "dm_tracksdataentry.h"
+
+
 // uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
 //#include <FelgoLiveClient>
 
@@ -26,8 +31,10 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonType(QUrl("qrc:///qml/libraries/Constants.qml"),"com.afriktek.qplayer",1,0,"Constants");
     qmlRegisterSingletonType(QUrl("qrc:///qml/libraries/JColors.qml"),"com.afriktek.qplayer",1,0,"JColors");
 
+   // qmlRegisterType<BaseDataEntryModel>("com.afriktek.qplayer",1,0,"BaseDataEntryModel");
 
-    qmlRegisterType<JLCD>("com.afriktek.qplayer",1,0,"JLCD");
+    qmlRegisterType<TracksDataEntry>("com.afriktek.qplayer",1,0,"TracksDataEntry");
+
 
     // use this during development
     // for PUBLISHING, use the entry point below
@@ -44,6 +51,16 @@ int main(int argc, char *argv[])
     // to start your project as Live Client, comment (remove) the lines "felgo.setMainQmlFileName ..." & "engine.load ...",
     // and uncomment the line below
     //FelgoLiveClient client (&engine);
+
+    MyThread *thread=new MyThread();
+
+    thread->start();
+   // JMalkiaDb db=JMalkiaDb::newInstance();
+
+    JMalkiaDbInterface &db=JMalkiaDbInterface::getInstace();
+
+
+
 
     return app.exec();
 }
