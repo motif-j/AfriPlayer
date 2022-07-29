@@ -21,6 +21,7 @@ RowLayout{
         source: "qrc:/assets/felgo-logo.png"
         fillMode: Image.Stretch
         Layout.alignment: Qt.AlignHCenter
+        Layout.leftMargin: dp(5)
 
 
     }

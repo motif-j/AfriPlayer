@@ -7,6 +7,7 @@ import "../pages"
 
 Item {
 
+    property string globalPlaylistTitle: ""
 
 
     Rectangle{
@@ -40,13 +41,36 @@ Item {
                 icon: IconType.home
 
                 NavigationStack{
+                    id:centerNavStack
 
 
                     MainPage{
                         anchors.fill: parent
+                        onNavigateUp:(pageTitle)=> {
+                                         globalPlaylistTitle=pageTitle
+
+                                         centerNavStack.push(playlistPage)
+
+
+                                     }
 
                     }
+
+                    Component{
+                        id:playlistPage
+                        PlaylistPage{
+                            playlistTitle: globalPlaylistTitle
+
+
+
+                        }
+
+
+                    }
+
+
                 }
+
 
             }
 
@@ -84,7 +108,7 @@ Item {
 
                 NavigationStack{
 
-                   FavoriteTracksPage{
+                    FavoriteTracksPage{
                         anchors.fill: parent
 
                     }
@@ -98,7 +122,7 @@ Item {
 
                 NavigationStack{
 
-                   FavoriteTracksPage{
+                    FavoriteTracksPage{
                         anchors.fill: parent
 
                     }
@@ -108,6 +132,8 @@ Item {
         }
 
     }
+
+
 
     function fixDrawer(){
         let isDesktop=Theme.isDesktop

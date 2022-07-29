@@ -2,7 +2,7 @@
 #include <FelgoApplication>
 #include <QtQml>
 #include <QQmlApplicationEngine>
-
+#include "jlcd.h"
 // uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
 //#include <FelgoLiveClient>
 
@@ -25,6 +25,10 @@ int main(int argc, char *argv[])
 
     qmlRegisterSingletonType(QUrl("qrc:///qml/libraries/Constants.qml"),"com.afriktek.qplayer",1,0,"Constants");
     qmlRegisterSingletonType(QUrl("qrc:///qml/libraries/JColors.qml"),"com.afriktek.qplayer",1,0,"JColors");
+
+
+    qmlRegisterType<JLCD>("com.afriktek.qplayer",1,0,"JLCD");
+
     // use this during development
     // for PUBLISHING, use the entry point below
     felgo.setMainQmlFileName(QStringLiteral("qml/Main.qml"));

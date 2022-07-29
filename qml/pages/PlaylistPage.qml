@@ -1,15 +1,19 @@
 import QtQuick 2.0
 import Felgo 3.0
 import com.afriktek.qplayer 1.0
+import QtQuick.Layouts 1.3
 import "../ui"
+
 Page {
-    title: "All Tracks"
-    anchors.fill: parent
+
+    property string playlistTitle: "Playlist X"
+    title:playlistTitle
+
+
     useSafeArea: false
     id:rootPage
 
-    anchors.topMargin: dp(50)
-    anchors.leftMargin: dp(10)
+
 
     Item {
         focus: true
@@ -20,11 +24,15 @@ Page {
 
     AppListView{
         id:tracksListView
+        width: parent.width
+
         anchors.fill: parent
+        anchors.margins: dp(5)
         model: 20
 
+
         spacing: dp(5)
-        currentIndex: 5
+        currentIndex: -1
         desktopScrollEnabled: true
         delegate: Rectangle{
             property int  currentIndex : index
@@ -53,11 +61,18 @@ Page {
             color: Theme.secondaryBackgroundColor
             radius: dp(5)
 
-
         }
 
 
 
+
+    }
+
+
+    FloatingActionButton{
+        icon: IconType.play
+        visible: true
+        backgroundColor: Theme.secondaryBackgroundColor
     }
 
 }

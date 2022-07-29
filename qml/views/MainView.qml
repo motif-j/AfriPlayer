@@ -14,12 +14,23 @@ Rectangle{
 
 
 
+
     //The Row layout subdivides the view into three portions
     GridLayout {
+
         id: layout
         anchors.fill: parent
         columns: Theme.isPortrait?1:2
         columnSpacing: dp(5)
+
+        onColumnsChanged: {
+            if(layout.columns>1){
+
+                rightViewLoader.sourceComponent=rightViewComponent  //source= "qrc:/qml/views/MainRightView.qml"
+            }else{
+                rightViewLoader.sourceComponent=undefined
+            }
+        }
 
         MainCenterView {
 
@@ -29,17 +40,38 @@ Rectangle{
 
         }
 
-        MainRightView {
 
+
+        Loader{
             Layout.fillWidth: true
-
+            visible: layout.columns>1
             Layout.fillHeight: true
-            visible: Theme.isPortrait?false:true
-
             Layout.minimumWidth: dp(220)
             Layout.maximumWidth: dp(280)
+            id:rightViewLoader
 
         }
+
+        Component{
+            id:rightViewComponent
+            MainRightView {
+                anchors.fill: parent
+
+                visible: Theme.isPortrait?false:true
+
+
+                Component.onCompleted: {
+                    console.debug("CREATED")
+                }
+
+                Component.onDestruction: {
+                    console.debug("AM destroyed")
+
+                }
+            }
+        }
+
+
     }
 
 }

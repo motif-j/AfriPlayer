@@ -14,6 +14,8 @@ RowLayout{
     Column{
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignHCenter
+        Layout.leftMargin: dp(5)
+        Layout.rightMargin: dp(5)
 
         AppText{
             text:"Song Title"

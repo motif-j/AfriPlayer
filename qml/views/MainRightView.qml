@@ -12,6 +12,17 @@ Rectangle{
     id:root
     color:Theme.secondaryBackgroundColor
 
+
+
+    FontLoader{
+        id:lcdFont
+        name:"Open 24 Display St"
+        source:"qrc:/assets/lcd.ttf"
+
+
+    }
+
+
     AppFlickable{
         anchors.fill:parent
         contentHeight: _col.height
@@ -24,8 +35,8 @@ Rectangle{
             spacing: dp(5)
 
             Rectangle{
-                Layout.maximumHeight: dp(10)
-                Layout.preferredHeight: dp(10)
+                Layout.maximumHeight: dp(5)
+                Layout.preferredHeight: dp(5)
             }
 
             AppText {
@@ -40,10 +51,10 @@ Rectangle{
             }
 
             RoundedImage{
-                Layout.preferredWidth:  dp(180)
+                Layout.preferredWidth:  dp(150)
                 Layout.alignment: Qt.AlignHCenter
-                Layout.preferredHeight:  dp(180)
-                Layout.maximumHeight: dp(200)
+                Layout.preferredHeight:  dp(150)
+                Layout.maximumHeight: dp(150)
                 fillMode: Image.Stretch
                 source:"qrc:/assets/qt.png"
                 radius: dp(10)
@@ -144,6 +155,22 @@ Rectangle{
                 trackColor:JColors.pink100
                 knobColor: JColors.purple100
             }
+            AppText {
+                id:timerText
+                text: qsTr("13 : 05 : 29")
+                fontSize: sp(20)
+                font.family: lcdFont.name
+                font.letterSpacing: dp(3)
+                antialiasing: true
+
+                color: Theme.secondaryTextColor
+
+                Layout.maximumWidth: dp(180)
+                Layout.alignment: Qt.AlignHCenter
+
+
+
+            }
 
             PlayerBarController{
                 Layout.maximumWidth: dp(220)
@@ -181,21 +208,36 @@ Rectangle{
 
             }
 
-            Repeater{
+            AppListView{
+                id:queueList
+                Layout.preferredHeight: dp(80)
+                Layout.preferredWidth: dp(200)
+                Layout.minimumHeight: dp(300)
+                Layout.alignment: Qt.AlignHCenter
+                Layout.rightMargin: dp(10)
+                Layout.leftMargin: dp(10)
                 model:5
-                PlayingQueue{
 
-                    Layout.preferredHeight: dp(80)
-                    Layout.maximumHeight: dp(50)
-                    Layout.preferredWidth: dp(120)
-                    Layout.alignment: Qt.AlignHCenter
-                   Layout.rightMargin: dp(10)
-                   Layout.leftMargin: dp(10)
+                delegate:Item {
+                    id: queueItem
+                    width: queueList.width
+                    height: dp(50)
+                    PlayingQueue{
+                        width: parent.width
+                        height: parent.height
+                    }
+                }
+
+                highlight:Rectangle{
+                    color:Theme.backgroundColor
+                    radius: dp(5)
 
 
                 }
 
             }
+
+
 
             Rectangle{
                 Layout.fillHeight: true

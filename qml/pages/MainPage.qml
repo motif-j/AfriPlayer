@@ -8,6 +8,7 @@ import "../ui" as Views
 
 Page{
 
+    signal navigateUp(pageTitle:string )
     property int  columnCount: Theme.isPortrait?1:2
 
     title: ""
@@ -56,22 +57,22 @@ Page{
                 model:10
 
                 delegate:Views.ItemPlaylist2{
+                    title:qsTr("Random Mix "+index)
+
+                    onPlaylistClicked:(plTitle)=>{
+                                          navigateUp(plTitle)
+                                      }
 
                 }
 
-                RippleMouseArea{
-                    anchors.fill: parent
-                    onClicked: {
-                        console.debug("Clicked" +index)
-                    }
-                }
+
             }
 
             //
 
             Rectangle{
                 Layout.fillWidth: true
-                height: dp(380)
+                height: dp(400)
 
 
                 color: Theme.backgroundColor
@@ -80,6 +81,8 @@ Page{
                 AppListView{
                     width: parent.width
                     height: parent.height
+
+                    id:recentList
 
 
                     model:5
@@ -93,9 +96,31 @@ Page{
                     }
 
 
-                    delegate: Views.HomeTracksView{
-                        width:parent.width
+                    delegate: Rectangle{
+                        width: parent.width
+                        height: dp(70)
+                        color: "#00000000"
+
+                        Views.HomeTracksView{
+                            width:parent.width
+
+                        }
+                        RippleMouseArea{
+                            width:parent.width
+                            height: dp(70)
+                            onClicked: {
+                                console.debug("Clicked" +index)
+                                recentList.currentIndex=index
+                            }
+                        }
                     }
+                    highlight:Rectangle{
+                        color: Theme.secondaryBackgroundColor
+                        radius: dp(5)
+
+
+                    }
+
                 }
             }
             Rectangle{
@@ -128,6 +153,11 @@ Page{
                         Layout.fillHeight: true
                         Layout.preferredHeight: dp(150)
                         Layout.maximumHeight: dp(150)
+
+                        onClicked:{
+                            navigateUp(title)
+
+                        }
                     }
                     Views.HomePlaylistView{
                         title:"Most Played"
@@ -136,6 +166,11 @@ Page{
                         Layout.preferredHeight: dp(150)
                         Layout.maximumHeight: dp(150)
 
+                        onClicked:{
+                            navigateUp(title)
+
+                        }
+
                     }
                     Views.HomePlaylistView{
                         title:"Least Played"
@@ -143,6 +178,11 @@ Page{
                         Layout.fillHeight: true
                         Layout.preferredHeight: dp(150)
                         Layout.maximumHeight: dp(150)
+
+                        onClicked:{
+                            navigateUp(title)
+
+                        }
                     }
                     Views.HomePlaylistView{
                         title:"Newest"
@@ -150,6 +190,11 @@ Page{
                         Layout.fillHeight: true
                         Layout.preferredHeight: dp(150)
                         Layout.maximumHeight: dp(150)
+
+                        onClicked:{
+                            navigateUp(title)
+
+                        }
                     }
 
 

@@ -14,6 +14,7 @@ RowLayout{
 
     Row{
         Layout.preferredHeight: dp(65)
+        Layout.margins: dp(5)
         RoundedImage{
             property int thumbnailSize:dp(60)
             height: thumbnailSize

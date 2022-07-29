@@ -3,8 +3,10 @@ import Felgo 3.0
 import QtQuick.Layouts 1.3
 
 Rectangle{
-
+   id:homePlaylistRect
     property string title: ""
+    signal clicked;
+
     clip: true
     color: Theme.backgroundColor
 
@@ -22,5 +24,12 @@ Rectangle{
                 font.bold: true
             }
 
+    }
+
+    RippleMouseArea{
+        anchors.fill: parent
+        onClicked: {
+         homePlaylistRect.clicked()
+        }
     }
 }

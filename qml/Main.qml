@@ -3,6 +3,7 @@ import QtQuick 2.0
 import "views"
 import com.afriktek.qplayer 1.0
 import "components"
+import "./utilities"
 
 
 App {
@@ -47,6 +48,10 @@ App {
     //./source:"qrc:/assets/font_icon.otf"
     // }
 
+
+    ColorHelper{
+        id:colorHelper
+    }
 
     MainView{
 
