@@ -11,10 +11,14 @@ MyThread::MyThread(QObject *parent)
 
 void MyThread::run()
 {
-    //JMalkiaDb dn=JMalkiaDb::newInstance();
+    qDebug()<<"From Thread";
     JMalkiaDbInterface &db=JMalkiaDbInterface::getInstace();
 
+  // auto c= db.getTracks();
+  // for(auto v : *c){
+   //    qDebug()<<v.trackName;
+   //}
 
-  //  dn.getAllTracks();
+  // db.massInsert();
 
 }

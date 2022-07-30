@@ -4,8 +4,9 @@
 #include <QQmlApplicationEngine>
 
 #include "mythread.h"
-#include "db_jmalkiadbinterface.h"
+
 #include "dm_tracksdataentry.h"
+#include "db_jmalkiadbinterface.h"
 
 
 // uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
@@ -34,7 +35,7 @@ int main(int argc, char *argv[])
    // qmlRegisterType<BaseDataEntryModel>("com.afriktek.qplayer",1,0,"BaseDataEntryModel");
 
     qmlRegisterType<TracksDataEntry>("com.afriktek.qplayer",1,0,"TracksDataEntry");
-
+ //   qRegisterMetaType<JTrack>();
 
     // use this during development
     // for PUBLISHING, use the entry point below
@@ -55,9 +56,11 @@ int main(int argc, char *argv[])
     MyThread *thread=new MyThread();
 
     thread->start();
-   // JMalkiaDb db=JMalkiaDb::newInstance();
+    JMalkiaDbInterface &dbInterface=JMalkiaDbInterface::getInstace();
 
-    JMalkiaDbInterface &db=JMalkiaDbInterface::getInstace();
+
+   //JDatabase &db=JDatabase::newInstance();
+
 
 
 

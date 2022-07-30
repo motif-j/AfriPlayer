@@ -42,14 +42,7 @@ Page{
 
             }
 
-            TracksDataEntry{
-                id:dynamicModel
-                onCountChanged: (count)=>{
-                                    console.debug("Hey "+dynamicModel.count)
 
-
-                                }
-            }
 
             AppListView{
                 id:view
@@ -62,16 +55,19 @@ Page{
                 spacing: dp(5)
                 desktopScrollEnabled: true
 
-                model:dynamicModel
+                model:10
 
                 delegate:Views.ItemPlaylist2{
-                    title:qsTr(model.display)
+
+                   title: qsTr("Random Index "+index)
+
+                    //title:qsTr(model)
 
                     onPlaylistClicked:(plTitle)=>{
-                                          dynamicModel.add("blue")
+                                         // dynamicModel.add("blue")
 
                                           // dynamic.add("blue")
-                                          //navigateUp(plTitle)
+                                           navigateUp(plTitle)
                                       }
 
                 }

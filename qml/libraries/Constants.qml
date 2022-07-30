@@ -8,5 +8,11 @@ QtObject{
 
     readonly property color transparentColor: "#00000000"
 
+    readonly property var  lcdFont: FontLoader{
+        name:"Open 24 Display St"
+        source:"qrc:/assets/lcd.ttf"
+
+
+    }
 
 }

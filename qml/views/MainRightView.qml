@@ -14,15 +14,6 @@ Rectangle{
 
 
 
-    FontLoader{
-        id:lcdFont
-        name:"Open 24 Display St"
-        source:"qrc:/assets/lcd.ttf"
-
-
-    }
-
-
     AppFlickable{
         anchors.fill:parent
         contentHeight: _col.height
@@ -159,7 +150,7 @@ Rectangle{
                 id:timerText
                 text: qsTr("13 : 05 : 29")
                 fontSize: sp(20)
-                font.family: lcdFont.name
+                font.family:  Constants.lcdFont.name
                 font.letterSpacing: dp(3)
                 antialiasing: true
 

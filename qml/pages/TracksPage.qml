@@ -18,14 +18,27 @@ Page {
         }
     }
 
+    TracksDataEntry{
+        id:tracksDataModel
+        onCountChanged: (count)=>{
+                            console.debug("Hey "+dynamicModel.count)
+
+
+                        }
+    }
+
     AppListView{
         id:tracksListView
         anchors.fill: parent
-        model: 20
+        model: tracksDataModel
 
         spacing: dp(5)
-        currentIndex: 5
+        currentIndex: -1
         desktopScrollEnabled: true
+        footer: VisibilityRefreshHandler {
+            canRefresh: tracksDataModel.count<50
+            onRefresh: loadNewTracks.start()
+        }
         delegate: Rectangle{
             property int  currentIndex : index
 
@@ -34,6 +47,11 @@ Page {
             width: rootPage.width
             color: "#00000000"
             MainTracksUi{
+                trackName: model.trackName
+                albumName: model.albumName
+                duration: model.duration
+                artistName: model.artistName
+
                 anchors.fill:delRect
 
             }
@@ -59,5 +77,16 @@ Page {
 
 
     }
+
+    Timer {
+      // Fake loading of new tweets in background
+      id: loadNewTracks
+      interval: 5000
+      onTriggered: {
+          console.log("Call fetch here")
+       // logic.addTweet("Lorem Ipsum.")
+      }
+    }
+
 
 }

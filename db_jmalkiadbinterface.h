@@ -4,11 +4,21 @@
 #include <QObject>
 #include <QSqlDatabase>
 #include <QSqlError>
+#include <QList>
+#include <QSqlQuery>
+#include "jmodels.h"
+#include <QDebug>
+#include <QVariant>
+#include <QThread>
 
+
+//  Q_DECLARE_METATYPE(JTrack);
 
 class JMalkiaDbInterface : public QObject
 {
     Q_OBJECT
+
+    //constructor
 public:
     static JMalkiaDbInterface &getInstace(){
         static JMalkiaDbInterface instance;
@@ -17,23 +27,42 @@ public:
 
     }
 
+    //functions
+public:
+    QList<JTrack> *getTracks(const int lastId,const int limit);
+    void massInsert();
+
+
+    //constrctor
+
+
 private:
 
-   JMalkiaDbInterface(QObject *parent = nullptr){
+
+    JMalkiaDbInterface(QObject *parent = nullptr){
         Q_UNUSED(parent);
 
-       this->intializeDatabase();
-      // initializeDa
+        this->intializeDatabase();
+
+
+
+
     }
 
-   const QString DRIVER_NAME=QString("QSQLITE");
+    //properties
+private:
 
-   QSqlDatabase mDb;
+    const QString DRIVER_NAME=QString("QSQLITE");
+
+    QSqlDatabase mDb;
 
 
-   //functions
 
-   void intializeDatabase();
+
+
+    //functions
+private:
+    void intializeDatabase();
 
 signals:
 

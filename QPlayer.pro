@@ -45,10 +45,8 @@ DEPLOYMENTFOLDERS += assetsFolder
 SOURCES += main.cpp \
     db_jmalkiadbinterface.cpp \
     dm_tracksdataentry.cpp \
-    md_jalbum.cpp \
-    md_jartist.cpp \
-    md_jtrack.cpp \
-    mythread.cpp
+    mythread.cpp \
+    qmd_qtrack.cpp
 
 
 android {
@@ -100,7 +98,7 @@ DISTFILES += \
 HEADERS += \
     db_jmalkiadbinterface.h \
     dm_tracksdataentry.h \
-    md_jalbum.h \
-    md_jartist.h \
-    md_jtrack.h \
-    mythread.h
+    jmodels.h \
+    jrole.h \
+    mythread.h \
+    qmd_qtrack.h

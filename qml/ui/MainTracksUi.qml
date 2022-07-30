@@ -2,10 +2,16 @@ import QtQuick 2.9
 import QtQuick.Layouts 1.3
 import Felgo 3.0
 
+import com.afriktek.qplayer 1.0
+
 
 
 RowLayout{
 
+    property string trackName: ""
+    property string artistName: ""
+    property string albumName: ""
+    property string duration: "13 : 12"
 
     id:root
 
@@ -30,21 +36,21 @@ RowLayout{
         }
 
         Column{
-           width: dp(100)
-           height: dp(65)
-           spacing: dp(5)
-           leftPadding: dp(5)
+            width: dp(100)
+            height: dp(65)
+            spacing: dp(5)
+            leftPadding: dp(5)
 
 
             AppText{
-                text:"Song Title"
+                text:trackName
                 font.bold: true
                 fontSize: sp(16)
                 topPadding: dp(5)
 
             }
             AppText{
-                text:"artist"
+                text:artistName
                 bottomPadding: dp(5)
                 fontSize: sp(14)
                 color: Theme.secondaryTextColor
@@ -57,7 +63,7 @@ RowLayout{
 
 
     AppText{
-        text:"Album"
+        text:albumName
 
         fontSize: sp(16)
 
@@ -69,13 +75,16 @@ RowLayout{
 
 
     AppText{
-        text:"13:00:00"
+        text:duration
 
-        fontSize: sp(16)
+        fontSize: sp(18)
+        font.family: Constants.lcdFont.name
+        font.letterSpacing: dp(2)
+
 
         Layout.alignment: Qt.AlignHCenter
-        Layout.maximumWidth: dp(60)
-        Layout.preferredWidth: dp(50)
+        Layout.maximumWidth: dp(100)
+        Layout.preferredWidth: dp(80)
 
     }
 
