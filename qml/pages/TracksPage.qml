@@ -1,42 +1,59 @@
 import QtQuick 2.0
 import Felgo 3.0
-import com.afriktek.qplayer 1.0
 import "../ui"
+import "../models"
+import "../logics"
+
 Page {
+
+
     title: "All Tracks"
-    anchors.fill: parent
     useSafeArea: false
     id:rootPage
 
     anchors.topMargin: dp(50)
     anchors.leftMargin: dp(10)
 
-    Item {
-        focus: true
-        Keys.onPressed: {
-            console.debug("pressed")
+
+
+    TracksPageDataModel{
+        id:tracksModel
+        dispatcher: appLogic
+
+        onJdownkeyPressed: {
+            handleListViewIndexUp()
+
+
+        }
+        onJupkeyPressed:{
+            handleListViewIndexDown()
+
+        }
+
+        onJreturnkeyPressed: {
+
         }
     }
 
-    TracksDataEntry{
-        id:tracksDataModel
-        onCountChanged: (count)=>{
-                            console.debug("Hey "+dynamicModel.count)
 
-
-                        }
-    }
 
     AppListView{
+
+
         id:tracksListView
-        anchors.fill: parent
-        model: tracksDataModel
+        width: rootPage.width
+        height: rootPage.height
+        model: tracksModel.model
+
+        emptyText.text: "No Tracks found"
 
         spacing: dp(5)
         currentIndex: -1
         desktopScrollEnabled: true
+
+
         footer: VisibilityRefreshHandler {
-            canRefresh: tracksDataModel.count<50
+            canRefresh:tracksModel.count>0? !tracksModel.doneFetching:false
             onRefresh: loadNewTracks.start()
         }
         delegate: Rectangle{
@@ -71,21 +88,59 @@ Page {
             color: Theme.secondaryBackgroundColor
             radius: dp(5)
 
-
         }
-
 
 
     }
 
     Timer {
-      // Fake loading of new tweets in background
-      id: loadNewTracks
-      interval: 5000
-      onTriggered: {
-          console.log("Call fetch here")
-       // logic.addTweet("Lorem Ipsum.")
-      }
+
+        id: loadNewTracks
+        interval: 2000
+        onTriggered: {
+            console.log("Call fetch here")
+            tracksModel.loadMoreTracks()
+            // tracksDataModel.cpu()
+            // logic.addTweet("Lorem Ipsum.")
+        }
+    }
+
+    FloatingActionButton{
+        icon: IconType.refresh
+        visible: tracksModel.count===0
+        backgroundColor: Theme.secondaryBackgroundColor
+        onClicked: {
+            tracksModel.loadMoreTracks()
+        }
+    }
+
+    function handleListViewIndexUp(){
+        const  currentIndex=tracksListView.currentIndex
+        let size=tracksModel.count
+
+        let lastIndex=size-1
+
+        let newIndex=currentIndex+1
+
+        if(newIndex<=lastIndex){
+            tracksListView.currentIndex=newIndex
+
+        }else{
+
+            tracksListView.currentIndex=currentIndex
+        }
+    }
+    function handleListViewIndexDown(){
+        const  currentIndex=tracksListView.currentIndex
+
+        let newIndex=currentIndex-1
+
+        if(newIndex>=0){
+            tracksListView.currentIndex=newIndex
+
+        }else{
+            tracksListView.currentIndex=currentIndex
+        }
     }
 
 

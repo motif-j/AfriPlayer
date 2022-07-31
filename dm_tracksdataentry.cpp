@@ -1,5 +1,6 @@
 #include "dm_tracksdataentry.h"
 #include <QTime>
+#include <QThread>
 
 
 
@@ -23,7 +24,7 @@ QVariant TracksDataEntry::data(const QModelIndex &index, int role) const
 
     QTime *time =new QTime(0,0,0,0);
 
-    QTime nT=time->addMSecs(25432356);
+    QTime nT=time->addMSecs(track.duration);
 
     time=nullptr;
 
@@ -72,32 +73,35 @@ QVariant TracksDataEntry::data(const QModelIndex &index, int role) const
 
 
 
-void TracksDataEntry::add(const JTrack &track)
-{
-    auto index=getCount();
-
-    if(index<0 || index>count){
-        return;
-    }
-
-
-
-    emit beginInsertColumns(QModelIndex(),index,index);
-
-    m_data.append(track);
-
-    emit endInsertRows();
-
-    setCount(m_data.count());
-
-
-
-}
-
 void TracksDataEntry::loadMoreTracks()
 {
+    qDebug("Load more tracks");
 
     loadTracks();
+}
+
+
+
+void TracksDataEntry::handleFetchedTracks(QList<JTrack> *tracks)
+{
+
+    if(tracks->count()>0){
+        qDebug("list >0");
+
+        int i=count;
+        for(auto track:*tracks){
+            emit beginInsertRows(QModelIndex(),i,i);
+            m_data.append(track);
+            emit   endInsertRows();
+
+            i=i+1;
+        }
+
+    }else{
+        qDebug("Done refreshing");
+        setDoneFetching(true);
+    }
+    setCount(m_data.count());
 }
 
 bool TracksDataEntry::getDoneFetching() const
@@ -115,26 +119,20 @@ void TracksDataEntry::setDoneFetching(bool newDoneFetching)
 
 void TracksDataEntry::loadTracks()
 {
+    qDebug("Load tracks");
     int lastId=0;
     if(count>0){
-        auto lastElement=m_data.value(count);
+        qDebug()<<"count = "<<count;
+
+        auto lastElement=m_data.value(count-1);
         lastId=lastElement.trackId;
+        qDebug()<<"Id "<<lastId;
 
     }
-    auto tempList=db.getTracks(lastId,limit);
 
-    if(tempList->count()>0){
-        for(auto track:*tempList){
-            m_data.append(track);
-        }
-
-    }else{
-        setDoneFetching(true);
-    }
-
-    tempList=nullptr;
-    delete tempList;
+    emit this->fetchTracks(lastId,limit);
 }
+
 
 QHash<int, QByteArray> TracksDataEntry::roleNames() const
 {

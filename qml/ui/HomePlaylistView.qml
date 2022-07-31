@@ -19,9 +19,13 @@ Rectangle{
 
             AppText{
                 anchors.centerIn: parent
+                anchors.margins: dp(5)
+                width: homePlaylistRect.width
                 text: title
                 color: "orange"
+                horizontalAlignment: Text.Center
                 font.bold: true
+
             }
 
     }

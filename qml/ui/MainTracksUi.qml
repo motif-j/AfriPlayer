@@ -18,6 +18,7 @@ RowLayout{
     spacing: dp(5)
 
 
+
     Row{
         Layout.preferredHeight: dp(65)
         Layout.margins: dp(5)
@@ -45,15 +46,20 @@ RowLayout{
             AppText{
                 text:trackName
                 font.bold: true
-                fontSize: sp(16)
+                fontSize: sp(15)
                 topPadding: dp(5)
+                maximumLineCount: 1
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+
 
             }
             AppText{
                 text:artistName
                 bottomPadding: dp(5)
-                fontSize: sp(14)
+                fontSize: sp(13)
                 color: Theme.secondaryTextColor
+                maximumLineCount: 1
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
             }
         }
@@ -64,12 +70,14 @@ RowLayout{
 
     AppText{
         text:albumName
-
-        fontSize: sp(16)
+        visible: root.width>410
+        fontSize: sp(15)
 
         Layout.alignment: Qt.AlignHCenter
-        Layout.maximumWidth: dp(60)
-        Layout.preferredWidth: dp(50)
+        Layout.maximumWidth: dp(80)
+        Layout.preferredWidth: dp(80)
+        maximumLineCount: 1
+        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
     }
 
@@ -85,6 +93,8 @@ RowLayout{
         Layout.alignment: Qt.AlignHCenter
         Layout.maximumWidth: dp(100)
         Layout.preferredWidth: dp(80)
+        maximumLineCount: 1
+        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
     }
 

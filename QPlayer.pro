@@ -70,10 +70,13 @@ macx {
 DISTFILES += \
     qml/components/PlayerBar2.qml \
     qml/components/PlayerBarController.qml \
+    qml/components/TracksEmptyLIstView.qml \
+    qml/data/JQTrack.qml \
     qml/libraries/Constants.qml \
     qml/libraries/JColors.qml \
     qml/libraries/JIconType.qml \
     qml/logics/AppLogics.qml \
+    qml/logics/JMusicLogic.qml \
     qml/pages/FavoriteTracksPage.qml \
     qml/pages/MainPage.qml \
     qml/pages/PlaylistPage.qml \
@@ -93,12 +96,16 @@ DISTFILES += \
     qml/views/MainLeftView.qml \
     qml/views/MainRightView.qml \
     qml/views/MainView.qml \
-    qml/views/MainCenterView.qml
+    qml/views/MainCenterView.qml \
+    qml/models/TracksPageDataModel.qml \
+    qml/logics/TracksLogic.qml
 
 HEADERS += \
     db_jmalkiadbinterface.h \
     dm_tracksdataentry.h \
+    jdbworker.h \
     jmodels.h \
     jrole.h \
+    jw_tracksworker.h \
     mythread.h \
     qmd_qtrack.h

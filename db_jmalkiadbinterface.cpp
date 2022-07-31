@@ -12,13 +12,14 @@ QList<JTrack> *JMalkiaDbInterface::getTracks(const int lastId,const int limit)
 
     QSqlQuery *query =new QSqlQuery(mDb);
 
-    auto prepare= query->prepare("select * from tracks where track_id>? limit ?");
+    auto prepare= query->prepare("SELECT track_id,track_name,artist_name,album_name,duration,file_url FROM tracks t LEFT Join albums a on a.album_id=t.album_id LEFT JOIN artists art on art.artist_id=t.artist_id where track_id>? limit ?");
 
     query->addBindValue(lastId);
     query->addBindValue(limit);
 
 
     if(!prepare){
+        qDebug()<<"Not prepared "<<query->lastError().text();
 
         return new QList<JTrack>();
     }
@@ -26,6 +27,7 @@ QList<JTrack> *JMalkiaDbInterface::getTracks(const int lastId,const int limit)
     auto querySuccess= query->exec();
 
     if(!querySuccess){
+         qDebug()<<"Query failed "<<query->lastError().text();
         return new QList<JTrack>();
     }
 
@@ -34,37 +36,39 @@ QList<JTrack> *JMalkiaDbInterface::getTracks(const int lastId,const int limit)
 
         QVariant *idVariant=new QVariant(query->value(0));
         QVariant *trackNameVariant=new QVariant(query->value(1));
-        QVariant *durationVariant=new QVariant(query->value(2));
-        QVariant *artistIdNameVariant=new QVariant(query->value(3));
-        QVariant *albumIdVariant=new QVariant(query->value(4));
+        QVariant *artistNameVariant=new QVariant(query->value(2));
+        QVariant *albumNameVariant=new QVariant(query->value(3));
+        QVariant *durationVariant=new QVariant(query->value(4));
+
+
         QVariant *fileUrlVariant=new QVariant(query->value(5));
 
 
         track.trackId=idVariant->toInt();
         track.trackName=trackNameVariant->toString();
         track.duration=durationVariant->toLongLong();
-        track.artistId=artistIdNameVariant->toInt();
-        track.albumId=albumIdVariant->toInt();
+        track.artistName=artistNameVariant->toString();
+        track.albumName=albumNameVariant->toString();
         track.fileUrl=fileUrlVariant->toString();
 
 
         tempList->append(track);
 
 
-          //reclaim the memory held by the variants
-         idVariant=nullptr;
-         trackNameVariant=nullptr;
-         durationVariant=nullptr;
-         artistIdNameVariant=nullptr;
-         albumIdVariant=nullptr;
-         fileUrlVariant=nullptr;
+        //reclaim the memory held by the variants
+        idVariant=nullptr;
+        trackNameVariant=nullptr;
+        durationVariant=nullptr;
+        artistNameVariant=nullptr;
+        albumNameVariant=nullptr;
+        fileUrlVariant=nullptr;
 
-         delete idVariant;
-         delete trackNameVariant;
-         delete durationVariant;
-         delete artistIdNameVariant;
-         delete albumIdVariant;
-         delete fileUrlVariant;
+        delete idVariant;
+        delete trackNameVariant;
+        delete durationVariant;
+        delete artistNameVariant;
+        delete albumNameVariant;
+        delete fileUrlVariant;
 
 
     }
@@ -80,15 +84,15 @@ void JMalkiaDbInterface::massInsert()
 {
 
     qDebug("Mass insert");
-    for(int i=21;i<10000;i++){
-       QSqlQuery *q=new QSqlQuery(mDb);
+    for(int i=0;i<100;i++){
+        QSqlQuery *q=new QSqlQuery(mDb);
         auto prepare=  q->prepare("INSERT INTO tracks (track_name, duration, artist_id, album_id, file_url) VALUES (?, '121', '1', '1', ?)");
 
         if(prepare){
             qDebug("Prepared");
 
             q->addBindValue(QString("Inserted track ").append(QString::number(i)));
-             q->addBindValue(QString("Url ").append(QString::number(i)));
+            q->addBindValue(QString("Url ").append(QString::number(i)));
 
             auto ex=q->exec();
 

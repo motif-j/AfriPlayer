@@ -7,16 +7,29 @@ import "../ui" as Views
 
 
 Page{
+  id:page
 
     signal navigateUp(pageTitle:string )
-    property int  columnCount: Theme.isPortrait?1:2
+
+    property int  columnCount: {
+        if(page.width>450){
+           return Theme.isPortrait?1:2
+        }else{
+            return 1
+
+        }
+
+
+
+    }
+
 
     title: ""
     useSafeArea: false
     anchors.topMargin: dp(50)
     anchors.leftMargin: dp(10)
 
-    id:page
+
 
     AppFlickable{
         anchors.fill: parent
@@ -34,7 +47,7 @@ Page{
             //Recently played tracks
 
             Views.HomeHeader{
-                title: "Hello"
+                title: "Hello "+page.width
                 bold:true
                 Layout.columnSpan: baseGrid.columns>1?2:1
 
@@ -88,19 +101,19 @@ Page{
             //
 
             Rectangle{
+                id:rect
                 Layout.fillWidth: true
-                height: dp(400)
+                height: dp(380)
 
 
                 color: Theme.backgroundColor
                 //Playing Que
 
                 AppListView{
-                    width: parent.width
-                    height: parent.height
+                    width:rect.width
 
                     id:recentList
-
+                    interactive: false
 
                     model:5
                     clip: true

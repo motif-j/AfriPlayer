@@ -11,20 +11,44 @@
 #include <QDebug>
 #include <QVariantMap>
 #include "jrole.h"
-#include "db_jmalkiadbinterface.h"
+#include "jw_tracksworker.h"
+
 
 
 class TracksDataEntry : public QAbstractListModel
 {
+
     Q_OBJECT
     Q_PROPERTY(int count READ getCount WRITE setCount RESET resetCount NOTIFY countChanged)
     Q_PROPERTY(bool doneFetching READ getDoneFetching WRITE setDoneFetching NOTIFY doneFetchingChanged)
 
+
+    QThread databaseThread;
+
 public:
+    ~TracksDataEntry(){
+
+        databaseThread.quit();
+        databaseThread.wait();
+    }
+
     explicit TracksDataEntry(QObject *parent = nullptr){
         Q_UNUSED(parent);
 
-        this->loadTracks();
+        JTracksWorker *dbWorker=new JTracksWorker;
+
+        dbWorker->moveToThread(&databaseThread);
+
+        connect(&databaseThread,&QThread::finished,dbWorker,&QObject::deleteLater);
+        connect(dbWorker,&JTracksWorker::tracksFetched,this,&TracksDataEntry::handleFetchedTracks);
+        connect(this,&TracksDataEntry::fetchTracks,dbWorker,&JTracksWorker::fetchTracks);
+
+        databaseThread.setObjectName("Database Thread");
+
+
+        databaseThread.start();
+
+
 
     }
 
@@ -40,27 +64,34 @@ public:
     void setCount(int newCount);
     void resetCount();
 
+    //Qml slots
 public slots:
-    // void add(int index,const QString &color);
-    void add(const JTrack &track);
+
     void loadMoreTracks();
 
 
-    //fields
+    //class slots exposed to other classes
+public slots:
+    void handleFetchedTracks(QList<JTrack> *tracks);
+
 signals:
     void countChanged(int count);
 
     void doneFetchingChanged();
 
+    void fetchTracks(int lastId,int limit);
+
+
+
 private:
-    bool doneFetching;
+    bool doneFetching=false;
 
     QList<JTrack> m_data;
     int count=0;
     const int limit=20;
 
     JRole &jroles=JRole::getInstance();
-    JMalkiaDbInterface &db=JMalkiaDbInterface::getInstace();
+
 
 
     //functions

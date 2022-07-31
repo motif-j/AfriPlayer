@@ -4,9 +4,12 @@ import "views"
 import com.afriktek.qplayer 1.0
 import "components"
 import "./utilities"
+import "./logics"
 
 
 App {
+
+
 
     // You get free licenseKeys from https://felgo.com/licenseKey
     // With a licenseKey you can:
@@ -53,7 +56,18 @@ App {
         id:colorHelper
     }
 
+    AppLogics{
+        id:appLogic
+    }
+
+    //all key events be handled globally
     MainView{
+        focus: true
+        Keys.onPressed: function(event){
+           let key= event.key
+           appLogic.jkeyPressed(key)
+
+        }
 
     }
 

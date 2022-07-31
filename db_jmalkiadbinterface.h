@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QVariant>
 #include <QThread>
+#include "jdbworker.h"
 
 
 //  Q_DECLARE_METATYPE(JTrack);
