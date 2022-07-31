@@ -77,6 +77,7 @@ DISTFILES += \
     qml/libraries/JIconType.qml \
     qml/logics/AppLogics.qml \
     qml/logics/JMusicLogic.qml \
+    qml/models/JMusicModel.qml \
     qml/pages/FavoriteTracksPage.qml \
     qml/pages/MainPage.qml \
     qml/pages/PlaylistPage.qml \

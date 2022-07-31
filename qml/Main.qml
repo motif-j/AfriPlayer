@@ -5,6 +5,7 @@ import com.afriktek.qplayer 1.0
 import "components"
 import "./utilities"
 import "./logics"
+import "./models"
 
 
 App {
@@ -59,6 +60,16 @@ App {
     AppLogics{
         id:appLogic
     }
+    JMusicLogic{
+        id:jmusicLogic
+
+    }
+
+    JMusicModel{
+        id:jmusicModel
+        dispatcher:jmusicLogic
+    }
+
 
     //all key events be handled globally
     MainView{

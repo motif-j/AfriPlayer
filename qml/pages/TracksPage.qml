@@ -56,34 +56,24 @@ Page {
             canRefresh:tracksModel.count>0? !tracksModel.doneFetching:false
             onRefresh: loadNewTracks.start()
         }
-        delegate: Rectangle{
-            property int  currentIndex : index
+        delegate:   MainTracksUi{
+            id:trackUi
+            trackName: model.trackName
+            albumName: model.albumName
+            duration: model.duration
+            artistName: model.artistName
+            trackId: model.trackId
 
-            id:delRect
-            height: dp(70)
-            width: rootPage.width
-            color: "#00000000"
-            MainTracksUi{
-                trackName: model.trackName
-                albumName: model.albumName
-                duration: model.duration
-                artistName: model.artistName
+            onClicked: {
+                jmusicLogic.trackClicked(trackId)
 
-                anchors.fill:delRect
-
+                tracksListView.currentIndex=index
             }
-            RippleMouseArea{
-                anchors.fill:delRect
-                onClicked: {
 
-                    tracksListView.currentIndex=currentIndex
-                }
-                onDoubleClicked: {
-                    //playing track
 
-                }
-            }
         }
+
+
         highlight:Rectangle{
             color: Theme.secondaryBackgroundColor
             radius: dp(5)
