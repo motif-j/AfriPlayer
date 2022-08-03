@@ -6,10 +6,10 @@ import Felgo 3.0
 AppText{
     property string  title:" "
     property bool bold: false
-    property int textSize:16
+
 
     text: title
-    fontSize: sp(textSize)
+    fontSize: 18
     font.bold: bold
 
 

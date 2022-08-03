@@ -3,17 +3,20 @@ import Felgo 3.0
 import QtQuick.Layouts 1.3
 import com.afriktek.qplayer 1.0
 import "../ui" as Views
+import "../models"
 
 
 
 Page{
-  id:page
+    navigationBarTranslucency: 1
+    id:page
+    anchors.fill: parent
 
-    signal navigateUp(pageTitle:string )
+    signal navigateUp(pageTitle:string ,playlistId:int)
 
     property int  columnCount: {
         if(page.width>450){
-           return Theme.isPortrait?1:2
+            return Theme.isPortrait?1:2
         }else{
             return 1
 
@@ -26,13 +29,19 @@ Page{
 
     title: ""
     useSafeArea: false
-    anchors.topMargin: dp(50)
-    anchors.leftMargin: dp(10)
+    anchors.leftMargin: dp(5)
+    anchors.rightMargin: columnCount>1?dp(0):dp(5)
+    //anchors.topMargin: dp(100)
+
+    MainPageDataModel{
+        id:mainPageDm
+    }
 
 
 
     AppFlickable{
-        anchors.fill: parent
+        width: page.width
+        height:page.height
         contentWidth: baseGrid.width
         contentHeight: baseGrid.height
 
@@ -46,15 +55,23 @@ Page{
 
             //Recently played tracks
 
-            Views.HomeHeader{
-                title: "Hello "+page.width
-                bold:true
+            Column{
+                Layout.fillWidth: true
                 Layout.columnSpan: baseGrid.columns>1?2:1
 
-                //Layout.alignment: Qt.AlignHCenter
+                Rectangle{
+                    height:Theme.isAndroid?dp(110):dp(80)
+                    width: page.width
+                    color: Theme.backgroundColor
+                }
 
+                Views.HomeHeader{
+                    title: "Playlist you may like "
+                    bold:true
+                    //Layout.alignment: Qt.AlignHCenter
+
+                }
             }
-
 
 
             AppListView{
@@ -68,19 +85,23 @@ Page{
                 spacing: dp(5)
                 desktopScrollEnabled: true
 
-                model:10
+                model:mainPageDm.playlistModel
 
+                emptyText.text: "Leave this to us"
                 delegate:Views.ItemPlaylist2{
 
-                   title: qsTr("Random Index "+index)
+                    title: model.playlistName
+                    playlistId: model.playlistId
 
                     //title:qsTr(model)
 
                     onPlaylistClicked:(plTitle)=>{
-                                         // dynamicModel.add("blue")
+                                          // dynamicModel.add("blue")
 
-                                          // dynamic.add("blue")
-                                           navigateUp(plTitle)
+                                           appLogic.navigateToPlaylistPage(plTitle,playlistId)
+
+                                          navigateUp(plTitle,playlistId)
+
                                       }
 
                 }
@@ -103,8 +124,9 @@ Page{
             Rectangle{
                 id:rect
                 Layout.fillWidth: true
+                //   Layout.leftMargin:  dp(5)
+                // Layout.rightMargin: columnCount>1?dp(0):dp(5)
                 height: dp(380)
-
 
                 color: Theme.backgroundColor
                 //Playing Que
@@ -114,8 +136,8 @@ Page{
 
                     id:recentList
                     interactive: false
-
-                    model:5
+                    //model:5
+                    emptyText.text: "No tracks found"
                     clip: true
                     desktopScrollEnabled: true
                     header: Views.HomeHeader{
@@ -156,10 +178,11 @@ Page{
             Rectangle{
                 Layout.fillWidth: true
                 height: dp(380)
+                //   Layout.rightMargin:dp(2.5)
                 color: Theme.backgroundColor
 
-                //AI based playlist
 
+                //AI based playlist
                 GridLayout {
                     height: parent.height
                     width: parent.width
@@ -238,7 +261,6 @@ Page{
                     }
 
                 }
-
 
 
 

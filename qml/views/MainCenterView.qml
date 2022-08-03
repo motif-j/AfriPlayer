@@ -7,11 +7,11 @@ import "../pages"
 
 Item {
 
-    property string globalPlaylistTitle: ""
-
-
+    property string globalPlTitle: ""
+    property int globalPlId: -1
     Rectangle{
-        anchors.fill: parent
+        width: parent.width
+        height: parent.height
 
         radius: dp(5)
 
@@ -25,7 +25,7 @@ Item {
 
 
         Navigation{
-            navigationMode: fixDrawer()?navigationModeDrawer:navigationModeTabs
+            navigationMode:fixDrawer?navigationModeDrawer:navigationModeTabs
             drawerFixed: fixDrawer()
             drawerMinifyEnabled: fixDrawer()?true:false
             headerView: Rectangle{
@@ -46,8 +46,12 @@ Item {
 
                     MainPage{
                         anchors.fill: parent
-                        onNavigateUp:(pageTitle)=> {
-                                         globalPlaylistTitle=pageTitle
+                        onNavigateUp:(pageTitle,playId)=> {
+
+                                         globalPlTitle=pageTitle
+                                         globalPlId=playId
+
+
 
                                          centerNavStack.push(playlistPage)
 
@@ -59,8 +63,8 @@ Item {
                     Component{
                         id:playlistPage
                         PlaylistPage{
-                            playlistTitle: globalPlaylistTitle
-
+                            playlistId:globalPlId
+                            playlistTitle:globalPlTitle
 
 
                         }

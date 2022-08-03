@@ -3,17 +3,20 @@ import com.afriktek.qplayer 1.0
 
 Item {
 
-id:root
+    id:root
     property alias dispatcher: conn.target
     property var  model: dataEntry
     property int  count: dataEntry.count
+    property int playlistId: -1
     property bool doneFetching: dataEntry.doneFetching
 
-    property bool  loading: dataEntry.isLoading
+
+
 
     signal jdownkeyPressed()
     signal jupkeyPressed()
     signal jreturnkeyPressed()
+    signal loadingChanged(bool loading)
 
     //    property string trackName:dataEntry.trackName
     //    property string albumName: dataEntry.albumName
@@ -26,9 +29,19 @@ id:root
         onCountChanged: (count)=>{
                             // console.debug("Hey "+count)
                             //count=0
-                           // root.loading=false
+
+                            if(count>0){
+
+                            }
+
+
 
                         }
+        onIsLoadingChanged:  {
+            loadingChanged(dataEntry.isLoading)
+
+
+        }
 
 
         onDoneFetchingChanged: {
@@ -38,25 +51,7 @@ id:root
     }
 
 
-    function loadMoreTracks(){
 
-        if(!root.loading){
-
-            //this reduces the possibility of loading data twice concurrently
-          //  root.loading=true
-            dataEntry.loadMoreTracks()
-        }else{
-            console.debug("Busy")
-        }
-
-
-    }
-
-
-    Component.onCompleted: {
-        loadMoreTracks()
-
-    }
 
     Connections{
         id:conn
@@ -78,7 +73,36 @@ id:root
 
         }
 
+        onNavigateToPlaylistPage:function(title,id){
+            playlistId=id
+
+
+        }
+
 
     }
+
+
+    function reloadTracks(){
+
+        dataEntry.clearPlaylist()
+        loadMoreTracks()
+    }
+
+    function loadMoreTracks(){
+
+        if(!dataEntry.isLoading){
+            //this reduces the possibility of loading data twice concurrently
+
+            dataEntry.loadPlaylistTracks(playlistId)
+
+        }else{
+            console.debug("Busy")
+        }
+
+
+    }
+
+
 
 }

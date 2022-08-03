@@ -11,13 +11,15 @@ Rectangle{
     color: Theme.backgroundColor
 
     Rectangle{
-        anchors.fill: parent
+        anchors.fill: homePlaylistRect
         anchors.margins: dp(5)
         radius: dp(5)
         clip: true
         color:Theme.secondaryBackgroundColor
 
             AppText{
+
+
                 anchors.centerIn: parent
                 anchors.margins: dp(5)
                 width: homePlaylistRect.width
@@ -25,13 +27,15 @@ Rectangle{
                 color: "orange"
                 horizontalAlignment: Text.Center
                 font.bold: true
+                font.pixelSize:  sp(14)
 
             }
 
     }
 
     RippleMouseArea{
-        anchors.fill: parent
+       width: homePlaylistRect.width
+       height: homePlaylistRect.height
         onClicked: {
          homePlaylistRect.clicked()
         }

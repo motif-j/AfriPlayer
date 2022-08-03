@@ -6,6 +6,7 @@ import "../logics"
 
 Page {
 
+    property bool isEmpty: tracksModel.count==0
 
     title: "All Tracks"
     useSafeArea: false
@@ -45,7 +46,18 @@ Page {
         height: rootPage.height
         model: tracksModel.model
 
-        emptyText.text: "No Tracks found"
+        emptyText.text:{
+            if(isEmptyList){
+                if(!isLoading){
+                    return "No Tracks found"
+                }else{
+                    return ""
+                }
+
+
+            }else{
+            }
+        }
 
         spacing: dp(5)
         currentIndex: -1
@@ -54,7 +66,7 @@ Page {
 
         footer: VisibilityRefreshHandler {
             canRefresh:tracksModel.count>0? !tracksModel.doneFetching:false
-            onRefresh: loadNewTracks.start()
+            onRefresh:  tracksModel.loadMoreTracks()
         }
         delegate:   MainTracksUi{
             id:trackUi
@@ -83,17 +95,7 @@ Page {
 
     }
 
-    Timer {
 
-        id: loadNewTracks
-        interval: 2000
-        onTriggered: {
-            console.log("Call fetch here")
-            tracksModel.loadMoreTracks()
-            // tracksDataModel.cpu()
-            // logic.addTweet("Lorem Ipsum.")
-        }
-    }
 
     FloatingActionButton{
         icon: IconType.refresh
@@ -104,6 +106,15 @@ Page {
         }
     }
 
+    AppActivityIndicator{
+        id:indicator
+        anchors.centerIn: parent
+        color:Theme.tintLightColor
+        visible:tracksModel.loading && tracksModel.count==0
+        iconSize: dp(40)
+
+
+    }
     function handleListViewIndexUp(){
         const  currentIndex=tracksListView.currentIndex
         let size=tracksModel.count

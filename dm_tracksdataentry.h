@@ -11,9 +11,10 @@
 #include <QDebug>
 #include <QVariantMap>
 #include "jrole.h"
-#include "jw_tracksworker.h"
+#include "jmusiccontroller.h"
 
 
+extern QString formatTrackTime(QTime);
 
 class TracksDataEntry : public QAbstractListModel
 {
@@ -21,33 +22,24 @@ class TracksDataEntry : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(int count READ getCount WRITE setCount RESET resetCount NOTIFY countChanged)
     Q_PROPERTY(bool doneFetching READ getDoneFetching WRITE setDoneFetching NOTIFY doneFetchingChanged)
-
-
-    QThread databaseThread;
+    Q_PROPERTY(bool isLoading READ getIsLoading WRITE setIsLoading NOTIFY isLoadingChanged)
 
 public:
     ~TracksDataEntry(){
 
-        databaseThread.quit();
-        databaseThread.wait();
     }
 
     explicit TracksDataEntry(QObject *parent = nullptr){
         Q_UNUSED(parent);
 
-        JTracksWorker *dbWorker=new JTracksWorker;
-
-        dbWorker->moveToThread(&databaseThread);
-
-        connect(&databaseThread,&QThread::finished,dbWorker,&QObject::deleteLater);
-        connect(dbWorker,&JTracksWorker::tracksFetched,this,&TracksDataEntry::handleFetchedTracks);
-        connect(this,&TracksDataEntry::fetchTracks,dbWorker,&JTracksWorker::fetchTracks);
-
-        databaseThread.setObjectName("Database Thread");
 
 
-        databaseThread.start();
+        //  connect(&databaseThread,&QThread::finished,dbWorker,&QObject::deleteLater);
+        connect(&mController,&JMusicController::tracksLoaded,this,&TracksDataEntry::handleFetchedTracks);
+        connect(this,&TracksDataEntry::fetchTracks,&mController,&JMusicController::loadTracks);
 
+        connect(this,&TracksDataEntry::fetchPlaylistTracks,&mController,&JMusicController::loadPlaylistTrack);
+        // connect(&mController,&JMusicController::playlistTracksFetched,this,&TracksDataEntry::handleFetchedTracks);
 
 
     }
@@ -68,26 +60,45 @@ public:
 public slots:
 
     void loadMoreTracks();
+    void loadPlaylistTracks(int playlistId);
+    void clearPlaylist();
+
 
 
     //class slots exposed to other classes
 public slots:
     void handleFetchedTracks(QList<JTrack> *tracks);
 
+
+    //QML signals
 signals:
     void countChanged(int count);
 
     void doneFetchingChanged();
 
+
+
+    //Controller Signals
+signals:
+
     void fetchTracks(int lastId,int limit);
 
+    void fetchPlaylistTracks(int playlistId);
 
+
+    //QML
+    void isLoadingChanged();
 
 private:
+    int count=0;
+    bool isLoading=false;
+
+private:
+    JMusicController &mController=JMusicController::getInstance();
+
     bool doneFetching=false;
 
     QList<JTrack> m_data;
-    int count=0;
     const int limit=20;
 
     JRole &jroles=JRole::getInstance();
@@ -98,13 +109,18 @@ private:
 private:
     void loadTracks();
 
+
     // QAbstractItemModel interface
+
+
 
 
 public:
     virtual QHash<int, QByteArray> roleNames() const override;
     bool getDoneFetching() const;
     void setDoneFetching(bool newDoneFetching);
+    bool getIsLoading() const;
+    void setIsLoading(bool newIsLoading);
 };
 
 #endif // TRACKSDATAENTRY_H

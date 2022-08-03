@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.3
 import com.afriktek.qplayer 1.0
 import "../components"
 import "../ui"
+import "../models"
 
 
 
@@ -12,6 +13,15 @@ Rectangle{
     id:root
     color:Theme.secondaryBackgroundColor
 
+
+    RightMusicInfoModel{
+        id:_rightMusicModel
+        dispatcher: jmusicLogic
+
+        onTrackClicked: function(trackId){
+
+        }
+    }
 
 
     AppFlickable{
@@ -33,7 +43,7 @@ Rectangle{
             AppText {
                 id: name
                 text: qsTr("Now Playing")
-                fontSize: sp(20)
+                fontSize: 16
                 font.bold: true
                 padding: dp(5)
                 Layout.alignment: Qt.AlignHCenter
@@ -42,10 +52,10 @@ Rectangle{
             }
 
             RoundedImage{
-                Layout.preferredWidth:  dp(150)
+                Layout.preferredWidth:  dp(120)
                 Layout.alignment: Qt.AlignHCenter
-                Layout.preferredHeight:  dp(150)
-                Layout.maximumHeight: dp(150)
+                Layout.preferredHeight:  dp(120)
+                Layout.maximumHeight: dp(120)
                 fillMode: Image.Stretch
                 source:"qrc:/assets/qt.png"
                 radius: dp(10)
@@ -64,8 +74,17 @@ Rectangle{
                 AppText {
 
                     id:trackText
-                    text: qsTr("Song title ")
-                    fontSize: sp(16)
+                    text: {
+                        let trackName=jmusicModel.activeTrack["trackName"]
+
+                        if(isUndefined(trackName)){
+                            return qsTr("Unknow Track")
+                        }
+                        return trackName
+                    }
+                    horizontalAlignment: Text.Center
+
+                    fontSize: 14
                     font.bold: true
                     topPadding: dp(10)
                     //  anchors.centerIn: parent
@@ -120,7 +139,9 @@ Rectangle{
                         if(trackW>=contW){
                             trackAnimator.start()
                         }else{
-                            seqTrackAnimator.start()
+                            trackText.width=contW
+
+                            //seqTrackAnimator.start()
                         }
                     }
                 }
@@ -129,8 +150,17 @@ Rectangle{
 
             AppText {
 
-                text: qsTr("Artist")
-                fontSize: sp(14)
+                text: {
+                    let artistName=jmusicModel.activeTrack["artistName"]
+                    if(isUndefined(artistName)){
+                        return qsTr("Unknown Artist")
+                    }
+
+                    return artistName
+
+                }
+
+                fontSize: 12
                 color: Theme.secondaryTextColor
 
                 Layout.maximumWidth: dp(180)
@@ -148,10 +178,19 @@ Rectangle{
             }
             AppText {
                 id:timerText
-                text: qsTr("13 : 05 : 29")
-                fontSize: sp(20)
+                text:{
+
+                    let duration=jmusicModel.activeTrack["duration"]
+
+                    if(isUndefined(duration)){
+                        return "00:00:00"
+                    }
+                    return duration
+                }
+
+                fontSize: 16
                 font.family:  Constants.lcdFont.name
-                font.letterSpacing: dp(3)
+                font.letterSpacing: dp(5)
                 antialiasing: true
 
                 color: Theme.secondaryTextColor
@@ -191,7 +230,7 @@ Rectangle{
             AppText {
 
                 text: qsTr("Playing Queue")
-                fontSize: sp(18)
+                fontSize:16
                 font.bold: true
                 padding: dp(5)
                 Layout.alignment: Qt.AlignHCenter
@@ -207,7 +246,8 @@ Rectangle{
                 Layout.alignment: Qt.AlignHCenter
                 Layout.rightMargin: dp(10)
                 Layout.leftMargin: dp(10)
-                model:5
+                interactive: false
+                emptyText.text: "No tracks in que"
 
                 delegate:Item {
                     id: queueItem
@@ -216,6 +256,10 @@ Rectangle{
                     PlayingQueue{
                         width: parent.width
                         height: parent.height
+                        onClicked: {
+                            queueList.currentIndex=index
+                        }
+
                     }
                 }
 
@@ -239,5 +283,15 @@ Rectangle{
 
 
     }
+
+
+    function isUndefined(input){
+
+        if(input===undefined){
+            return true
+        }
+        return false
+    }
+
 
 }

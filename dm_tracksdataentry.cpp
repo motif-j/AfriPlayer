@@ -30,13 +30,9 @@ QVariant TracksDataEntry::data(const QModelIndex &index, int role) const
 
     delete time;
 
-    QString timeFormat;
 
-    if(nT.hour()==0){
-        timeFormat="mm:ss ";
-    }else{
-        timeFormat="hh:mm:ss";
-    }
+
+    QString formatedTime=formatTrackTime(nT);
 
     //  QVariant value=QVariant::fromValue<JTrack>(track);
 
@@ -61,7 +57,7 @@ QVariant TracksDataEntry::data(const QModelIndex &index, int role) const
 
     case JRole::ROLE_DURATION:
 
-        return nT.toString(timeFormat);
+        return formatedTime;
 
     case JRole::ROLE_FILEURL:
         return track.fileUrl;
@@ -75,9 +71,47 @@ QVariant TracksDataEntry::data(const QModelIndex &index, int role) const
 
 void TracksDataEntry::loadMoreTracks()
 {
-    qDebug("Load more tracks");
+
 
     loadTracks();
+}
+
+void TracksDataEntry::loadPlaylistTracks(int playlistId)
+{
+
+
+
+    setIsLoading(true);
+
+    //0=Rnd mix 1, 1=Rand mix 2, 2=Rnd mix 3
+    /*
+     *Before we call this function clear the list first to avoid
+     *append.
+     *This function should at all cost only return unique data
+     */
+
+
+   // clearPlaylist();
+    emit fetchPlaylistTracks(playlistId);
+
+
+
+}
+
+void TracksDataEntry::clearPlaylist()
+{
+    setIsLoading(true);
+    if(count>0){
+        //here the data list is not empty
+
+
+        emit beginRemoveRows(QModelIndex(),0,m_data.count()-1);
+        m_data.clear();
+        emit endRemoveRows();
+        setCount(m_data.count());
+
+    }
+    setIsLoading(false);
 }
 
 
@@ -86,7 +120,7 @@ void TracksDataEntry::handleFetchedTracks(QList<JTrack> *tracks)
 {
 
     if(tracks->count()>0){
-        qDebug("list >0");
+
 
         int i=count;
         for(auto track:*tracks){
@@ -98,11 +132,30 @@ void TracksDataEntry::handleFetchedTracks(QList<JTrack> *tracks)
         }
 
     }else{
-        qDebug("Done refreshing");
+
         setDoneFetching(true);
     }
+    setIsLoading(false);
     setCount(m_data.count());
+
+
+
 }
+
+bool TracksDataEntry::getIsLoading() const
+{
+    return isLoading;
+}
+
+void TracksDataEntry::setIsLoading(bool newIsLoading)
+{
+    if (isLoading == newIsLoading)
+        return;
+    isLoading = newIsLoading;
+    emit isLoadingChanged();
+}
+
+
 
 bool TracksDataEntry::getDoneFetching() const
 {
@@ -119,19 +172,21 @@ void TracksDataEntry::setDoneFetching(bool newDoneFetching)
 
 void TracksDataEntry::loadTracks()
 {
-    qDebug("Load tracks");
+  setIsLoading(true);
+
     int lastId=0;
     if(count>0){
-        qDebug()<<"count = "<<count;
+
 
         auto lastElement=m_data.value(count-1);
         lastId=lastElement.trackId;
-        qDebug()<<"Id "<<lastId;
+
 
     }
 
     emit this->fetchTracks(lastId,limit);
 }
+
 
 
 QHash<int, QByteArray> TracksDataEntry::roleNames() const

@@ -2,6 +2,7 @@ import Felgo 3.0
 import QtQuick 2.0
 import "views"
 import com.afriktek.qplayer 1.0
+
 import "components"
 import "./utilities"
 import "./logics"
@@ -53,6 +54,7 @@ App {
     // }
 
 
+
     ColorHelper{
         id:colorHelper
     }
@@ -70,6 +72,10 @@ App {
         dispatcher:jmusicLogic
     }
 
+    AppModel{
+        id:jappmodel
+        dispatcher: appLogic
+    }
 
     //all key events be handled globally
     MainView{

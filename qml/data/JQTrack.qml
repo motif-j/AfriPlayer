@@ -1,6 +1,8 @@
+pragma Singleton
 import QtQuick 2.0
 
 QtObject {
-    property string  trackName: {""}
+    property int  activeTrackId: {0}
+
 
 }

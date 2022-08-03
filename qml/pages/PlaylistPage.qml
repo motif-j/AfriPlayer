@@ -2,11 +2,19 @@ import QtQuick 2.0
 import Felgo 3.0
 import com.afriktek.qplayer 1.0
 import QtQuick.Layouts 1.3
+
+
 import "../ui"
+import "../models"
 
 Page {
 
-    property string playlistTitle: "Playlist X"
+    property string playlistTitle: ""
+    property int  playlistId: ({})
+    property bool isLoading: true
+    property bool isEmptyList: false
+
+
     title:playlistTitle
 
 
@@ -14,12 +22,30 @@ Page {
     id:rootPage
 
 
+    PlaylistPageDataModel{
+        dispatcher: appLogic
+        id:dataModel
+        playlistId: playlistId
 
-    Item {
-        focus: true
-        Keys.onPressed: {
-            console.debug("pressed")
+        onLoadingChanged: function(loading){
+            isEmptyList=dataModel.count==0
+            if(loading){
+                indicator.visible=true
+            }else{
+                indicator.visible=false
+            }
+
+            isLoading=loading
         }
+
+        onJdownkeyPressed: {
+            handleListViewIndexUp()
+        }
+
+        onJupkeyPressed: {
+            handleListViewIndexDown()
+        }
+
     }
 
     AppListView{
@@ -28,8 +54,20 @@ Page {
 
         anchors.fill: parent
         anchors.margins: dp(5)
-        model: 20
+        model: dataModel.model
+        emptyText.text: {
+            if(isEmptyList){
+                if(!isLoading){
+                     return "No Tracks found"
+                }else{
+                    return ""
+                }
 
+
+            }else{
+                return ""
+            }
+        }
 
         spacing: dp(5)
         currentIndex: -1
@@ -43,19 +81,18 @@ Page {
             color: "#00000000"
             MainTracksUi{
                 anchors.fill:delRect
-
-            }
-            RippleMouseArea{
-                anchors.fill:delRect
+                trackName: model.trackName
+                albumName: model.albumName
+                duration: model.duration
+                artistName: model.artistName
+                trackId: model.trackId
                 onClicked: {
-
                     tracksListView.currentIndex=currentIndex
+                    jmusicLogic.trackClicked(trackId)
                 }
-                onDoubleClicked: {
-                    //playing track
 
-                }
             }
+
         }
         highlight:Rectangle{
             color: Theme.secondaryBackgroundColor
@@ -63,16 +100,77 @@ Page {
 
         }
 
-
-
-
     }
 
-
-    FloatingActionButton{
-        icon: IconType.play
-        visible: true
+    AppButton{
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.bottomMargin: Theme.navigationBar.height+dp(10)
+        anchors.rightMargin: dp(5)
+        flat:false
+        radius: dp(5)
+        text: "Refresh"
+        iconLeft: IconType.refresh
+        textColor: Theme.textColor
         backgroundColor: Theme.secondaryBackgroundColor
+        onClicked: {
+
+            isLoading=true
+            dataModel.reloadTracks()
+        }
     }
 
+    AppActivityIndicator{
+        id:indicator
+        anchors.centerIn: parent
+        color:Theme.tintLightColor
+        visible:isLoading
+        iconSize: dp(40)
+
+
+    }
+
+
+    //    FloatingActionButton{
+    //        icon: IconType.play
+    //        visible: true
+    //        backgroundColor: Theme.secondaryBackgroundColor
+    //    }
+
+
+
+    Component.onCompleted: {
+        appLogic.navigateToPlaylistPage(playlistTitle,playlistId)
+
+        dataModel.loadMoreTracks()
+    }
+
+    function handleListViewIndexUp(){
+        const  currentIndex=tracksListView.currentIndex
+        let size=dataModel.count
+
+        let lastIndex=size-1
+
+        let newIndex=currentIndex+1
+
+        if(newIndex<=lastIndex){
+            tracksListView.currentIndex=newIndex
+
+        }else{
+
+            tracksListView.currentIndex=currentIndex
+        }
+    }
+    function handleListViewIndexDown(){
+        const  currentIndex=tracksListView.currentIndex
+
+        let newIndex=currentIndex-1
+
+        if(newIndex>=0){
+            tracksListView.currentIndex=newIndex
+
+        }else{
+            tracksListView.currentIndex=currentIndex
+        }
+    }
 }

@@ -27,6 +27,25 @@ struct JTrack{
     QString albumName;
     QString artistName;
 
+    bool operator ==(JTrack a){
+
+        return a.trackId==this->trackId;
+    }
+    void x(){
+
+    }
+
+};
+
+struct JPlaylist{
+    int playlistId;
+    QString playlistTitle;
+    QString colors;
+
+    bool operator ==(JPlaylist other){
+        return other.playlistId==this->playlistId;
+    }
+
 };
 
 #endif // JMODELS_H

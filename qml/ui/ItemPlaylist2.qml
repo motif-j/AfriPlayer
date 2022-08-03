@@ -5,6 +5,8 @@ import Felgo 3.0
 Rectangle{
     property color topColor: Qt.rgba(Math.random(0,255),Math.random(0,255),Math.random(0,255),1)
     property string title:{""}
+    property int playlistId: 0
+    id:root
 
     signal playlistClicked(plTitle:string)
 
@@ -31,7 +33,7 @@ Rectangle{
         AppText{
             text: title
             anchors.centerIn: parent
-            fontSize: sp(22)
+            font.pixelSize: sp(18)
             font.bold: true
             color: colorHelper.isLight(topColor)?"black":Theme.textColor
 
@@ -40,7 +42,8 @@ Rectangle{
     }
 
     RippleMouseArea{
-        anchors.fill: parent
+        width: root.width
+        height:root.height
         onClicked: {
            playlistClicked(title)
         }

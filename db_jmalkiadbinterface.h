@@ -10,7 +10,8 @@
 #include <QDebug>
 #include <QVariant>
 #include <QThread>
-#include "jdbworker.h"
+#include <QRandomGenerator>
+
 
 
 //  Q_DECLARE_METATYPE(JTrack);
@@ -31,6 +32,11 @@ public:
     //functions
 public:
     QList<JTrack> *getTracks(const int lastId,const int limit);
+    JTrack *getTrack(int trackId);
+    QList<JPlaylist> *fetchPlaylistsFromRepository(int limit);
+
+    QList<JTrack> *randomizedPlaylist();
+
     void massInsert();
 
 
@@ -38,16 +44,10 @@ public:
 
 
 private:
-
-
     JMalkiaDbInterface(QObject *parent = nullptr){
         Q_UNUSED(parent);
 
         this->intializeDatabase();
-
-
-
-
     }
 
     //properties
@@ -56,9 +56,6 @@ private:
     const QString DRIVER_NAME=QString("QSQLITE");
 
     QSqlDatabase mDb;
-
-
-
 
 
     //functions

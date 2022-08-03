@@ -1,8 +1,9 @@
 import QtQuick 2.9
 import QtQuick.Layouts 1.3
 import Felgo 3.0
-
+import QtGraphicalEffects 1.15
 import com.afriktek.qplayer 1.0
+
 
 
 
@@ -16,6 +17,9 @@ Rectangle{
     property string albumName: ""
     property string duration: "13 : 12"
     property int  trackId: 0
+    property color thumbnailColor: Qt.rgba(Math.random(255),Math.random(255),Math.random(255),1)
+      property color thumbnailColor2: Qt.rgba(Math.random(255),Math.random(255),Math.random(255),1)
+    property color thumbnailColor3: Qt.rgba(Math.random(155),Math.random(200),Math.random(55),1)
     id:rootRect
 
     signal clicked()
@@ -31,16 +35,40 @@ Rectangle{
         Row{
             Layout.preferredHeight: dp(65)
             Layout.margins: dp(5)
-            RoundedImage{
-                property int thumbnailSize:dp(60)
-                height: thumbnailSize
-                width: thumbnailSize
-                source: "qrc:/assets/qt.png"
-                fillMode: Image.Stretch
-                Layout.alignment: Qt.AlignHCenter
+
+            Rectangle{
+
+                height: dp(60)
+                width: dp(60)
+                radius: dp(5)
+                gradient:Gradient{
 
 
+                    GradientStop{
+                       position: 0.0
+                       color: thumbnailColor
+                    }
+
+                    GradientStop{
+                       position: 1.0
+                       color: thumbnailColor2
+                    }
+
+                }
+
+//                RoundedImage{
+//                    property int thumbnailSize:dp(60)
+//                    height: thumbnailSize
+//                    width: thumbnailSize
+//                    source: "qrc:/assets/qt.png"
+//                    fillMode: Image.Stretch
+//                    Layout.alignment: Qt.AlignHCenter
+
+
+//                }
             }
+
+
             Rectangle{
                 width: dp(5)
             }
@@ -55,7 +83,7 @@ Rectangle{
                 AppText{
                     text:trackName
                     font.bold: true
-                    fontSize: sp(15)
+                    fontSize: 14
                     topPadding: dp(5)
                     maximumLineCount: 1
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -65,7 +93,7 @@ Rectangle{
                 AppText{
                     text:artistName
                     bottomPadding: dp(5)
-                    fontSize: sp(13)
+                    fontSize: 12
                     color: Theme.secondaryTextColor
                     maximumLineCount: 1
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -80,7 +108,7 @@ Rectangle{
         AppText{
             text:albumName
             visible: root.width>410
-            fontSize: sp(15)
+            fontSize: 14
 
             Layout.alignment: Qt.AlignHCenter
             Layout.maximumWidth: dp(80)
@@ -94,9 +122,10 @@ Rectangle{
         AppText{
             text:duration
 
-            fontSize: sp(18)
+            fontSize: 16
             font.family: Constants.lcdFont.name
             font.letterSpacing: dp(2)
+            font.bold: true
 
 
             Layout.alignment: Qt.AlignHCenter

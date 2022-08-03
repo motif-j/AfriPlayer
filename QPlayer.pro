@@ -45,7 +45,9 @@ DEPLOYMENTFOLDERS += assetsFolder
 SOURCES += main.cpp \
     db_jmalkiadbinterface.cpp \
     dm_tracksdataentry.cpp \
-    mythread.cpp \
+    jmusiccontroller.cpp \
+    jplaylistcontroller.cpp \
+    jplaylistdataentry.cpp \
     qmd_qtrack.cpp
 
 
@@ -68,6 +70,7 @@ macx {
 }
 
 DISTFILES += \
+    android/src/com/afriktek/qplayer/TestClass.java \
     qml/components/PlayerBar2.qml \
     qml/components/PlayerBarController.qml \
     qml/components/TracksEmptyLIstView.qml \
@@ -75,9 +78,14 @@ DISTFILES += \
     qml/libraries/Constants.qml \
     qml/libraries/JColors.qml \
     qml/libraries/JIconType.qml \
+    qml/libraries/JQMusicController.qml \
     qml/logics/AppLogics.qml \
     qml/logics/JMusicLogic.qml \
+    qml/models/AppModel.qml \
     qml/models/JMusicModel.qml \
+    qml/models/MainPageDataModel.qml \
+    qml/models/PlaylistPageDataModel.qml \
+    qml/models/RightMusicInfoModel.qml \
     qml/pages/FavoriteTracksPage.qml \
     qml/pages/MainPage.qml \
     qml/pages/PlaylistPage.qml \
@@ -104,9 +112,11 @@ DISTFILES += \
 HEADERS += \
     db_jmalkiadbinterface.h \
     dm_tracksdataentry.h \
-    jdbworker.h \
     jmodels.h \
+    jmusiccontroller.h \
+    jmusiccontrollerinterface.h \
+    jmusiccontrollerworker.h \
+    jplaylistcontroller.h \
+    jplaylistdataentry.h \
     jrole.h \
-    jw_tracksworker.h \
-    mythread.h \
     qmd_qtrack.h
