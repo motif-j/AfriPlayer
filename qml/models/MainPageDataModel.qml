@@ -4,16 +4,23 @@ import com.afriktek.qplayer 1.0
 Item {
 
     property var playlistModel: jplaylistModel
+    property int  count: dataEntry.count
+    property bool  recentTracksEmpty: count==0
+    property bool isLoading: dataEntry.isLoading
+
+
+    property var tracksModel: dataEntry
 
     JPlaylistModel{
         id:jplaylistModel
     }
 
 
-
-
-    Component.onCompleted: {
-        jplaylistModel.loadHomePlaylists()
+    TracksDataEntry{
+        id:dataEntry
     }
+
+
+
 
 }

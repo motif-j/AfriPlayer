@@ -9,8 +9,7 @@ GridLayout{
 
     columns: 5
 
-
-
+    signal playClicked();
 
     IconButton{
         icon: IconType.hearto
@@ -30,6 +29,11 @@ GridLayout{
         Layout.fillWidth: true
         size: dp(30)
         color: JColors.purple100
+        onClicked: {
+            playClicked();
+        }
+
+
     }
     IconButton{
         Layout.fillWidth: true

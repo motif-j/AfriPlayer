@@ -4,6 +4,7 @@ Item {
 
     signal trackClicked(int trackId)
     signal trackFetched(var trackMap)
+    signal trackPlayed(int trackId)
 
 
 }

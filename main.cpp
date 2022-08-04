@@ -6,6 +6,7 @@
 #include "jplaylistdataentry.h"
 #include "dm_tracksdataentry.h"
 #include "db_jmalkiadbinterface.h"
+
 #include "jmusiccontrollerinterface.h"
 #include <QString>
 
@@ -52,7 +53,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<TracksDataEntry>("com.afriktek.qplayer",1,0,"TracksDataEntry");
     qmlRegisterType<JMusicControllerInterface>("com.afriktek.qplayer",1,0,"JMusicController");
-      qmlRegisterType<JPlaylistDataEntry>("com.afriktek.qplayer",1,0,"JPlaylistModel");
+    qmlRegisterType<JPlaylistDataEntry>("com.afriktek.qplayer",1,0,"JPlaylistModel");
 
 
     qRegisterMetaType<JTrack>("JTrack");

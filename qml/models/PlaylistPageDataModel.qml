@@ -8,6 +8,7 @@ Item {
     property var  model: dataEntry
     property int  count: dataEntry.count
     property int playlistId: -1
+    property int activeIndex:dataEntry.activeIndex
     property bool doneFetching: dataEntry.doneFetching
 
 
@@ -85,16 +86,20 @@ Item {
 
     function reloadTracks(){
 
-        dataEntry.clearPlaylist()
-        loadMoreTracks()
+        //  dataEntry.clearPlaylist()
+        loadMoreTracks(1)
     }
 
-    function loadMoreTracks(){
+    function clearPlaylist(){
+        dataEntry.clearPlaylist()
+    }
+
+    function loadMoreTracks(refresh=0){
 
         if(!dataEntry.isLoading){
             //this reduces the possibility of loading data twice concurrently
 
-            dataEntry.loadPlaylistTracks(playlistId)
+            dataEntry.loadPlaylistTracks(playlistId,refresh)
 
         }else{
             console.debug("Busy")

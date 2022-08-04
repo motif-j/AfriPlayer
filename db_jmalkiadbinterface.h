@@ -28,6 +28,15 @@ public:
         return instance;
 
     }
+    enum PLAYLISTIDS{
+        ID_FAV=1,
+        ID_MOSTPLAYED=2,
+        ID_LEASTPLAYED=3,
+        ID_NEWEST=4,
+        ID_RAND=5,
+        ID_SONGSYOUMAYKNOW=6,
+        ID_DAILYMIX=7
+    };
 
     //functions
 public:
@@ -36,6 +45,14 @@ public:
     QList<JPlaylist> *fetchPlaylistsFromRepository(int limit);
 
     QList<JTrack> *randomizedPlaylist();
+    QList<JTrack> *fetchPlaylistTracksFromRepo(int playlistId);
+    QList<JTrack> *fetchRecentlyPlayedTracks();
+
+    int generateLimit(int maxTrackId);
+    void addTrackToPlaylist(JTrack track,int playlistId);
+    void clearPlaylist(int playlistId);
+    void addTrackToRecentlyPlayed(int trackId);
+
 
     void massInsert();
 
@@ -61,6 +78,7 @@ private:
     //functions
 private:
     void intializeDatabase();
+
 
 signals:
 

@@ -7,6 +7,13 @@ import Felgo 3.0
 Rectangle{
     color:"#00000000"
     id:root
+    property string trackName: ""
+    property string artistName: ""
+    property string albumName: ""
+    property int  trackId: 0
+    property color thumbnailColor: Qt.rgba(Math.random(255),Math.random(255),Math.random(255),1)
+    property color thumbnailColor2: Qt.rgba(Math.random(255),Math.random(255),Math.random(255),1)
+    property color thumbnailColor3: Qt.rgba(Math.random(155),Math.random(200),Math.random(55),1)
 
 
     RowLayout{
@@ -16,18 +23,21 @@ Rectangle{
         height: dp(70)
 
 
-        RoundedImage{
+       Rectangle{
             property int thumbnailSize:dp(50)
             Layout.fillWidth: true
             Layout.preferredWidth: thumbnailSize
             Layout.preferredHeight: thumbnailSize
             Layout.maximumHeight: thumbnailSize
             Layout.maximumWidth: thumbnailSize
-            source: "qrc:/assets/felgo-logo.png"
-            fillMode: Image.Stretch
+           radius: dp(5)
             Layout.alignment: Qt.AlignHCenter
             Layout.leftMargin: dp(5)
 
+           gradient: Gradient{
+               GradientStop{position: 0.0;color:thumbnailColor}
+                GradientStop{position: 1.0;color:thumbnailColor2}
+           }
 
         }
 
@@ -36,14 +46,14 @@ Rectangle{
             Layout.alignment: Qt.AlignHCenter
 
             AppText{
-                text:"Song Title"
+                text:trackName
                 font.bold: true
                 font.pixelSize:  sp(14)
                 topPadding: dp(5)
 
             }
             AppText{
-                text:"artist"
+                text:artistName
                 bottomPadding: dp(5)
                 font.pixelSize:  sp(12)
                 color: Theme.secondaryTextColor

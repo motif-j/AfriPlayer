@@ -12,6 +12,9 @@ public:
         Q_UNUSED(parent)
 
     }
+
+    int activeTrackId=0;
+
 public slots:
     void getTrack(const int trackId){
 
@@ -23,10 +26,23 @@ public slots:
 
     }
 
+    void getPlayingTrack(int trackId){
+        JTrack *tempTrack=db.getTrack(trackId);
+        emit playingTrackFetched(*tempTrack);
+    }
+
     void fetchTracksFromRepository(int lastId,int limit){
-        auto tracks=db.getTracks(lastId,limit);
+
+        int lim=db.generateLimit(activeTrackId);
+
+        if(lim<20){
+            lim=limit;
+        }
+
+        auto tracks=db.getTracks(lastId,lim);
 
         QThread::msleep(500);
+
 
         emit tracksFetchedFromRepository(tracks);
     }
@@ -39,35 +55,62 @@ public slots:
         emit homePlaylistFetchedFromRepository(playlists);
     }
 
-    void fetchPlaylistTracksFromRepo(int playlistId){
+    void fetchPlaylistTracksFromRepo(int playlistId,int refreshCode){
 
+
+        auto currentPlaylist=db.fetchPlaylistTracksFromRepo(playlistId);
         switch (playlistId) {
 
-        case 1:
-        case 3:
+        case JMalkiaDbInterface::ID_RAND:
+        case JMalkiaDbInterface::ID_SONGSYOUMAYKNOW:
         {
-            auto randPlaylist=db.randomizedPlaylist();
 
-            QThread::msleep(500);
+            if(currentPlaylist->isEmpty() || refreshCode==1){
 
-            emit tracksFetchedFromRepository(randPlaylist);
+                currentPlaylist->clear();
+                db.clearPlaylist(playlistId);
+                auto randPlaylist=db.randomizedPlaylist();
+
+                foreach(JTrack t,*randPlaylist){
+                    //add playlist to db
+                    db.addTrackToPlaylist(t,playlistId);
+                    currentPlaylist->append(t);
+                }
+                delete randPlaylist;
+            }
 
             break;
         }
-        default:
-            emit tracksFetchedFromRepository(new QList<JTrack>());
-            break;
 
         }
 
+        QThread::msleep(500);
+        emit playlistTracksFetchedFromRepo(currentPlaylist);
+
+    }
 
 
+    void fetchRecentlyPlayedTracks(){
+
+        auto tracks=db.fetchRecentlyPlayedTracks();
+
+
+        QThread::msleep(500);
+
+        qDebug()<<" Called "<<tracks->size();
+
+        emit recentlyPlayedTracksFetched(tracks);
     }
 
 signals:
     void trackFetched(JTrack track);
+    void playingTrackFetched(JTrack track);
     void tracksFetchedFromRepository(QList<JTrack>*);
+
+    void playlistTracksFetchedFromRepo(QList<JTrack>*);
     void homePlaylistFetchedFromRepository(QList<JPlaylist>*);
+    void recentlyPlayedTracksFetched(QList<JTrack>*);
+
 
 
 private:

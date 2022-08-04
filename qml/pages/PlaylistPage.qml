@@ -15,6 +15,7 @@ Page {
     property bool isEmptyList: false
 
 
+
     title:playlistTitle
 
 
@@ -47,61 +48,108 @@ Page {
         }
 
     }
+    ColumnLayout{
+        width:parent.width
+        height: parent.height
 
-    AppListView{
-        id:tracksListView
-        width: parent.width
+        RowLayout{
+            Layout.preferredWidth:   tracksListView.width
 
-        anchors.fill: parent
-        anchors.margins: dp(5)
-        model: dataModel.model
-        emptyText.text: {
-            if(isEmptyList){
-                if(!isLoading){
-                     return "No Tracks found"
+
+            AppButton{
+                Layout.margins: dp(2)
+                Layout.alignment: Qt.AlignHCenter
+                flat:false
+                radius: dp(5)
+                visible: dataModel.count>0
+                text: "Play all"
+                iconLeft: IconType.play
+                textColor: Theme.textColor
+                backgroundColor: Theme.secondaryBackgroundColor
+                onClicked: {
+
+
+
+                }
+            }
+            AppButton{
+                Layout.margins: dp(2)
+                Layout.alignment: Qt.AlignHCenter
+                flat:false
+                radius: dp(5)
+                visible: dataModel.count>0
+                text: "Shuffle all"
+                iconLeft: IconType.random
+                textColor: Theme.textColor
+                backgroundColor: Theme.secondaryBackgroundColor
+                onClicked: {
+
+
+
+                }
+            }
+        }
+
+        AppListView{
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            id:tracksListView
+            width: parent.width
+
+            // anchors.fill: parent
+            anchors.margins: dp(5)
+            model: dataModel.model
+
+
+            emptyText.text: {
+                if(isEmptyList){
+                    if(!isLoading){
+                        return "No Tracks found"
+                    }else{
+                        return ""
+                    }
+
+
                 }else{
                     return ""
                 }
-
-
-            }else{
-                return ""
             }
-        }
 
-        spacing: dp(5)
-        currentIndex: -1
-        desktopScrollEnabled: true
-        delegate: Rectangle{
-            property int  currentIndex : index
+            spacing: dp(5)
+            currentIndex: dataModel.activeIndex
+            desktopScrollEnabled: true
+            highlightMoveDuration: 1500
+            delegate: Rectangle{
+                property int  currentIndex : index
 
-            id:delRect
-            height: dp(70)
-            width: rootPage.width
-            color: "#00000000"
-            MainTracksUi{
-                anchors.fill:delRect
-                trackName: model.trackName
-                albumName: model.albumName
-                duration: model.duration
-                artistName: model.artistName
-                trackId: model.trackId
-                onClicked: {
-                    tracksListView.currentIndex=currentIndex
-                    jmusicLogic.trackClicked(trackId)
+                id:delRect
+                height: dp(70)
+                width: rootPage.width
+                color: "#00000000"
+                MainTracksUi{
+                    anchors.fill:delRect
+                    trackName: model.trackName
+                    albumName: model.albumName
+                    duration: model.duration
+                    artistName: model.artistName
+                    trackId: model.trackId
+                    onClicked: {
+
+                        jmusicLogic.trackClicked(trackId)
+                    }
+
                 }
 
             }
+            highlight:Rectangle{
+                color: Theme.secondaryBackgroundColor
+                radius: dp(5)
+
+            }
+
 
         }
-        highlight:Rectangle{
-            color: Theme.secondaryBackgroundColor
-            radius: dp(5)
-
-        }
-
     }
-
     AppButton{
         anchors.bottom: parent.bottom
         anchors.right: parent.right
@@ -116,7 +164,9 @@ Page {
         onClicked: {
 
             isLoading=true
+
             dataModel.reloadTracks()
+
         }
     }
 
@@ -146,31 +196,9 @@ Page {
     }
 
     function handleListViewIndexUp(){
-        const  currentIndex=tracksListView.currentIndex
-        let size=dataModel.count
-
-        let lastIndex=size-1
-
-        let newIndex=currentIndex+1
-
-        if(newIndex<=lastIndex){
-            tracksListView.currentIndex=newIndex
-
-        }else{
-
-            tracksListView.currentIndex=currentIndex
-        }
+        dataModel.model.incrementIndex()
     }
     function handleListViewIndexDown(){
-        const  currentIndex=tracksListView.currentIndex
-
-        let newIndex=currentIndex-1
-
-        if(newIndex>=0){
-            tracksListView.currentIndex=newIndex
-
-        }else{
-            tracksListView.currentIndex=currentIndex
-        }
+        dataModel.model.decrementIndex()
     }
 }

@@ -30,20 +30,36 @@ public:
         //connect directly to the signals of the main controller
         connect(&musicController,&JMusicController::trackFetched,this,&JMusicControllerInterface::trackFetchedFromRepo);
 
+        connect(&musicController,&JMusicController::playingTrackFetched,this,&JMusicControllerInterface::playingTrackFetched);
+
+        Q_PROPERTY(int activeTrackId READ getActiveTrackId WRITE setActiveTrackId NOTIFY activeTrackIdChanged)
     }
 
-     ~JMusicControllerInterface() {
+    ~JMusicControllerInterface() {
 
         qDebug()<<"DESTROYING INTERFACE";
     }
     //music controller slots
-public slots:
-   void  handleFetchedTrack(QVariantMap trackMap){
-
-       emit trackFetchedFromRepo(trackMap);
+    int getActiveTrackId() const{
+        return activeTrackId;
+    }
+    void setActiveTrackId(int newActiveTrackId){
+        if (activeTrackId == newActiveTrackId)
+            return;
+        activeTrackId = newActiveTrackId;
+        emit activeTrackIdChanged();
     }
 
-   //qml interface slots
+public slots:
+    void  handleFetchedTrack(QVariantMap trackMap){
+
+        emit trackFetchedFromRepo(trackMap);
+    }
+    void handleFetchedPlayingTrack(QVariantMap map){
+        emit playingTrackFetched(map);
+    }
+
+    //qml interface slots
 public slots:
 
     void getTrack(int trackId){
@@ -51,12 +67,33 @@ public slots:
 
     }
 
-//These signals directly communicate with the QML file
+    void getPlayingTrack(int trackId){
+
+        musicController.getPlayingTrack(trackId);
+    }
+
+    void trackClicked(int trackId){
+        setActiveTrackId(trackId);
+        musicController.setActiveTrackId(trackId);
+    }
+
+    void addTrackToRecentlyPlayed(int trackId){
+        musicController.addTrackToRecentsPlaylist(trackId);
+    }
+
+    //These signals directly communicate with the QML file
 signals:
     void trackFetchedFromRepo(QVariantMap trackMap);
+    void playingTrackFetched(QVariantMap trackMap);
+
+    void activeTrackIdChanged();
 
 private:
     JMusicController &musicController=JMusicController::getInstance();
+    int activeTrackId;
+
 
 };
+
+
 #endif // JMUSICCONTROLLERINTERFACE_H

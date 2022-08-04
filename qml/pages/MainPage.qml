@@ -30,7 +30,7 @@ Page{
     title: ""
     useSafeArea: false
     anchors.leftMargin: dp(5)
-    anchors.rightMargin: columnCount>1?dp(0):dp(5)
+    anchors.rightMargin: dp(5)
     //anchors.topMargin: dp(100)
 
     MainPageDataModel{
@@ -98,7 +98,7 @@ Page{
                     onPlaylistClicked:(plTitle)=>{
                                           // dynamicModel.add("blue")
 
-                                           appLogic.navigateToPlaylistPage(plTitle,playlistId)
+                                          appLogic.navigateToPlaylistPage(plTitle,playlistId)
 
                                           navigateUp(plTitle,playlistId)
 
@@ -136,8 +136,23 @@ Page{
 
                     id:recentList
                     interactive: false
-                    //model:5
-                    emptyText.text: "No tracks found"
+                    model:mainPageDm.tracksModel
+                    currentIndex: mainPageDm.tracksModel.activeIndex
+                    emptyText.text: {
+
+                        if(mainPageDm.recentTracksEmpty){
+                            if(!mainPageDm.isLoading){
+                                return "Your recent Tracks will appear here"
+                            }else{
+                                return ""
+                            }
+
+
+                        }else{
+                            return ""
+                        }
+                    }
+
                     clip: true
                     desktopScrollEnabled: true
                     header: Views.HomeHeader{
@@ -149,20 +164,25 @@ Page{
 
 
                     delegate: Rectangle{
-                        width: parent.width
+                        width: rect.width
                         height: dp(70)
                         color: "#00000000"
 
                         Views.HomeTracksView{
                             width:parent.width
+                            trackName: model.trackName
+                            artistName: model.artistName
+                            trackId: model.trackId
+
+
 
                         }
                         RippleMouseArea{
-                            width:parent.width
+                            width:rect.width
                             height: dp(70)
                             onClicked: {
-                                console.debug("Clicked" +index)
-                                recentList.currentIndex=index
+                                 jmusicLogic.trackClicked(trackId)
+
                             }
                         }
                     }
@@ -172,6 +192,16 @@ Page{
 
 
                     }
+
+                }
+
+                AppActivityIndicator{
+                    id:indicator
+                    anchors.centerIn: parent
+                    color:Theme.tintLightColor
+                    visible:mainPageDm.isLoading
+                    iconSize: dp(40)
+
 
                 }
             }
@@ -208,7 +238,10 @@ Page{
                         Layout.maximumHeight: dp(150)
 
                         onClicked:{
-                            navigateUp(title)
+                            appLogic.navigateToPlaylistPage(title,Constants.favoritesPlaylists)
+
+                            navigateUp(title,Constants.favoritesPlaylists)
+
 
                         }
                     }
@@ -220,7 +253,9 @@ Page{
                         Layout.maximumHeight: dp(150)
 
                         onClicked:{
-                            navigateUp(title)
+                            appLogic.navigateToPlaylistPage(title,Constants.mostPlayedPlaylists)
+
+                            navigateUp(title,Constants.mostPlayedPlaylists)
 
                         }
 
@@ -233,7 +268,9 @@ Page{
                         Layout.maximumHeight: dp(150)
 
                         onClicked:{
-                            navigateUp(title)
+                            appLogic.navigateToPlaylistPage(title,Constants.leastPlayedPlaylists)
+
+                            navigateUp(title,Constants.leastPlayedPlaylists)
 
                         }
                     }
@@ -245,7 +282,9 @@ Page{
                         Layout.maximumHeight: dp(150)
 
                         onClicked:{
-                            navigateUp(title)
+                            appLogic.navigateToPlaylistPage(title,Constants.newestAddedTracks)
+
+                            navigateUp(title,Constants.newestAddedTracks)
 
                         }
                     }
@@ -269,6 +308,12 @@ Page{
 
 
         }
+    }
+
+    Component.onCompleted: {
+        mainPageDm.playlistModel.loadHomePlaylists();
+        mainPageDm.tracksModel.loadRecentlyPlayedTracks();
+
     }
 }
 

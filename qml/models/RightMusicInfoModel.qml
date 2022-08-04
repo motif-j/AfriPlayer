@@ -11,10 +11,8 @@ Item {
     Connections{
         id:conn
 
-        onTrackClicked:function(trackId){
-            jmusicModel.getTrack(trackId)
 
-        }
+
     }
 
 }

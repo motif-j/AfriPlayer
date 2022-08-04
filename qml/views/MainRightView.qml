@@ -75,7 +75,7 @@ Rectangle{
 
                     id:trackText
                     text: {
-                        let trackName=jmusicModel.activeTrack["trackName"]
+                        let trackName=jmusicModel.playingTrack["trackName"]
 
                         if(isUndefined(trackName)){
                             return qsTr("Unknow Track")
@@ -130,7 +130,7 @@ Rectangle{
                     }
 
                     Component.onCompleted: {
-                        console.log(""+ trackContainer.width +" "+trackText.width)
+
 
                         let trackW=trackText.width
                         let contW=trackContainer.width
@@ -151,7 +151,7 @@ Rectangle{
             AppText {
 
                 text: {
-                    let artistName=jmusicModel.activeTrack["artistName"]
+                    let artistName=jmusicModel.playingTrack["artistName"]
                     if(isUndefined(artistName)){
                         return qsTr("Unknown Artist")
                     }
@@ -180,7 +180,7 @@ Rectangle{
                 id:timerText
                 text:{
 
-                    let duration=jmusicModel.activeTrack["duration"]
+                    let duration=jmusicModel.playingTrack["duration"]
 
                     if(isUndefined(duration)){
                         return "00:00:00"
@@ -207,6 +207,9 @@ Rectangle{
                 Layout.alignment: Qt.AlignHCenter
                 Layout.maximumHeight: dp(50)
                 Layout.preferredHeight: dp(50)
+                onPlayClicked: {
+                    jmusicLogic.trackPlayed(jmusicModel.activeTrackId)
+                }
 
             }
             PlayerBar2{

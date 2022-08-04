@@ -6,7 +6,7 @@ import "../logics"
 
 Page {
 
-    property bool isEmpty: tracksModel.count==0
+    property bool isEmptyList: tracksModel.count==0
 
     title: "All Tracks"
     useSafeArea: false
@@ -34,21 +34,25 @@ Page {
         onJreturnkeyPressed: {
 
         }
+        onIndexChanged:function(newIndex){
+           // tracksListView.currentIndex=newIndex
+        }
     }
 
 
 
     AppListView{
 
-
         id:tracksListView
         width: rootPage.width
         height: rootPage.height
         model: tracksModel.model
+        currentIndex: tracksModel.activeIndex
+        highlightMoveDuration: 500
 
         emptyText.text:{
             if(isEmptyList){
-                if(!isLoading){
+                if(!tracksModel.loading){
                     return "No Tracks found"
                 }else{
                     return ""
@@ -61,7 +65,7 @@ Page {
         }
 
         spacing: dp(5)
-        currentIndex: -1
+
         desktopScrollEnabled: true
 
 
@@ -70,6 +74,7 @@ Page {
             onRefresh:  tracksModel.loadMoreTracks()
         }
         delegate:   MainTracksUi{
+            width: tracksListView.width
             id:trackUi
             trackName: model.trackName
             albumName: model.albumName
@@ -77,12 +82,24 @@ Page {
             artistName: model.artistName
             trackId: model.trackId
 
+
             onClicked: {
                 jmusicLogic.trackClicked(trackId)
-
-                tracksListView.currentIndex=index
+                //if(trackId)
             }
 
+            //            Component.onCompleted: {
+            //             let  activeId= jmusicModel.activeTrack["trackId"]
+
+            //                if(activeId!==undefined){
+            //                    if(activeId===trackId){
+            //                        tracksListView.currentIndex=index
+            //                       //  console.debug(activeId)
+            //                    }
+
+
+            //                }
+            //            }
 
         }
 
@@ -117,33 +134,15 @@ Page {
 
     }
     function handleListViewIndexUp(){
-        const  currentIndex=tracksListView.currentIndex
-        let size=tracksModel.count
 
-        let lastIndex=size-1
-
-        let newIndex=currentIndex+1
-
-        if(newIndex<=lastIndex){
-            tracksListView.currentIndex=newIndex
-
-        }else{
-
-            tracksListView.currentIndex=currentIndex
-        }
+        tracksModel.model.incrementIndex()
     }
+
     function handleListViewIndexDown(){
-        const  currentIndex=tracksListView.currentIndex
-
-        let newIndex=currentIndex-1
-
-        if(newIndex>=0){
-            tracksListView.currentIndex=newIndex
-
-        }else{
-            tracksListView.currentIndex=currentIndex
-        }
+        tracksModel.model.decrementIndex()
     }
+
+
 
 
 }

@@ -72,16 +72,15 @@ QVariant TracksDataEntry::data(const QModelIndex &index, int role) const
 void TracksDataEntry::loadMoreTracks()
 {
 
-
+    playlistId=0;
     loadTracks();
 }
 
-void TracksDataEntry::loadPlaylistTracks(int playlistId)
+void TracksDataEntry::loadPlaylistTracks(int playlistId,int refreshCode)
 {
 
+    this->playlistId=playlistId;
 
-
-    setIsLoading(true);
 
     //0=Rnd mix 1, 1=Rand mix 2, 2=Rnd mix 3
     /*
@@ -90,16 +89,27 @@ void TracksDataEntry::loadPlaylistTracks(int playlistId)
      *This function should at all cost only return unique data
      */
 
+    clearPlaylist();
+    setIsLoading(true);
 
-   // clearPlaylist();
-    emit fetchPlaylistTracks(playlistId);
+    emit fetchPlaylistTracks(playlistId,refreshCode);
 
 
 
 }
 
+void TracksDataEntry::loadRecentlyPlayedTracks()
+{
+
+    playlistId=-1;
+    setIsLoading(true);
+    emit fetchRecentlyPlayedTracks();
+
+}
+
 void TracksDataEntry::clearPlaylist()
 {
+
     setIsLoading(true);
     if(count>0){
         //here the data list is not empty
@@ -108,10 +118,43 @@ void TracksDataEntry::clearPlaylist()
         emit beginRemoveRows(QModelIndex(),0,m_data.count()-1);
         m_data.clear();
         emit endRemoveRows();
-        setCount(m_data.count());
+
 
     }
+    setCount(0);
     setIsLoading(false);
+}
+
+void TracksDataEntry::addTrackToRecentlyPlayed(int trackId)
+{
+
+    mController.addTrackToRecentsPlaylist(trackId);
+    this->reloadRecentlyPlayedTracks();
+
+}
+
+void TracksDataEntry::incrementIndex()
+{
+    int newIndex=activeIndex+1;
+
+
+    if(newIndex>count-1){
+        newIndex=count-1;
+    }
+    setActiveIndex(newIndex);
+    setActiveTrackId(m_data.value(newIndex).trackId);
+}
+
+void TracksDataEntry::decrementIndex()
+{
+    int newIndex=activeIndex-1;
+
+
+    if(newIndex<0){
+        newIndex=0;
+    }
+    setActiveIndex(newIndex);
+    setActiveTrackId(m_data.value(newIndex).trackId);
 }
 
 
@@ -119,28 +162,98 @@ void TracksDataEntry::clearPlaylist()
 void TracksDataEntry::handleFetchedTracks(QList<JTrack> *tracks)
 {
 
-    if(tracks->count()>0){
 
+    if(playlistId==0){
 
-        int i=count;
-        for(auto track:*tracks){
-            emit beginInsertRows(QModelIndex(),i,i);
-            m_data.append(track);
-            emit   endInsertRows();
+        addData(tracks);
 
-            i=i+1;
+        if(this->activeTrackId!=mController.getActiveTrackId()){
+            handleActiveTrackIdChanged(mController.getActiveTrackId());
         }
 
-    }else{
-
-        setDoneFetching(true);
     }
-    setIsLoading(false);
-    setCount(m_data.count());
 
+}
+
+void TracksDataEntry::handleFetchedPlaylstTracks(QList<JTrack> *tracks)
+{
+    if(playlistId>0){
+
+        addData(tracks);
+    }
+
+    if(this->activeTrackId!=mController.getActiveTrackId()){
+        handleActiveTrackIdChanged(mController.getActiveTrackId());
+    }
+}
+
+void TracksDataEntry::handleActiveTrackIdChanged(int newId)
+{
+
+    setActiveTrackId(newId);
+
+    int index=0;
+    bool hasFound=false;
+
+    foreach(JTrack d, m_data){
+
+        if(d.trackId==newId){
+            hasFound=true;
+            setActiveIndex(index);
+
+            break;
+        }
+        index++;
+
+    }
+
+    if(!hasFound){
+        setActiveIndex(-1);
+    }
 
 
 }
+
+void TracksDataEntry::handleRecentlyFetchedTracks(QList<JTrack> *tracks)
+{
+
+
+    if(playlistId==-1){
+
+        qDebug()<<"HHHAHAHAHA";
+        clearPlaylist();
+        addData(tracks);
+    }
+
+}
+
+int TracksDataEntry::getActiveIndex() const
+{
+    return activeIndex;
+}
+
+void TracksDataEntry::setActiveIndex(int newActiveIndex)
+{
+    if (activeIndex == newActiveIndex)
+        return;
+    activeIndex = newActiveIndex;
+    emit activeIndexChanged();
+}
+
+int TracksDataEntry::getActiveTrackId() const
+{
+    return activeTrackId;
+}
+
+void TracksDataEntry::setActiveTrackId(int newActiveTrackId)
+{
+    if (activeTrackId == newActiveTrackId)
+        return;
+    activeTrackId = newActiveTrackId;
+    emit activeTrackIdChanged();
+}
+
+
 
 bool TracksDataEntry::getIsLoading() const
 {
@@ -172,11 +285,10 @@ void TracksDataEntry::setDoneFetching(bool newDoneFetching)
 
 void TracksDataEntry::loadTracks()
 {
-  setIsLoading(true);
+    setIsLoading(true);
 
     int lastId=0;
     if(count>0){
-
 
         auto lastElement=m_data.value(count-1);
         lastId=lastElement.trackId;
@@ -185,6 +297,32 @@ void TracksDataEntry::loadTracks()
     }
 
     emit this->fetchTracks(lastId,limit);
+}
+
+void TracksDataEntry::addData(QList<JTrack> *tracks)
+{
+
+    if(tracks->count()>0){
+
+        int i=count;
+        for(auto track:*tracks){
+            emit beginInsertRows(QModelIndex(),i,i);
+            m_data.append(track);
+            emit   endInsertRows();
+
+            i=i+1;
+        }
+
+    }else{
+
+        setDoneFetching(true);
+    }
+    setIsLoading(false);
+    setCount(m_data.count());
+
+    if(this->activeTrackId!=mController.getActiveTrackId()){
+        handleActiveTrackIdChanged(mController.getActiveTrackId());
+    }
 }
 
 
@@ -210,4 +348,13 @@ void TracksDataEntry::setCount(int newCount)
 void TracksDataEntry::resetCount()
 {
     setCount({}); // TODO: Adapt to use your actual default value
+}
+
+void TracksDataEntry::reloadRecentlyPlayedTracks()
+{
+    qDebug()<<"Reloading";
+
+    playlistId=-1;
+    setIsLoading(true);
+    emit fetchRecentlyPlayedTracks();
 }
