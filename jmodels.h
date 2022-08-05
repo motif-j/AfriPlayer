@@ -21,19 +21,19 @@ struct JTrack{
     int artistId;
     int albumId;
     long long duration;
+    bool isFavorite=false;
 
     QString trackName;
     QString fileUrl;
     QString albumName;
     QString artistName;
 
+
     bool operator ==(JTrack a){
 
         return a.trackId==this->trackId;
     }
-    void x(){
 
-    }
 
 };
 

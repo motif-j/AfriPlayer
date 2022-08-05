@@ -15,13 +15,9 @@ Item {
     JMusicController{
         id:jmusicController
 
-        onTrackFetchedFromRepo: function(trackmap){
-            activeTrack=trackmap
-            setActiveTrackId(trackmap["trackId"])
 
-        }
         onPlayingTrackFetched: function(trackMap){
-           playingTrack=trackMap
+            playingTrack=trackMap
         }
 
     }
@@ -29,11 +25,6 @@ Item {
     Connections{
         id:musicModelConn
 
-        onTrackClicked:function(trackId){
-          getTrack(trackId)
-
-           // console.debug("Clicked "+trackId)
-        }
 
         onTrackFetched:function(trackmap){
             //consume the event here
@@ -42,10 +33,19 @@ Item {
         }
 
         onTrackPlayed:function(trackId){
-           // getTrack(trackId)
+            // getTrack(trackId)
+            if(trackId!==0){
 
-            jmusicController.getPlayingTrack(trackId)
-            addTrackToRecentlyClicked(trackId)
+                addTrackToRecentlyClicked(trackId)
+                jmusicController.getPlayingTrack(trackId)
+            }else{
+
+            }
+        }
+        onActiveTrackIdChanged: function(newId){
+
+            setActiveTrackId(newId);
+            // activeTrackId=newId
 
         }
 
@@ -65,6 +65,10 @@ Item {
     function addTrackToRecentlyClicked(trackId){
 
         jmusicController.addTrackToRecentlyPlayed(trackId)
+    }
+
+    function addTrackToPlaylist(trackId,plId){
+        jmusicController.addTrackToPlaylist(trackId,plId);
     }
 
 }

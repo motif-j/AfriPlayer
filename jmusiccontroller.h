@@ -42,6 +42,10 @@ private:
 
         connect(this,&JMusicController::fetchPlayingTrackFromRepository,worker,&JMusicControllerWorker::getPlayingTrack);
         connect(worker,&JMusicControllerWorker::playingTrackFetched,this,&JMusicController::handlePlayingTrackFetched);
+
+
+        connect(this,&JMusicController::addTrackToPlaylistSig,worker,&JMusicControllerWorker::addTrackToPlaylist);
+
         controllerThread.start();
 
 
@@ -78,6 +82,7 @@ public slots:
     void loadPlaylistTrack(int playlistId,int refreshCode);
     void loadRecentlyPlayedTracks();
 
+    void addTrackToPlaylist(int trackId,int playlistId);
 
     //slots that interact with the worker
 public slots:
@@ -100,6 +105,7 @@ signals:
     void fetchHomePlaylistFromRepository();
     void fetchPlaylistTracksFromRepo(int playlistId,int refreshCode);
     void fetchRecentlyPlayedTracks();
+    void addTrackToPlaylistSig(int trackId,int playlistId);
 
 
     //signals received in qml interface which is the controller interface

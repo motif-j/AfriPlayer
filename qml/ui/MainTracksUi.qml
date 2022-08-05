@@ -1,7 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Layouts 1.3
 import Felgo 3.0
-import QtGraphicalEffects 1.15
+import QtQuick.Controls 2.5
 import com.afriktek.qplayer 1.0
 
 
@@ -17,8 +17,10 @@ Rectangle{
     property string albumName: ""
     property string duration: "13 : 12"
     property int  trackId: 0
+    property bool isFavorite: false
+
     property color thumbnailColor: Qt.rgba(Math.random(255),Math.random(255),Math.random(255),1)
-      property color thumbnailColor2: Qt.rgba(Math.random(255),Math.random(255),Math.random(255),1)
+    property color thumbnailColor2: Qt.rgba(Math.random(255),Math.random(255),Math.random(255),1)
     property color thumbnailColor3: Qt.rgba(Math.random(155),Math.random(200),Math.random(55),1)
     id:rootRect
 
@@ -45,27 +47,27 @@ Rectangle{
 
 
                     GradientStop{
-                       position: 0.0
-                       color: thumbnailColor
+                        position: 0.0
+                        color: thumbnailColor
                     }
 
                     GradientStop{
-                       position: 1.0
-                       color: thumbnailColor2
+                        position: 1.0
+                        color: thumbnailColor2
                     }
 
                 }
 
-//                RoundedImage{
-//                    property int thumbnailSize:dp(60)
-//                    height: thumbnailSize
-//                    width: thumbnailSize
-//                    source: "qrc:/assets/qt.png"
-//                    fillMode: Image.Stretch
-//                    Layout.alignment: Qt.AlignHCenter
+                //                RoundedImage{
+                //                    property int thumbnailSize:dp(60)
+                //                    height: thumbnailSize
+                //                    width: thumbnailSize
+                //                    source: "qrc:/assets/qt.png"
+                //                    fillMode: Image.Stretch
+                //                    Layout.alignment: Qt.AlignHCenter
 
 
-//                }
+                //                }
             }
 
 
@@ -140,7 +142,7 @@ Rectangle{
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredWidth: dp(40)
             Layout.preferredHeight: dp(40)
-            icon: IconType.play
+            icon: isFavorite? IconType.heart:IconType.hearto
 
 
         }
@@ -150,17 +152,71 @@ Rectangle{
     }
     RippleMouseArea{
         anchors.fill:rootRect
+        acceptedButtons: Qt.RightButton | Qt.LeftButton
         onClicked: {
 
-            rootRect.clicked()
+            if(mouse.button===Qt.RightButton){
+                menu.popup()
+            }
 
+            rootRect.clicked()
 
         }
         onDoubleClicked: {
             //playing track
+            jmusicLogic.trackPlayed(trackId)
 
         }
+        onPressAndHold: {
+            rootRect.clicked()
+            menu.popup()
+        }
+
+        Menu{
+            Action{
+                text: "Play"
+                onTriggered: {
+                    jmusicLogic.trackPlayed(trackId)
+                }
+            }
+            Action{text: "Add to Queue"}
+            Action{text: "Add to Playlist"}
+
+            id:menu
+            background: Rectangle{
+                implicitWidth: dp(200)
+                implicitHeight: dp(220)
+                radius: dp(5)
+                clip: true
+                border.color: Theme.secondaryBackgroundColor
+                color: Theme.backgroundColor
+
+            }
+            delegate:MenuItem{
+                width:menu.width
+                id:m_item
+
+                contentItem: AppText{
+                    fontSize: 14
+                    color: Theme.textColor
+                    text: m_item.text
+                    font.bold: true
+                    padding: dp(5)
+
+                }
+                background:Rectangle{
+                    width:menu.width
+                    radius: dp(5)
+                    color: m_item.highlighted? Theme.tintColor:Theme.backgroundColor
+                }
+
+
+
+            }
+        }
     }
+
+
 }
 
 

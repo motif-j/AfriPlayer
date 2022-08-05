@@ -71,7 +71,7 @@ public slots:
                 db.clearPlaylist(playlistId);
                 auto randPlaylist=db.randomizedPlaylist();
 
-                foreach(JTrack t,*randPlaylist){
+                for(JTrack t:*randPlaylist){
                     //add playlist to db
                     db.addTrackToPlaylist(t,playlistId);
                     currentPlaylist->append(t);
@@ -100,6 +100,20 @@ public slots:
         qDebug()<<" Called "<<tracks->size();
 
         emit recentlyPlayedTracksFetched(tracks);
+    }
+
+    void addTrackToPlaylist(int trackId,int playlistId){
+        auto track=db.getTrack(trackId);
+
+        db.addTrackToPlaylist(*track,playlistId);
+
+        delete track;
+
+         QThread::msleep(500);
+
+         getPlayingTrack(trackId);
+        // getTrack(trackId);
+      //  emit playlistTracksFetchedFromRepo(tracks);
     }
 
 signals:

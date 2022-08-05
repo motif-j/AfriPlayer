@@ -208,7 +208,7 @@ Rectangle{
                 Layout.maximumHeight: dp(50)
                 Layout.preferredHeight: dp(50)
                 onPlayClicked: {
-                    jmusicLogic.trackPlayed(jmusicModel.activeTrackId)
+                   //to be implemented later
                 }
 
             }

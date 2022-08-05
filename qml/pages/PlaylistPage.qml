@@ -46,6 +46,9 @@ Page {
         onJupkeyPressed: {
             handleListViewIndexDown()
         }
+        onJreturnkeyPressed: {
+             jmusicLogic.trackPlayed(jmusicModel.activeTrackId)
+        }
 
     }
     ColumnLayout{
@@ -133,9 +136,10 @@ Page {
                     duration: model.duration
                     artistName: model.artistName
                     trackId: model.trackId
+                     isFavorite: model.isFavorite
                     onClicked: {
 
-                        jmusicLogic.trackClicked(trackId)
+                        selectIndex(index)
                     }
 
                 }
@@ -201,4 +205,9 @@ Page {
     function handleListViewIndexDown(){
         dataModel.model.decrementIndex()
     }
+
+    function selectIndex(index){
+        dataModel.model.newListIndex(index)
+    }
+
 }

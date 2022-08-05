@@ -27,7 +27,8 @@ public:
         ROLE_ALBUMNAME=Qt::UserRole+12,
         ROLE_FILEURL=Qt::UserRole+14,
         ROLE_PLAYLISTNAME=Qt::UserRole+16,
-        ROLE_PLAYLISTID=Qt::UserRole+18
+        ROLE_PLAYLISTID=Qt::UserRole+18,
+        ROLE_ISFAVORITE=Qt::UserRole+20
 
 
     };
@@ -48,6 +49,7 @@ private:
         mRoles[ROLE_FILEURL]="fileUrl";
         mRoles[ROLE_PLAYLISTNAME]="playlistName";
         mRoles[ROLE_PLAYLISTID]="playlistId";
+        mRoles[ROLE_ISFAVORITE]="isFavorite";
     }
 
     QHash<int,QByteArray> mRoles;

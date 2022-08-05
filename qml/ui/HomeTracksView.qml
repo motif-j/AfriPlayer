@@ -11,6 +11,8 @@ Rectangle{
     property string artistName: ""
     property string albumName: ""
     property int  trackId: 0
+    property bool isFavorite: false
+
     property color thumbnailColor: Qt.rgba(Math.random(255),Math.random(255),Math.random(255),1)
     property color thumbnailColor2: Qt.rgba(Math.random(255),Math.random(255),Math.random(255),1)
     property color thumbnailColor3: Qt.rgba(Math.random(155),Math.random(200),Math.random(55),1)
@@ -65,7 +67,7 @@ Rectangle{
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredWidth: dp(40)
             Layout.preferredHeight: dp(40)
-            icon: IconType.play
+            icon:isFavorite? IconType.heart:IconType.hearto
 
 
         }

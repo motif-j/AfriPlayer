@@ -81,6 +81,10 @@ public slots:
         musicController.addTrackToRecentsPlaylist(trackId);
     }
 
+    void addTrackToPlaylist(int trackId,int playlistId){
+        musicController.addTrackToPlaylist(trackId,playlistId);
+    }
+
     //These signals directly communicate with the QML file
 signals:
     void trackFetchedFromRepo(QVariantMap trackMap);

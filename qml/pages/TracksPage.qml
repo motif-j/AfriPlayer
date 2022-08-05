@@ -33,6 +33,7 @@ Page {
 
         onJreturnkeyPressed: {
 
+            jmusicLogic.trackPlayed(jmusicModel.activeTrackId)
         }
         onIndexChanged:function(newIndex){
            // tracksListView.currentIndex=newIndex
@@ -81,25 +82,13 @@ Page {
             duration: model.duration
             artistName: model.artistName
             trackId: model.trackId
+            isFavorite: model.isFavorite
 
 
             onClicked: {
-                jmusicLogic.trackClicked(trackId)
-                //if(trackId)
+
+                selectIndex(index)
             }
-
-            //            Component.onCompleted: {
-            //             let  activeId= jmusicModel.activeTrack["trackId"]
-
-            //                if(activeId!==undefined){
-            //                    if(activeId===trackId){
-            //                        tracksListView.currentIndex=index
-            //                       //  console.debug(activeId)
-            //                    }
-
-
-            //                }
-            //            }
 
         }
 
@@ -142,6 +131,9 @@ Page {
         tracksModel.model.decrementIndex()
     }
 
+    function selectIndex(index){
+        tracksModel.model.newListIndex(index)
+    }
 
 
 

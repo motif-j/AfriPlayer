@@ -49,6 +49,10 @@ Item {
             console.debug("done with loading")
             // doneFetching=true
         }
+
+        onActiveTrackIdChanged: {
+            jmusicLogic.activeTrackIdChanged(dataEntry.activeTrackId)
+        }
     }
 
 

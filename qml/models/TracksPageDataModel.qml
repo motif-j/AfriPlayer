@@ -40,6 +40,10 @@ Item {
 
             indexChanged(dataEntry.activeIndex)
         }
+
+        onActiveTrackIdChanged: {
+            jmusicLogic.activeTrackIdChanged(dataEntry.activeTrackId)
+        }
     }
 
 

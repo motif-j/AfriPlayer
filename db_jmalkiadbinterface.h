@@ -53,7 +53,9 @@ public:
     void clearPlaylist(int playlistId);
     void addTrackToRecentlyPlayed(int trackId);
 
+    void toggleFavoriteInTrack(int trackId);
 
+void removeTrackFromPlaylist(int trackId,int playlistId);
     void massInsert();
 
 
@@ -67,6 +69,15 @@ private:
         this->intializeDatabase();
     }
 
+    void printError(QSqlQuery *query){
+
+       QString error=query->lastError().text();
+
+       if(!error.isEmpty()){
+           qDebug()<<"SQL ERROR "<<error;
+       }
+   }
+
     //properties
 private:
 
@@ -78,6 +89,8 @@ private:
     //functions
 private:
     void intializeDatabase();
+    bool isTrackFavorite(int trackId);
+
 
 
 signals:

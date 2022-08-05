@@ -61,6 +61,9 @@ QVariant TracksDataEntry::data(const QModelIndex &index, int role) const
 
     case JRole::ROLE_FILEURL:
         return track.fileUrl;
+
+    case JRole::ROLE_ISFAVORITE:
+        return track.isFavorite;
     }
 
     return QVariant();
@@ -133,6 +136,12 @@ void TracksDataEntry::addTrackToRecentlyPlayed(int trackId)
 
 }
 
+void TracksDataEntry::addTrackToPlaylist(int trackId, int playlistId)
+{
+
+    emit this->addTrackToPlaylistSig(trackId,playlistId);
+}
+
 void TracksDataEntry::incrementIndex()
 {
     int newIndex=activeIndex+1;
@@ -155,6 +164,13 @@ void TracksDataEntry::decrementIndex()
     }
     setActiveIndex(newIndex);
     setActiveTrackId(m_data.value(newIndex).trackId);
+}
+
+void TracksDataEntry::newListIndex(int newIndex)
+{
+    setActiveIndex(newIndex);
+    setActiveTrackId(m_data.value(newIndex).trackId);
+
 }
 
 
@@ -220,12 +236,59 @@ void TracksDataEntry::handleRecentlyFetchedTracks(QList<JTrack> *tracks)
 
     if(playlistId==-1){
 
-        qDebug()<<"HHHAHAHAHA";
         clearPlaylist();
         addData(tracks);
     }
 
 }
+
+void TracksDataEntry::handlePlayingTrackFetched(QVariantMap trackMap)
+{
+    //    JTrack* track=new JTrack;
+
+    //    track->trackId=trackMap["trackId"].toInt();
+    //    track->trackName=trackMap["trackName"].toString();
+    //    track->artistName=trackMap["artistName"].toString();
+    //    track->albumName=trackMap["albumName"].toString();
+    //    track->fileUrl=trackMap["fileUrl"].toString();
+    //    track->isFavorite=trackMap["isFavorite"].toBool();
+    //    track->duration=trackMap["duration"].toLongLong();
+
+    int trackId=trackMap["trackId"].toInt();
+
+
+
+    int newIndex=0;
+    foreach(JTrack track,m_data){
+
+        if(track.trackId==trackId){
+
+            break;
+        }
+        newIndex++;
+    }
+
+
+    if(newIndex<0 || newIndex>count-1){
+        return;
+    }
+
+
+
+    auto track=m_data.value(newIndex);
+    track.isFavorite=trackMap["isFavorite"].toBool();
+
+    m_data.replace(newIndex,track);
+
+    QModelIndex topLeft=createIndex(newIndex,0);
+    QModelIndex bottomRight=createIndex(newIndex,0);
+    emit dataChanged(topLeft,bottomRight);
+}
+
+
+
+
+
 
 int TracksDataEntry::getActiveIndex() const
 {
@@ -250,7 +313,7 @@ void TracksDataEntry::setActiveTrackId(int newActiveTrackId)
     if (activeTrackId == newActiveTrackId)
         return;
     activeTrackId = newActiveTrackId;
-    emit activeTrackIdChanged();
+    emit activeTrackIdChanged(newActiveTrackId);
 }
 
 

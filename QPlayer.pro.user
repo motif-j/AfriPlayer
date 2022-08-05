@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 7.0.2, 2022-08-03T20:45:37. -->
+<!-- Written by QtCreator 7.0.2, 2022-08-05T13:56:06. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -468,7 +468,6 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">0</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">QPlayer</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.AndroidRunConfiguration:F:/Programing/QtWorld/QPlayer/QPlayer.pro</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">F:/Programing/QtWorld/QPlayer/QPlayer.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>

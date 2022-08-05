@@ -8,6 +8,7 @@ Item {
     property bool  recentTracksEmpty: count==0
     property bool isLoading: dataEntry.isLoading
 
+    property alias dispatcher: conn.target
 
     property var tracksModel: dataEntry
 
@@ -18,9 +19,22 @@ Item {
 
     TracksDataEntry{
         id:dataEntry
+
+        onActiveTrackIdChanged: {
+            jmusicLogic.activeTrackIdChanged(dataEntry.activeTrackId)
+        }
     }
 
 
+    Connections{
+        id:conn
+        onJkeyPressed:function(key){
+            if(key===Qt.Key_Return){
+
+                jmusicLogic.trackPlayed(jmusicModel.activeTrackId)
+            }
+        }
+    }
 
 
 }

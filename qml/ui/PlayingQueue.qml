@@ -42,7 +42,7 @@ Item {
 
         IconButton{
             Layout.alignment: Qt.AlignHCenter
-            icon: IconType.play
+            icon: IconType.hearto
 
 
         }

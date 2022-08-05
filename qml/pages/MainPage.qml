@@ -35,6 +35,7 @@ Page{
 
     MainPageDataModel{
         id:mainPageDm
+        dispatcher:appLogic
     }
 
 
@@ -173,6 +174,7 @@ Page{
                             trackName: model.trackName
                             artistName: model.artistName
                             trackId: model.trackId
+                             isFavorite: model.isFavorite
 
 
 
@@ -181,7 +183,7 @@ Page{
                             width:rect.width
                             height: dp(70)
                             onClicked: {
-                                 jmusicLogic.trackClicked(trackId)
+                                selectIndex(index)
 
                             }
                         }
@@ -310,6 +312,9 @@ Page{
         }
     }
 
+    function selectIndex(index){
+        mainPageDm.tracksModel.newListIndex(index)
+    }
     Component.onCompleted: {
         mainPageDm.playlistModel.loadHomePlaylists();
         mainPageDm.tracksModel.loadRecentlyPlayedTracks();

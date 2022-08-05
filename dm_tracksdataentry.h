@@ -51,6 +51,11 @@ public:
 
         connect(this,&TracksDataEntry::fetchRecentlyPlayedTracks,&mController,&JMusicController::loadRecentlyPlayedTracks);
         connect(&mController,&JMusicController::recentlyPlayedTracksFetched,this,&TracksDataEntry::handleRecentlyFetchedTracks);
+
+
+        connect(this,&TracksDataEntry::addTrackToPlaylistSig,&mController,&JMusicController::addTrackToPlaylist);
+
+        connect(&mController,&JMusicController::playingTrackFetched,this,&TracksDataEntry::handlePlayingTrackFetched);
     }
 
 
@@ -75,9 +80,11 @@ public slots:
     void clearPlaylist();
 
     void addTrackToRecentlyPlayed(int trackId);
+    void addTrackToPlaylist(int trackId,int playlistId);
 
     void incrementIndex();
     void decrementIndex();
+    void newListIndex(int newIndex);
 
     //class slots exposed to other classes
 public slots:
@@ -85,6 +92,7 @@ public slots:
     void handleFetchedPlaylstTracks(QList<JTrack>*);
     void handleActiveTrackIdChanged(int newId);
     void handleRecentlyFetchedTracks(QList<JTrack>*);
+    void handlePlayingTrackFetched(QVariantMap trackMap);
 
     //QML signals
 signals:
@@ -97,7 +105,7 @@ signals:
 
     void activeIndexChanged();
 
-    void activeTrackIdChanged();
+    void activeTrackIdChanged(int newId);
 
     //Controller Signals
 signals:
@@ -106,6 +114,8 @@ signals:
 
     void fetchPlaylistTracks(int playlistId,int refreshCode);
     void fetchRecentlyPlayedTracks();
+    void addTrackToPlaylistSig(int trackId,int playlistId);
+
 
 
 

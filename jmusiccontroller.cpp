@@ -35,6 +35,12 @@ void JMusicController::loadRecentlyPlayedTracks()
     emit fetchRecentlyPlayedTracks();
 }
 
+void JMusicController::addTrackToPlaylist(int trackId, int playlistId)
+{
+  emit addTrackToPlaylistSig(trackId,playlistId);
+
+}
+
 void JMusicController::handleFetchTrack(JTrack trackResult)
 {
 
@@ -56,6 +62,7 @@ void JMusicController::handleFetchTrack(JTrack trackResult)
     trackMap["albumName"]=trackResult.albumName;
     trackMap["artistName"]=trackResult.artistName;
     trackMap["duration"]=formatedTime;
+    trackMap["isFavorite"]=trackResult.isFavorite;
 
 
     emit trackFetched(trackMap);
@@ -81,6 +88,9 @@ void JMusicController::handlePlayingTrackFetched(JTrack trackResult)
     trackMap["albumName"]=trackResult.albumName;
     trackMap["artistName"]=trackResult.artistName;
     trackMap["duration"]=formatedTime;
+     trackMap["isFavorite"]=trackResult.isFavorite;
+
+     qDebug()<<" "<<trackMap["duration"].toString();
     emit playingTrackFetched(trackMap);
 
 }
@@ -109,7 +119,7 @@ void JMusicController::addTrackToRecentsPlaylist(int trackId)
 {
     dbInterface.addTrackToRecentlyPlayed(trackId);
 
-    qDebug()<<"Here ";
+
     emit fetchRecentlyPlayedTracks();
 }
 

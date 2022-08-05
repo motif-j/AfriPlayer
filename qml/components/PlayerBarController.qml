@@ -5,6 +5,15 @@ import com.afriktek.qplayer 1.0
 
 
 GridLayout{
+    property bool  isFavorite: {
+        if(isUndefined(jmusicModel.playingTrack["isFavorite"])){
+
+            return false
+        }
+
+        return jmusicModel.playingTrack["isFavorite"]
+    }
+
     width: parent.width
 
     columns: 5
@@ -12,10 +21,24 @@ GridLayout{
     signal playClicked();
 
     IconButton{
-        icon: IconType.hearto
+        icon: isFavorite ?IconType.heart:IconType.hearto
         Layout.fillWidth: true
         size: dp(18)
         color: JColors.purple100
+        onClicked: {
+            let trackId=0
+            if(!isUndefined(jmusicModel.playingTrack["trackId"])){
+                trackId=jmusicModel.playingTrack["trackId"]
+            }
+
+            if(trackId>0){
+                jmusicModel.addTrackToPlaylist(trackId,1)
+            }else{
+                console.debug("invalid id")
+            }
+
+
+        }
 
     }
     IconButton{
