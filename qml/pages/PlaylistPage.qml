@@ -47,7 +47,7 @@ Page {
             handleListViewIndexDown()
         }
         onJreturnkeyPressed: {
-             jmusicLogic.trackPlayed(jmusicModel.activeTrackId)
+            jmusicLogic.trackPlayed(jmusicModel.activeTrackId)
         }
 
     }
@@ -70,8 +70,7 @@ Page {
                 textColor: Theme.textColor
                 backgroundColor: Theme.secondaryBackgroundColor
                 onClicked: {
-
-
+                    dataModel.addPlaylistToQueue(false)
 
                 }
             }
@@ -86,7 +85,7 @@ Page {
                 textColor: Theme.textColor
                 backgroundColor: Theme.secondaryBackgroundColor
                 onClicked: {
-
+                    dataModel.addPlaylistToQueue(true)
 
 
                 }
@@ -136,7 +135,7 @@ Page {
                     duration: model.duration
                     artistName: model.artistName
                     trackId: model.trackId
-                     isFavorite: model.isFavorite
+                    isFavorite: model.isFavorite
                     onClicked: {
 
                         selectIndex(index)

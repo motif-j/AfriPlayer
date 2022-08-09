@@ -2,6 +2,7 @@ import QtQuick 2.0
 import Felgo 3.0
 import QtQuick.Layouts 1.3
 import com.afriktek.qplayer 1.0
+import "../models"
 
 
 
@@ -50,24 +51,29 @@ Rectangle{
             Layout.maximumWidth: dp(280)
             id:rightViewLoader
 
+            Component.onCompleted: {
+               jmusicModel.loadQueuedTracks()
+            }
+
         }
+
 
         Component{
             id:rightViewComponent
+
             MainRightView {
+
+
                 anchors.fill: parent
+
 
                 visible: Theme.isPortrait?false:true
 
 
-                Component.onCompleted: {
-                    console.debug("CREATED")
-                }
 
-                Component.onDestruction: {
-                    console.debug("AM destroyed")
 
-                }
+
+
             }
         }
 

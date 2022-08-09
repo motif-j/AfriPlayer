@@ -54,6 +54,7 @@ SOURCES += main.cpp \
 android {
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
     OTHER_FILES += android/AndroidManifest.xml       android/build.gradle
+
 }
 
 ios {
@@ -84,6 +85,7 @@ DISTFILES += \
     qml/models/AppModel.qml \
     qml/models/JMusicModel.qml \
     qml/models/MainPageDataModel.qml \
+    qml/models/PlayingQueModel.qml \
     qml/models/PlaylistPageDataModel.qml \
     qml/models/RightMusicInfoModel.qml \
     qml/pages/FavoriteTracksPage.qml \

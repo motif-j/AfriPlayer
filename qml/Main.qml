@@ -12,7 +12,6 @@ import "./models"
 App {
 
 
-
     // You get free licenseKeys from https://felgo.com/licenseKey
     // With a licenseKey you can:
     //  * Publish your games & apps for the app stores
@@ -34,11 +33,13 @@ App {
         Theme.navigationAppDrawer.itemBackgroundColor=JColors.sideBarColor
         Theme.navigationAppDrawer.textColor=JColors.purple100
         Theme.navigationAppDrawer.activeTextColor=JColors.pink500
+        Theme.navigationAppDrawer.dividerColor=Theme.secondaryBackgroundColor
 
 
         Theme.navigationTabBar.backgroundColor=JColors.sideBarColor
         Theme.navigationTabBar.titleColor=JColors.purple100
         Theme.navigationTabBar.titlePressedColor=JColors.pink500
+
 
 
 
@@ -75,10 +76,15 @@ App {
     AppModel{
         id:jappmodel
         dispatcher: appLogic
+
+        onMMenuClosed:{
+            console.debug("closes")
+        }
     }
 
     //all key events be handled globally
     MainView{
+        id:mainView
         focus: true
         Keys.onPressed: function(event){
            let key= event.key

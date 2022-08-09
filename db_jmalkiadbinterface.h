@@ -55,7 +55,16 @@ public:
 
     void toggleFavoriteInTrack(int trackId);
 
-void removeTrackFromPlaylist(int trackId,int playlistId);
+    //Queue list impl
+    void queueTrack(int trackId); //does not require a signal
+    void clearQueue();
+    void toggleQueuedTrackPlayed(int trackId);//done
+    void queuePlaylist(QList<JTrack> tracks);
+
+    //will be updated dynamically
+    QList<JTrack> *fetchNext10QueuedTracks(bool shuffle);
+
+    void removeTrackFromPlaylist(int trackId,int playlistId);
     void massInsert();
 
 
@@ -69,14 +78,14 @@ private:
         this->intializeDatabase();
     }
 
-    void printError(QSqlQuery *query){
+    void printError(QString tag,QSqlQuery *query){
 
-       QString error=query->lastError().text();
+        QString error=query->lastError().text();
 
-       if(!error.isEmpty()){
-           qDebug()<<"SQL ERROR "<<error;
-       }
-   }
+        if(!error.isEmpty()){
+            qDebug()<<"SQL ERROR "<<tag<<" : "<<error;
+        }
+    }
 
     //properties
 private:

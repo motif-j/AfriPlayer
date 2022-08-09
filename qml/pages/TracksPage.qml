@@ -13,7 +13,8 @@ Page {
     id:rootPage
 
     anchors.topMargin: dp(50)
-    anchors.leftMargin: dp(10)
+    anchors.leftMargin: dp(5)
+    anchors.rightMargin: dp(5)
 
 
 
@@ -103,15 +104,26 @@ Page {
     }
 
 
-
-    FloatingActionButton{
-        icon: IconType.refresh
-        visible: tracksModel.count===0
+    AppButton{
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.bottomMargin: Theme.navigationBar.height+dp(10)
+        anchors.rightMargin: dp(5)
+        flat:false
+        radius: dp(5)
+        text: "Dynamic Play "
+        iconLeft: IconType.play
+        textColor: Theme.textColor
         backgroundColor: Theme.secondaryBackgroundColor
         onClicked: {
-            tracksModel.loadMoreTracks()
+
+           // isLoading=true
+
+            tracksModel.queAll()
+
         }
     }
+
 
     AppActivityIndicator{
         id:indicator

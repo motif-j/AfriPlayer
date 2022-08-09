@@ -46,6 +46,10 @@ GridLayout{
         icon: IconType.stepbackward
         size: dp(18)
         color: JColors.purple100
+
+        onClicked: {
+            jmusicModel.playPrevious()
+        }
     }
     IconButton{
         icon: IconType.playcircle
@@ -63,6 +67,10 @@ GridLayout{
         icon: IconType.stepforward
         size: dp(18)
         color: JColors.purple100
+
+        onClicked: {
+            jmusicModel.playNext()
+        }
     }
     IconButton{
         icon: IconType.plus

@@ -12,6 +12,7 @@
 #include <QVariantMap>
 #include "jrole.h"
 #include "jmusiccontroller.h"
+#include <QSettings>
 
 
 extern QString formatTrackTime(QTime);
@@ -56,8 +57,23 @@ public:
         connect(this,&TracksDataEntry::addTrackToPlaylistSig,&mController,&JMusicController::addTrackToPlaylist);
 
         connect(&mController,&JMusicController::playingTrackFetched,this,&TracksDataEntry::handlePlayingTrackFetched);
-    }
 
+
+        connect(this,&TracksDataEntry::loadQueuedTracksSig,&mController,&JMusicController::loadQueueList);
+        connect(&mController,&JMusicController::queuedTracksFetched,this,&TracksDataEntry::handleQueuedTracksFetched);
+
+        connect(&mController,&JMusicController::trackQueued,this,&TracksDataEntry::handleSoloQueuedTrackFetched);
+
+
+        QSettings settings("AfrikTek","Qplayer");
+
+        int playingId=settings.value("playingTrackId",0).toInt();
+
+        if(playlistId==-2){
+            playQueuedTrack(playingId);
+        }
+
+    }
 
     // QAbstractItemModel interface
 public:
@@ -81,10 +97,19 @@ public slots:
 
     void addTrackToRecentlyPlayed(int trackId);
     void addTrackToPlaylist(int trackId,int playlistId);
+    void loadQuedTracks();
+    void addTrackToQue(int trackId);
 
     void incrementIndex();
     void decrementIndex();
     void newListIndex(int newIndex);
+
+    void playNext();
+    void playPrevious();
+    void playQueuedTrack(int trackId);
+   // void clearQueue();
+
+
 
     //class slots exposed to other classes
 public slots:
@@ -93,6 +118,8 @@ public slots:
     void handleActiveTrackIdChanged(int newId);
     void handleRecentlyFetchedTracks(QList<JTrack>*);
     void handlePlayingTrackFetched(QVariantMap trackMap);
+    void handleQueuedTracksFetched(QList<JTrack>* queuedTracks);
+    void handleSoloQueuedTrackFetched(JTrack track);
 
     //QML signals
 signals:
@@ -115,6 +142,8 @@ signals:
     void fetchPlaylistTracks(int playlistId,int refreshCode);
     void fetchRecentlyPlayedTracks();
     void addTrackToPlaylistSig(int trackId,int playlistId);
+    void loadQueuedTracksSig();
+    void addTrackToQueSig(int trackId);
 
 
 
@@ -128,6 +157,7 @@ private:
     int activeTrackId;
 
 private:
+
     JMusicController &mController=JMusicController::getInstance();
 
     bool doneFetching=false;
@@ -137,7 +167,29 @@ private:
 
     JRole &jroles=JRole::getInstance();
 
+    int getPlayingIndex(int trackId=0){
+        int index=0;
+        bool hasFound=false;
 
+        if(trackId>0){
+            for(JTrack t:m_data ){
+
+                if(t.trackId==trackId){
+                    hasFound=true;
+                    break;
+                }
+                index++;
+            }
+        }else{
+            index=-1;
+        }
+
+
+        if(!hasFound){
+            return -1;
+        }
+        return index;
+    }
 
     //functions
 private:

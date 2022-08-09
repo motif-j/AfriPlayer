@@ -31,7 +31,12 @@ QString formatTrackTime(QTime time){
 int main(int argc, char *argv[])
 {
 
+
     QApplication app(argc, argv);
+
+   // QCoreApplication::setOrganizationName("AfrikTek");
+   // QCoreApplication::setOrganizationDomain("afriktek.com");
+   // QCoreApplication::setApplicationName("QPlayer");
 
     FelgoApplication felgo;
 

@@ -9,9 +9,10 @@ import com.afriktek.qplayer 1.0
 
 Rectangle{
 
-    height: dp(70)
+    height: dp(80)
     width: parent.width
     color: "#00000000"
+    clip: true
     property string trackName: ""
     property string artistName: ""
     property string albumName: ""
@@ -29,112 +30,121 @@ Rectangle{
     RowLayout{
         anchors.fill: parent
         id:root
-
         spacing: dp(5)
 
+        Rectangle{
+            Layout.topMargin:  dp(5)
+            Layout.fillWidth: true
+             Layout.alignment: Qt.AlignTop
+            id:baseRect
+
+            GridLayout{
+                columns: 3
+                width: parent.width
+
+                Row{
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.leftMargin: dp(2)
+                    Rectangle{
+
+                        height: dp(60)
+                        width: dp(60)
+                        radius: dp(5)
+                        gradient:Gradient{
 
 
-        Row{
-            Layout.preferredHeight: dp(65)
-            Layout.margins: dp(5)
+                            GradientStop{
+                                position: 0.0
+                                color: thumbnailColor
+                            }
 
-            Rectangle{
+                            GradientStop{
+                                position: 1.0
+                                color: thumbnailColor2
+                            }
 
-                height: dp(60)
-                width: dp(60)
-                radius: dp(5)
-                gradient:Gradient{
+                        }
+
+                        //                RoundedImage{
+                        //                    property int thumbnailSize:dp(60)
+                        //                    height: thumbnailSize
+                        //                    width: thumbnailSize
+                        //                    source: "qrc:/assets/qt.png"
+                        //                    fillMode: Image.Stretch
+                        //                    Layout.alignment: Qt.AlignHCenter
 
 
-                    GradientStop{
-                        position: 0.0
-                        color: thumbnailColor
+                        //                }
                     }
 
-                    GradientStop{
-                        position: 1.0
-                        color: thumbnailColor2
+
+                    Rectangle{
+                        width: dp(5)
                     }
 
+                    Column{
+                        width: dp(100)
+                       // height: dp(65)
+                        spacing: dp(5)
+                        leftPadding: dp(5)
+
+
+                        AppText{
+                            text:trackName
+                            font.bold: true
+                            fontSize: 14
+                            topPadding: dp(5)
+                            maximumLineCount: 1
+                            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+
+
+                        }
+                        AppText{
+                            text:artistName
+                            bottomPadding: dp(5)
+                            fontSize: 12
+                            color: Theme.secondaryTextColor
+                            maximumLineCount: 1
+                            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+
+                        }
+                    }
                 }
 
-                //                RoundedImage{
-                //                    property int thumbnailSize:dp(60)
-                //                    height: thumbnailSize
-                //                    width: thumbnailSize
-                //                    source: "qrc:/assets/qt.png"
-                //                    fillMode: Image.Stretch
-                //                    Layout.alignment: Qt.AlignHCenter
-
-
-                //                }
-            }
-
-
-            Rectangle{
-                width: dp(5)
-            }
-
-            Column{
-                width: dp(100)
-                height: dp(65)
-                spacing: dp(5)
-                leftPadding: dp(5)
-
-
                 AppText{
-                    text:trackName
-                    font.bold: true
+                    text:albumName
+                    visible: root.width>dp(480)
                     fontSize: 14
-                    topPadding: dp(5)
+                    Layout.fillWidth: true
+
+                    Layout.alignment: Qt.AlignRight
+                    // Layout.maximumWidth: dp(80)
+                    Layout.preferredWidth: dp(80)
                     maximumLineCount: 1
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
-
                 }
+
                 AppText{
-                    text:artistName
-                    bottomPadding: dp(5)
-                    fontSize: 12
-                    color: Theme.secondaryTextColor
+                    text:duration
+
+                    fontSize: 16
+                    font.family: Constants.lcdFont.name
+                    font.letterSpacing: dp(2)
+                    font.bold: true
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignRight
+                    // Layout.maximumWidth: dp(100)
+                    Layout.preferredWidth: dp(50)
                     maximumLineCount: 1
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
                 }
+
             }
-        }
 
 
-
-
-        AppText{
-            text:albumName
-            visible: root.width>410
-            fontSize: 14
-
-            Layout.alignment: Qt.AlignHCenter
-            Layout.maximumWidth: dp(80)
-            Layout.preferredWidth: dp(80)
-            maximumLineCount: 1
-            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-
-        }
-
-
-        AppText{
-            text:duration
-
-            fontSize: 16
-            font.family: Constants.lcdFont.name
-            font.letterSpacing: dp(2)
-            font.bold: true
-
-
-            Layout.alignment: Qt.AlignHCenter
-            Layout.maximumWidth: dp(100)
-            Layout.preferredWidth: dp(80)
-            maximumLineCount: 1
-            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
         }
 
@@ -146,20 +156,23 @@ Rectangle{
 
 
         }
-
-
-
     }
+
+
     RippleMouseArea{
-        anchors.fill:rootRect
+        anchors.fill: parent
         acceptedButtons: Qt.RightButton | Qt.LeftButton
         onClicked: {
+
 
             if(mouse.button===Qt.RightButton){
                 menu.popup()
             }
 
             rootRect.clicked()
+            if(Theme.isAndroid){
+                 jmusicLogic.trackPlayed(trackId)
+            }
 
         }
         onDoubleClicked: {
@@ -173,16 +186,29 @@ Rectangle{
         }
 
         Menu{
+            modal: false
+            id:menu
+            onClosed: {
+
+                menu.close()
+            }
+
             Action{
                 text: "Play"
                 onTriggered: {
                     jmusicLogic.trackPlayed(trackId)
+                      menu.close()
                 }
             }
-            Action{text: "Add to Queue"}
+            Action{
+                text: "Add to Queue"
+                onTriggered: {
+                    jmusicModel.addTrackToQueue(trackId)
+                }
+            }
             Action{text: "Add to Playlist"}
 
-            id:menu
+
             background: Rectangle{
                 implicitWidth: dp(200)
                 implicitHeight: dp(220)
@@ -215,8 +241,6 @@ Rectangle{
             }
         }
     }
-
-
 }
 
 

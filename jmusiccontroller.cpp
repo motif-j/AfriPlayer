@@ -9,7 +9,12 @@ void JMusicController::getTrack(int trackId)
 
 void JMusicController::getPlayingTrack(int trackId)
 {
+    QSettings settings("AfrikTek","Qplayer");
     playingTrackId=trackId;
+
+    settings.setValue("playingTrackId",trackId);
+
+    //toggle queue track played
     emit fetchPlayingTrackFromRepository(trackId);
 }
 
@@ -39,6 +44,22 @@ void JMusicController::addTrackToPlaylist(int trackId, int playlistId)
 {
   emit addTrackToPlaylistSig(trackId,playlistId);
 
+}
+
+void JMusicController::addTrackToQueue(int trackId)
+{
+    emit queueTrack(trackId);
+}
+
+void JMusicController::addPlaylistToQueue(int playlistId, bool append)
+{
+    emit queuePlaylistTracks(playlistId,append);
+
+}
+
+void JMusicController::loadQueueList()
+{
+  emit fetchPlayingQueue();
 }
 
 void JMusicController::handleFetchTrack(JTrack trackResult)
@@ -90,7 +111,8 @@ void JMusicController::handlePlayingTrackFetched(JTrack trackResult)
     trackMap["duration"]=formatedTime;
      trackMap["isFavorite"]=trackResult.isFavorite;
 
-     qDebug()<<" "<<trackMap["duration"].toString();
+     //que the track
+     //queueTrack(trackResult.trackId);
     emit playingTrackFetched(trackMap);
 
 }
@@ -115,12 +137,34 @@ void JMusicController::handleRecentlyPlayedTracksFetched(QList<JTrack> *tracks)
     emit recentlyPlayedTracksFetched(tracks);
 }
 
+void JMusicController::handleQueuedTracksFetched(QList<JTrack> *tracks)
+{
+
+    emit queuedTracksFetched(tracks);
+}
+
+void JMusicController::handleQueuedSoloTrackFetched(JTrack track)
+{
+
+    emit trackQueued(track);
+}
+
+JTrack JMusicController::getTrackSync(int trackId)
+{
+return *dbInterface.getTrack(trackId);
+}
+
 void JMusicController::addTrackToRecentsPlaylist(int trackId)
 {
     dbInterface.addTrackToRecentlyPlayed(trackId);
 
 
     emit fetchRecentlyPlayedTracks();
+}
+
+void JMusicController::toggleQueuedTrack(int trackId)
+{
+  worker->togglePlayingQue(trackId);
 }
 
 int JMusicController::getActiveTrackId() const

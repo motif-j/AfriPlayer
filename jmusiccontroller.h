@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QDebug>
 #include <QString>
+#include <QSettings>
 #include "jmusiccontrollerworker.h"
 
 extern QString formatTrackTime(QTime);
@@ -20,6 +21,12 @@ private:
         Q_UNUSED(parent)
 
         qDebug()<<"INITIALIZING MAIN CONTROLELR";
+
+          QSettings settings("AfrikTek","Qplayer");
+
+          int playingId=settings.value("playingTrackId",0).toInt();
+
+
 
 
         worker->moveToThread(&controllerThread);
@@ -46,7 +53,22 @@ private:
 
         connect(this,&JMusicController::addTrackToPlaylistSig,worker,&JMusicControllerWorker::addTrackToPlaylist);
 
+
+        connect(this,&JMusicController::queueTrack,worker,&JMusicControllerWorker::queueTrack);
+
+        connect(this,&JMusicController::queuePlaylistTracks,worker,&JMusicControllerWorker::queuePlaylistTracks);
+
+        connect(this,&JMusicController::fetchPlayingQueue,worker,&JMusicControllerWorker::fetchPlayingQueue);
+        connect(worker,&JMusicControllerWorker::queuedTracksFetched,this,&JMusicController::handleQueuedTracksFetched);
+
+
+        connect(worker,&JMusicControllerWorker::trackQueued,this,&JMusicController::handleQueuedSoloTrackFetched);
+
         controllerThread.start();
+
+        if(playingId!=0){
+             getPlayingTrack(playingId);
+        }
 
 
     }
@@ -67,8 +89,9 @@ public:
 
 
     void addTrackToRecentsPlaylist(int trackId);
-    //slots called from qml interface which is the controller
+    void toggleQueuedTrack(int trackId);
 
+    //slots called from qml interface which is the controller
 
 public slots:
     int getActiveTrackId() const;
@@ -84,6 +107,10 @@ public slots:
 
     void addTrackToPlaylist(int trackId,int playlistId);
 
+    void addTrackToQueue(int trackId);
+    void addPlaylistToQueue(int playlistId,bool append);
+    void loadQueueList();
+
     //slots that interact with the worker
 public slots:
     void handleFetchTrack(JTrack trackResult);
@@ -96,6 +123,9 @@ public slots:
     void handleRecentlyPlayedTracksFetched(QList<JTrack>*);
 
 
+    void handleQueuedTracksFetched(QList<JTrack>* tracks);
+    void handleQueuedSoloTrackFetched(JTrack track);
+
     //signals that interact with the worker
 signals:
 
@@ -106,6 +136,10 @@ signals:
     void fetchPlaylistTracksFromRepo(int playlistId,int refreshCode);
     void fetchRecentlyPlayedTracks();
     void addTrackToPlaylistSig(int trackId,int playlistId);
+
+    void queueTrack(int trackId);
+    void queuePlaylistTracks(int playlistId,bool append);
+    void  fetchPlayingQueue();
 
 
     //signals received in qml interface which is the controller interface
@@ -119,6 +153,11 @@ signals:
     void homePlaylistFetched(QList<JPlaylist>*);
 
     void activeTrackIdChanged(int newTrackID);
+
+    void queuedTracksFetched(QList<JTrack>*);
+
+    void trackQueued(JTrack track);
+
     //   void playlistTracksFetched(QList<JTrack>*);
 private:
     JMusicControllerWorker *worker=new JMusicControllerWorker;
@@ -128,6 +167,12 @@ private:
 
     int playingIndex=0;
     int playingTrackId=0;
+public:
+
+    int getPlayingTrackId(){
+        return playingTrackId;
+    }
+    JTrack getTrackSync(int trackId);
 };
 
 #endif // JMUSICCONTROLLER_H

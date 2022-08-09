@@ -4,11 +4,20 @@ import Felgo 3.0
 
 
 
-Item {
+Rectangle{
+
+    property int  trackId: 0
+    property string trackName:""
+    property string artistName: ""
+    property bool isFavorite: false
+    property bool isPlaying:false
+
     id: root
     height: dp(50)
 
     signal clicked()
+
+    color:isPlaying?Theme.backgroundColor:Theme.secondaryBackgroundColor
     RowLayout{
         width: root.width
         height: root.height
@@ -23,15 +32,15 @@ Item {
             Layout.rightMargin: dp(5)
 
             AppText{
-                text:"Song Title"
+                text:trackName
                 font.bold: true
-                fontSize: 13
+                fontSize: 12
                 topPadding: dp(5)
                 Layout.alignment: Qt.AlignHCenter
 
             }
             AppText{
-                text:"Song Title"
+                text:artistName
                 bottomPadding: dp(5)
                 fontSize: 11
                 color: Theme.secondaryTextColor
@@ -40,12 +49,12 @@ Item {
             }
         }
 
-        IconButton{
-            Layout.alignment: Qt.AlignHCenter
-            icon: IconType.hearto
+//        IconButton{
+//            Layout.alignment: Qt.AlignHCenter
+//            icon: isFavorite?IconType.heart: IconType.hearto
 
 
-        }
+//        }
 
 
 

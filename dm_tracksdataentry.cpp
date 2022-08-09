@@ -1,6 +1,8 @@
 #include "dm_tracksdataentry.h"
 #include <QTime>
 #include <QThread>
+#include <stdexcpt.h>
+
 
 
 
@@ -64,6 +66,9 @@ QVariant TracksDataEntry::data(const QModelIndex &index, int role) const
 
     case JRole::ROLE_ISFAVORITE:
         return track.isFavorite;
+
+    case JRole::ROLE_ISPLAYING:
+        return track.isPlaying;
     }
 
     return QVariant();
@@ -142,6 +147,18 @@ void TracksDataEntry::addTrackToPlaylist(int trackId, int playlistId)
     emit this->addTrackToPlaylistSig(trackId,playlistId);
 }
 
+void TracksDataEntry::loadQuedTracks()
+{
+
+    playlistId=-2;
+    emit loadQueuedTracksSig();
+}
+
+void TracksDataEntry::addTrackToQue(int trackId)
+{
+    emit addTrackToQueSig(trackId);
+}
+
 void TracksDataEntry::incrementIndex()
 {
     int newIndex=activeIndex+1;
@@ -150,6 +167,7 @@ void TracksDataEntry::incrementIndex()
     if(newIndex>count-1){
         newIndex=count-1;
     }
+
     setActiveIndex(newIndex);
     setActiveTrackId(m_data.value(newIndex).trackId);
 }
@@ -170,6 +188,262 @@ void TracksDataEntry::newListIndex(int newIndex)
 {
     setActiveIndex(newIndex);
     setActiveTrackId(m_data.value(newIndex).trackId);
+
+}
+
+void TracksDataEntry::playNext()
+{
+    QSettings settings("AfrikTek","Qplayer");
+    if(playlistId==-2){
+
+        if(!m_data.isEmpty()){
+
+            int cId=settings.value("playingTrackId",0).toInt();
+            JTrack pTrack;
+
+            int oldIndex=getPlayingIndex(cId);
+
+
+            if(oldIndex>-1 && oldIndex<count-1){
+
+
+                pTrack=m_data.value(oldIndex);
+
+                pTrack.isPlaying=false;
+                m_data.replace(oldIndex,pTrack);
+                QModelIndex topLeft=createIndex(oldIndex,0);
+                QModelIndex bottomRight=createIndex(oldIndex,0);
+
+                emit dataChanged(topLeft,bottomRight);
+            }
+
+            oldIndex++;;
+
+
+            if(oldIndex>m_data.count()-1){{
+                    oldIndex=m_data.count()-1;
+                }
+
+            }
+
+
+            pTrack=m_data.value(oldIndex);
+            pTrack.isPlaying=true;
+            m_data.replace(oldIndex,pTrack);
+
+            QModelIndex topLeft=createIndex(oldIndex,0);
+            QModelIndex bottomRight=createIndex(oldIndex,0);
+
+            emit dataChanged(topLeft,bottomRight);
+            int playingId=pTrack.trackId;
+
+            mController.getPlayingTrack(playingId);
+
+            //  auto
+
+            emit dataChanged(topLeft,bottomRight);
+
+            activeIndex=oldIndex;
+
+            emit activeIndexChanged();
+            if((m_data.count()-activeIndex)<5){
+
+
+                loadQuedTracks();
+            }
+        }
+
+    }
+}
+
+void TracksDataEntry::playPrevious()
+{
+    QSettings settings("AfrikTek","Qplayer");
+
+    if(playlistId==-2){
+        //activeIndex=getPlayingIndex();
+
+        if(!m_data.isEmpty()){
+
+
+            JTrack pTrack;
+            int cId=settings.value("playingTrackId",0).toInt();
+
+
+            int oldIndex=getPlayingIndex(cId);
+
+
+            if(oldIndex>-1 && oldIndex<count-1){
+
+
+                pTrack=m_data.value(oldIndex);
+
+                pTrack.isPlaying=false;
+                m_data.replace(oldIndex,pTrack);
+                QModelIndex topLeft=createIndex(oldIndex,0);
+                QModelIndex bottomRight=createIndex(oldIndex,0);
+
+                emit dataChanged(topLeft,bottomRight);
+            }
+
+            oldIndex--;
+
+            if(oldIndex<0 ){{
+                    oldIndex=0;
+                }
+
+            }
+
+            pTrack=m_data.value(oldIndex);
+            pTrack.isPlaying=true;
+            m_data.replace(oldIndex,pTrack);
+
+            QModelIndex topLeft=createIndex(oldIndex,0);
+            QModelIndex bottomRight=createIndex(oldIndex,0);
+
+            emit dataChanged(topLeft,bottomRight);
+            int playingId=pTrack.trackId;
+
+            mController.getPlayingTrack(playingId);
+
+            //  auto
+
+
+            emit dataChanged(topLeft,bottomRight);
+
+            activeIndex=oldIndex;
+            emit activeIndexChanged();
+        }
+    }
+}
+
+void TracksDataEntry::playQueuedTrack(int trackId)
+{
+
+    if(playlistId==-2){
+        if(!m_data.isEmpty()){
+
+
+            QSettings settings("AfrikTek","Qplayer");
+
+
+            int cId=settings.value("playingTrackId",0).toInt();
+
+            JTrack pTrack;
+            int oldIndex=getPlayingIndex(trackId);
+
+            if(oldIndex==-1){
+                oldIndex=getPlayingIndex(cId);
+            }
+
+            if(oldIndex<0 || oldIndex>m_data.count()-1){
+
+                 //qDebug()<<"OUT OF BOUND EXC";
+                //oldIndex=0;
+                bool hasFound=false;
+                for(JTrack t :m_data){
+                    if(t.isPlaying){
+                        hasFound=true;
+                        break;
+                    }
+                    oldIndex++;
+                }
+
+                if(!hasFound){
+
+                    pTrack= mController.getTrackSync(trackId);
+                    pTrack.isPlaying=true;
+
+                    emit beginInsertRows(QModelIndex(),0,0);
+
+                    m_data.insert(0,pTrack);
+
+                    emit endInsertRows();
+
+                    activeIndex=0;
+
+                    emit activeIndexChanged();
+
+
+                    mController.getPlayingTrack(pTrack.trackId);
+                    return;
+                }
+
+
+
+            }else{
+
+
+                 int cIndex=getPlayingIndex(cId);
+                 if(cIndex>-1){
+                     oldIndex=cIndex;
+                 }
+                pTrack=m_data.value(oldIndex);
+
+                pTrack.isPlaying=false;
+                m_data.replace(oldIndex,pTrack);
+
+                QModelIndex topLeft=createIndex(oldIndex,0);
+                QModelIndex bottomRight=createIndex(m_data.count()-1,0);
+
+                // qDebug()<<" Two "<<oldIndex;
+
+                emit dataChanged(topLeft,bottomRight);
+            }
+
+            oldIndex=getPlayingIndex(trackId);
+
+
+
+            if(oldIndex<0 || oldIndex>m_data.count()-1){
+
+
+                //The item is not available so insert it at top
+
+
+                pTrack= mController.getTrackSync(trackId);
+                pTrack.isPlaying=true;
+
+                emit beginInsertRows(QModelIndex(),0,0);
+
+                m_data.insert(0,pTrack);
+
+                emit endInsertRows();
+
+                activeIndex=0;
+
+                emit activeIndexChanged();
+
+                mController.getPlayingTrack(pTrack.trackId);
+
+                return;
+
+
+            }
+
+
+            pTrack=m_data.value(oldIndex);
+            pTrack.isPlaying=true;
+            m_data.replace(oldIndex,pTrack);
+
+
+            QModelIndex topLeft=createIndex(oldIndex,0);
+            QModelIndex bottomRight=createIndex(oldIndex,0);
+
+            emit dataChanged(topLeft,bottomRight);
+            int playingId=pTrack.trackId;
+
+            mController.getPlayingTrack(playingId);
+
+            //  auto
+
+            activeIndex=oldIndex;
+            emit dataChanged(topLeft,bottomRight);
+
+            emit activeIndexChanged();
+
+        }
+    }
 
 }
 
@@ -244,50 +518,79 @@ void TracksDataEntry::handleRecentlyFetchedTracks(QList<JTrack> *tracks)
 
 void TracksDataEntry::handlePlayingTrackFetched(QVariantMap trackMap)
 {
-    //    JTrack* track=new JTrack;
-
-    //    track->trackId=trackMap["trackId"].toInt();
-    //    track->trackName=trackMap["trackName"].toString();
-    //    track->artistName=trackMap["artistName"].toString();
-    //    track->albumName=trackMap["albumName"].toString();
-    //    track->fileUrl=trackMap["fileUrl"].toString();
-    //    track->isFavorite=trackMap["isFavorite"].toBool();
-    //    track->duration=trackMap["duration"].toLongLong();
 
     int trackId=trackMap["trackId"].toInt();
 
+    if(playlistId!=-2){
 
 
-    int newIndex=0;
-    foreach(JTrack track,m_data){
 
-        if(track.trackId==trackId){
+        int newIndex=0;
+        foreach(JTrack track,m_data){
 
-            break;
+            if(track.trackId==trackId){
+
+                break;
+            }
+            newIndex++;
         }
-        newIndex++;
+
+
+        if(newIndex<0 || newIndex>count-1){
+            return;
+        }
+
+
+
+        auto track=m_data.value(newIndex);
+        track.isFavorite=trackMap["isFavorite"].toBool();
+
+        m_data.replace(newIndex,track);
+
+        QModelIndex topLeft=createIndex(newIndex,0);
+        QModelIndex bottomRight=createIndex(newIndex,0);
+        emit dataChanged(topLeft,bottomRight);
     }
-
-
-    if(newIndex<0 || newIndex>count-1){
-        return;
-    }
-
-
-
-    auto track=m_data.value(newIndex);
-    track.isFavorite=trackMap["isFavorite"].toBool();
-
-    m_data.replace(newIndex,track);
-
-    QModelIndex topLeft=createIndex(newIndex,0);
-    QModelIndex bottomRight=createIndex(newIndex,0);
-    emit dataChanged(topLeft,bottomRight);
 }
 
+void TracksDataEntry::handleQueuedTracksFetched(QList<JTrack> *queuedTracks)
+{
+
+    if(playlistId==-2){
+
+        addData(queuedTracks);
+    }else{
+
+        if(this->activeTrackId!=mController.getActiveTrackId()){
+            handleActiveTrackIdChanged(mController.getActiveTrackId());
+        }
+    }
+
+
+}
+
+void TracksDataEntry::handleSoloQueuedTrackFetched(JTrack track)
+{
+    if(playlistId==-2){
+
+        //This will not be the case always
+
+        if(!m_data.contains(track)){
+
+            emit beginInsertRows(QModelIndex(),count,count);
+            m_data.append(track);
+            emit   endInsertRows();
+            setCount(m_data.count());
+        }
 
 
 
+
+    }
+
+
+
+}
 
 
 int TracksDataEntry::getActiveIndex() const
@@ -297,10 +600,17 @@ int TracksDataEntry::getActiveIndex() const
 
 void TracksDataEntry::setActiveIndex(int newActiveIndex)
 {
-    if (activeIndex == newActiveIndex)
-        return;
-    activeIndex = newActiveIndex;
-    emit activeIndexChanged();
+
+    if(playlistId>-2){
+
+        if (activeIndex == newActiveIndex)
+            return;
+        activeIndex = newActiveIndex;
+
+        emit activeIndexChanged();
+    }
+
+
 }
 
 int TracksDataEntry::getActiveTrackId() const
@@ -369,11 +679,17 @@ void TracksDataEntry::addData(QList<JTrack> *tracks)
 
         int i=count;
         for(auto track:*tracks){
-            emit beginInsertRows(QModelIndex(),i,i);
-            m_data.append(track);
-            emit   endInsertRows();
 
-            i=i+1;
+            if(!m_data.contains(track)){
+                emit beginInsertRows(QModelIndex(),i,i);
+                m_data.append(track);
+                emit   endInsertRows();
+                i=i+1;
+                setCount(m_data.count());
+            }
+
+
+
         }
 
     }else{

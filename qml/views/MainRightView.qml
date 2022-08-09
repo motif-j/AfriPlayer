@@ -10,18 +10,9 @@ import "../models"
 
 Rectangle{
 
+
     id:root
     color:Theme.secondaryBackgroundColor
-
-
-    RightMusicInfoModel{
-        id:_rightMusicModel
-        dispatcher: jmusicLogic
-
-        onTrackClicked: function(trackId){
-
-        }
-    }
 
 
     AppFlickable{
@@ -51,16 +42,28 @@ Rectangle{
 
             }
 
-            RoundedImage{
-                Layout.preferredWidth:  dp(120)
+            Rectangle{
+                Layout.preferredWidth:  dp(150)
                 Layout.alignment: Qt.AlignHCenter
-                Layout.preferredHeight:  dp(120)
-                Layout.maximumHeight: dp(120)
-                fillMode: Image.Stretch
-                source:"qrc:/assets/qt.png"
+                Layout.preferredHeight:  dp(150)
+                Layout.maximumHeight: dp(150)
                 radius: dp(10)
+                color: Theme.secondaryBackgroundColor
+                RoundedImage{
+
+                    fillMode: Image.Stretch
+                    source:"qrc:/assets/qt.png"
+                    radius: dp(10)
+                    anchors.fill: parent
+
+                }
+                RippleMouseArea{
+                    anchors.fill: parent
+                }
 
             }
+
+
 
             Rectangle{
                 color:Theme.secondaryBackgroundColor
@@ -250,24 +253,34 @@ Rectangle{
                 Layout.rightMargin: dp(10)
                 Layout.leftMargin: dp(10)
                 interactive: false
+                desktopScrollEnabled: true
                 emptyText.text: "No tracks in que"
+                model:jmusicModel.model
+                currentIndex: jmusicModel.activeIndex
+
 
                 delegate:Item {
                     id: queueItem
                     width: queueList.width
                     height: dp(50)
                     PlayingQueue{
+                        trackName: model.trackName
+                        trackId:model.trackId
+                        isFavorite:model.isFavorite
+                        isPlaying: model.isPlaying
+
                         width: parent.width
                         height: parent.height
                         onClicked: {
-                            queueList.currentIndex=index
+                           // queueList.currentIndex=index
+                            jmusicModel.playQueuedTrack(trackId)
                         }
 
                     }
                 }
 
                 highlight:Rectangle{
-                    color:Theme.backgroundColor
+                    color:"#00000000"
                     radius: dp(5)
 
 
@@ -295,6 +308,7 @@ Rectangle{
         }
         return false
     }
+
 
 
 }

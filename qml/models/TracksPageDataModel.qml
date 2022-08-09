@@ -73,6 +73,7 @@ Item {
 
             switch(key){
             case Qt.Key_Down:
+
                 jdownkeyPressed()
                 break;
             case Qt.Key_Up:
@@ -88,6 +89,10 @@ Item {
         }
 
 
+    }
+
+    function queAll(){
+        jmusicModel.addPlaylistToQue(-1,false)
     }
 
 }

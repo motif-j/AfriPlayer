@@ -170,6 +170,7 @@ Page{
                         color: "#00000000"
 
                         Views.HomeTracksView{
+                            id:tView
                             width:parent.width
                             trackName: model.trackName
                             artistName: model.artistName
@@ -185,6 +186,9 @@ Page{
                             onClicked: {
                                 selectIndex(index)
 
+                                if(Theme.isAndroid){
+                                    jmusicLogic.trackPlayed(tView.trackId)
+                                }
                             }
                         }
                     }

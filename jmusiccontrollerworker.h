@@ -1,6 +1,7 @@
 #ifndef JMUSICCONTROLLERWORKER_H
 #define JMUSICCONTROLLERWORKER_H
 #include<QObject>
+#include <QSettings>
 #include<QThread>
 #include "db_jmalkiadbinterface.h"
 
@@ -14,6 +15,9 @@ public:
     }
 
     int activeTrackId=0;
+    void togglePlayingQue(int trackId){
+        db.toggleQueuedTrackPlayed(trackId);
+    }
 
 public slots:
     void getTrack(const int trackId){
@@ -28,6 +32,9 @@ public slots:
 
     void getPlayingTrack(int trackId){
         JTrack *tempTrack=db.getTrack(trackId);
+
+        db.toggleQueuedTrackPlayed(trackId);
+
         emit playingTrackFetched(*tempTrack);
     }
 
@@ -97,7 +104,7 @@ public slots:
 
         QThread::msleep(500);
 
-        qDebug()<<" Called "<<tracks->size();
+
 
         emit recentlyPlayedTracksFetched(tracks);
     }
@@ -109,13 +116,57 @@ public slots:
 
         delete track;
 
-         QThread::msleep(500);
+        QThread::msleep(500);
 
-         getPlayingTrack(trackId);
+        getPlayingTrack(trackId);
         // getTrack(trackId);
-      //  emit playlistTracksFetchedFromRepo(tracks);
+        //  emit playlistTracksFetchedFromRepo(tracks);
     }
 
+    //QUE LIST
+    void queueTrack(int trackId){
+
+
+        db.queueTrack(trackId);
+
+        auto track=db.getTrack(trackId);
+
+        delay();
+        emit trackQueued(*track);
+
+    }
+
+    void fetchPlayingQueue(){
+        QSettings settings("AfrikTek","Qplayer");
+        bool shuffle=settings.value("shuffle").toBool();
+
+
+        auto queue=db.fetchNext10QueuedTracks(shuffle);
+
+        delay();
+        emit queuedTracksFetched(queue);
+    }
+
+    void queuePlaylistTracks(int playlistId,bool append){
+        auto tracks=db.fetchPlaylistTracksFromRepo(playlistId);
+        if(!append){
+            //clear the que
+
+            db.clearQueue();
+        }
+
+        foreach(JTrack t, *tracks){
+            db.queueTrack(t.trackId);
+        }
+
+        if(!append){
+            //
+            fetchPlayingQueue();
+        }
+
+        delete tracks;
+
+    }
 signals:
     void trackFetched(JTrack track);
     void playingTrackFetched(JTrack track);
@@ -125,11 +176,17 @@ signals:
     void homePlaylistFetchedFromRepository(QList<JPlaylist>*);
     void recentlyPlayedTracksFetched(QList<JTrack>*);
 
+    void queuedTracksFetched(QList<JTrack>*);
+    void trackQueued(JTrack track);
 
 
 private:
 
     JMalkiaDbInterface &db=JMalkiaDbInterface::getInstace();
+
+    void delay(int duration=500){
+        QThread::msleep(duration);
+    }
 
 };
 #endif // JMUSICCONTROLLERWORKER_H

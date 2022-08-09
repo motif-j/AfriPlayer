@@ -113,5 +113,13 @@ Item {
     }
 
 
+    function addPlaylistToQueue(shuffle){
+        if(playlistId>-1){
+              jmusicModel.addPlaylistToQue(playlistId,shuffle)
+        }
+
+
+    }
+
 
 }

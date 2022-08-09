@@ -11,6 +11,24 @@ Item {
     property var  playingTrack: ({})
     property var  playingTrackId: jmusicController.playingTrack
 
+    property bool shuffle: jmusicController.shuffle
+    property int activeIndex : dataEntry.activeIndex
+
+    signal trackClicked(int trackId)
+    property var  model: dataEntry
+
+    TracksDataEntry{
+        id:dataEntry
+
+        onActiveIndexChanged:function() {
+            //\\ console.debug("INDEX "+dataEntry.activeIndex)
+        }
+    }
+
+
+    function loadQueuedTracks(){
+        dataEntry.loadQuedTracks();
+    }
 
     JMusicController{
         id:jmusicController
@@ -21,6 +39,9 @@ Item {
         }
 
     }
+
+
+
 
     Connections{
         id:musicModelConn
@@ -37,7 +58,9 @@ Item {
             if(trackId!==0){
 
                 addTrackToRecentlyClicked(trackId)
-                jmusicController.getPlayingTrack(trackId)
+
+                //  jmusicController.getPlayingTrack(trackId)
+                playQueuedTrack(trackId)
             }else{
 
             }
@@ -69,6 +92,30 @@ Item {
 
     function addTrackToPlaylist(trackId,plId){
         jmusicController.addTrackToPlaylist(trackId,plId);
+    }
+
+    function addTrackToQueue(trackId){
+        jmusicController.addTrackToQue(trackId);
+
+    }
+
+    function playNext(){
+        dataEntry.playNext()
+    }
+    function playPrevious(){
+        dataEntry.playPrevious()
+    }
+    function playQueuedTrack(trackId){
+        dataEntry.playQueuedTrack(trackId)
+    }
+
+    function addPlaylistToQue(playlistId,shuffle){
+
+      dataEntry.clearPlaylist()
+        jmusicController.addPlaylistToQueue(playlistId,shuffle)
+    }
+    function toggleShuffle(){
+        jmusicController.toggleShuffle()
     }
 
 }

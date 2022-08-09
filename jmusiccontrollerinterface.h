@@ -5,6 +5,7 @@
 #include <QtQml/qqml.h>
 #include "jmusiccontroller.h"
 
+
 /*
 *Having this class feels like redudancy
 *However I want the music controller to be a single instance in the entire project.
@@ -27,12 +28,22 @@ public:
         Q_UNUSED(parent)
         qDebug()<<"INITIALIZING INTERFACE";
 
+
+        // qDebug()<<" PATH IS "<<path;
         //connect directly to the signals of the main controller
         connect(&musicController,&JMusicController::trackFetched,this,&JMusicControllerInterface::trackFetchedFromRepo);
 
         connect(&musicController,&JMusicController::playingTrackFetched,this,&JMusicControllerInterface::playingTrackFetched);
 
+        Q_PROPERTY(bool shuffle READ getShuffle WRITE setShuffle NOTIFY shuffleChanged)
         Q_PROPERTY(int activeTrackId READ getActiveTrackId WRITE setActiveTrackId NOTIFY activeTrackIdChanged)
+
+        Q_PROPERTY(bool dynamicMode READ getDynamicMode WRITE setDynamicMode NOTIFY dynamicModeChanged)
+
+        QSettings settings("AfrikTek","Qplayer");
+        bool shuffle=settings.value("shuffle",false).toBool();
+
+        setShuffle(shuffle);
     }
 
     ~JMusicControllerInterface() {
@@ -49,6 +60,25 @@ public:
         activeTrackId = newActiveTrackId;
         emit activeTrackIdChanged();
     }
+
+    bool getShuffle() const
+    {
+        return shuffle;
+    }
+
+    void setShuffle(bool newShuffle)
+    {
+        if (shuffle == newShuffle)
+            return;
+        shuffle = newShuffle;
+        emit shuffleChanged();
+    }
+
+    //  bool getShuffle() const;
+    //  void setShuffle(bool newShuffle);
+
+    bool getDynamicMode() const;
+    void setDynamicMode(bool newDynamicMode);
 
 public slots:
     void  handleFetchedTrack(QVariantMap trackMap){
@@ -84,6 +114,32 @@ public slots:
     void addTrackToPlaylist(int trackId,int playlistId){
         musicController.addTrackToPlaylist(trackId,playlistId);
     }
+    void addTrackToQue(int trackId){
+        musicController.addTrackToQueue(trackId);
+    }
+
+    void addPlaylistToQueue(int playlistId,bool shuffle){
+
+        QSettings settings("AfrikTek","Qplayer");
+        settings.setValue("shuffle",shuffle);
+
+        setShuffle(shuffle);
+        musicController.addPlaylistToQueue(playlistId,false);
+    }
+
+    void toggleShuffle()
+    {
+        QSettings settings("AfrikTek","Qplayer");
+        bool shuffle=settings.value("shuffle",false).toBool();
+
+        bool newShuffleMode=!shuffle;
+
+        settings.setValue("shuffle",newShuffleMode);
+
+        setShuffle(newShuffleMode);
+
+    }
+
 
     //These signals directly communicate with the QML file
 signals:
@@ -92,12 +148,35 @@ signals:
 
     void activeTrackIdChanged();
 
+
+
+    void shuffleChanged();
+
+    void dynamicModeChanged();
+
 private:
     JMusicController &musicController=JMusicController::getInstance();
     int activeTrackId;
+    bool shuffle;
+    bool dynamicMode;
+
 
 
 };
+
+inline bool JMusicControllerInterface::getDynamicMode() const
+{
+    return dynamicMode;
+}
+
+inline void JMusicControllerInterface::setDynamicMode(bool newDynamicMode)
+{
+    if (dynamicMode == newDynamicMode)
+        return;
+    dynamicMode = newDynamicMode;
+    emit dynamicModeChanged();
+}
+
 
 
 #endif // JMUSICCONTROLLERINTERFACE_H

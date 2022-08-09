@@ -11,10 +11,14 @@ GridLayout{
     columnSpacing: dp(5)
 
     AppButton{
-        text: "Shuffle off"
+        text:jmusicModel.shuffle? "Shuffle On":"Shuffle Off"
 
         radius: dp(5)
         borderColor: JColors.purple100
+
+        onClicked: {
+            jmusicModel.toggleShuffle()
+        }
 
     }
     AppButton{

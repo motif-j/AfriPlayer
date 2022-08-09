@@ -25,7 +25,18 @@ Item {
 
 
         Navigation{
-            navigationMode:fixDrawer?navigationModeDrawer:navigationModeTabs
+            navigationMode:{
+             if(Theme.isAndroid ){
+                 if(Theme.isPortrait){
+                     return  navigationModeTabs
+                 }
+
+                 return navigationModeDrawer
+             }else{
+
+                 return navigationModeDrawer
+             }
+            }//fixDrawer?navigationModeDrawer:navigationModeTabs
             drawerFixed: fixDrawer()
             drawerMinifyEnabled: fixDrawer()?true:false
             headerView: Rectangle{
@@ -143,18 +154,19 @@ Item {
         let isDesktop=Theme.isDesktop
         let isPotrait=Theme.isPortrait
 
-        if(isPotrait){
+        if(Theme.isAndroid){
             return false
-        }else{
-
-            if(isDesktop){
-                return true
-            }else{
-                return false
-
-            }
         }
 
+        if(isDesktop){
+            return true
+        }else{
+            if(isPotrait){
+                return false
+            }else{
+                return true
+            }
+        }
 
 
     }

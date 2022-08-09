@@ -22,6 +22,8 @@ struct JTrack{
     int albumId;
     long long duration;
     bool isFavorite=false;
+    bool hasPlayed=false;
+    bool isPlaying=false;
 
     QString trackName;
     QString fileUrl;
@@ -29,7 +31,7 @@ struct JTrack{
     QString artistName;
 
 
-    bool operator ==(JTrack a){
+    bool operator ==(const JTrack &a) const{
 
         return a.trackId==this->trackId;
     }
