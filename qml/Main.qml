@@ -83,16 +83,46 @@ App {
     }
 
     //all key events be handled globally
-    MainView{
-        id:mainView
-        focus: true
-        Keys.onPressed: function(event){
-           let key= event.key
-           appLogic.jkeyPressed(key)
+    NavigationStack{
+        id:baseNavStack
 
+
+        Page{
+            id:mainPage
+            navigationBarTranslucency: 1
+            navigationBarHidden: true
+
+            MainView{
+                id:mainView
+                focus: true
+                Keys.onPressed: function(event){
+                    let key= event.key
+                    appLogic.jkeyPressed(key)
+
+                }
+
+            }
+        }
+        Component{
+             id:playerPage
+            Page{
+                useSafeArea: false
+
+
+
+                PlayerView{
+                    width: parent.width
+                    height: parent.height
+
+                }
+            }
         }
 
+
+
+
     }
+
 
 
 }

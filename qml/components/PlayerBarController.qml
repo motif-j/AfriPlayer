@@ -81,6 +81,14 @@ GridLayout{
 
     }
 
+    function isUndefined(input){
+
+        if(input===undefined){
+            return true
+        }
+        return false
+    }
+
 
 }
 

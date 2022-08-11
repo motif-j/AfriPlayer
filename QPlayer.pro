@@ -3,6 +3,8 @@ CONFIG += felgo
 QT +=core
 QT +=gui
 QT +=sql
+QT +=multimedia
+
 # uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
 # for the remaining steps to build a custom Live Code Reload app see here: https://felgo.com/custom-code-reload-app/
 # CONFIG += felgo-live
@@ -45,6 +47,7 @@ DEPLOYMENTFOLDERS += assetsFolder
 SOURCES += main.cpp \
     db_jmalkiadbinterface.cpp \
     dm_tracksdataentry.cpp \
+    jmetaretriever.cpp \
     jmusiccontroller.cpp \
     jplaylistcontroller.cpp \
     jplaylistdataentry.cpp \
@@ -109,11 +112,13 @@ DISTFILES += \
     qml/views/MainView.qml \
     qml/views/MainCenterView.qml \
     qml/models/TracksPageDataModel.qml \
-    qml/logics/TracksLogic.qml
+    qml/logics/TracksLogic.qml \
+    qml/views/PlayerView.qml
 
 HEADERS += \
     db_jmalkiadbinterface.h \
     dm_tracksdataentry.h \
+    jmetaretriever.h \
     jmodels.h \
     jmusiccontroller.h \
     jmusiccontrollerinterface.h \

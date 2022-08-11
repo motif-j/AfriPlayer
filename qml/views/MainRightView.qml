@@ -59,6 +59,9 @@ Rectangle{
                 }
                 RippleMouseArea{
                     anchors.fill: parent
+                    onClicked: {
+                        baseNavStack.push(playerPage)
+                    }
                 }
 
             }

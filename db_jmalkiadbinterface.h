@@ -12,7 +12,7 @@
 #include <QThread>
 #include <QRandomGenerator>
 
-
+#include <QMediaMetaData>
 
 //  Q_DECLARE_METATYPE(JTrack);
 
