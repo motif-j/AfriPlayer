@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QtQml/qqml.h>
 #include "jmusiccontroller.h"
+#include "file_jfileio.h"
 
 
 /*
@@ -27,6 +28,10 @@ public:
 
         Q_UNUSED(parent)
         qDebug()<<"INITIALIZING INTERFACE";
+
+        JFileIO &fileIo=JFileIO::getInstance();
+        //fileIo.queryDir();
+
 
 
         // qDebug()<<" PATH IS "<<path;

@@ -96,7 +96,9 @@ Rectangle{
                             fontSize: 14
                             topPadding: dp(5)
                             maximumLineCount: 1
-                            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                            width: dp(200)
+                           // wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                            elide: Text.ElideRight
 
 
                         }
@@ -106,7 +108,8 @@ Rectangle{
                             fontSize: 12
                             color: Theme.secondaryTextColor
                             maximumLineCount: 1
-                            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                             elide: Text.ElideRight
+                             width: dp(200)
 
                         }
                     }
@@ -117,12 +120,13 @@ Rectangle{
                     visible: root.width>dp(480)
                     fontSize: 14
                     Layout.fillWidth: true
+                     width: dp(80)
 
                     Layout.alignment: Qt.AlignRight
                     // Layout.maximumWidth: dp(80)
                     Layout.preferredWidth: dp(80)
                     maximumLineCount: 1
-                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                     elide: Text.ElideRight
 
                 }
 

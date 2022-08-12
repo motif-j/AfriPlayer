@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.3
 import Felgo 3.0
+import QtQuick.Controls 2.5
 
 
 
@@ -25,21 +26,21 @@ Rectangle{
         height: dp(70)
 
 
-       Rectangle{
+        Rectangle{
             property int thumbnailSize:dp(50)
             Layout.fillWidth: true
             Layout.preferredWidth: thumbnailSize
             Layout.preferredHeight: thumbnailSize
             Layout.maximumHeight: thumbnailSize
             Layout.maximumWidth: thumbnailSize
-           radius: dp(5)
+            radius: dp(5)
             Layout.alignment: Qt.AlignHCenter
             Layout.leftMargin: dp(5)
 
-           gradient: Gradient{
-               GradientStop{position: 0.0;color:thumbnailColor}
+            gradient: Gradient{
+                GradientStop{position: 0.0;color:thumbnailColor}
                 GradientStop{position: 1.0;color:thumbnailColor2}
-           }
+            }
 
         }
 
@@ -52,6 +53,9 @@ Rectangle{
                 font.bold: true
                 font.pixelSize:  sp(14)
                 topPadding: dp(5)
+                maximumLineCount: 1
+                elide: Text.Right
+                width: dp(200)
 
             }
             AppText{
@@ -59,6 +63,9 @@ Rectangle{
                 bottomPadding: dp(5)
                 font.pixelSize:  sp(12)
                 color: Theme.secondaryTextColor
+                maximumLineCount: 1
+                elide: Text.Right
+                width: dp(200)
 
             }
         }
@@ -74,6 +81,17 @@ Rectangle{
 
 
     }
-}
 
+    RippleMouseArea{
+        width:root.width
+        height: root.height
+        acceptedButtons: Qt.RightButton | Qt.LeftButton
+        onClicked: {
+
+        }
+        onDoubleClicked: {
+            console.debug("Hello")
+        }
+    }
+}
 

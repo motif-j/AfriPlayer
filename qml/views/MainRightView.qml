@@ -93,7 +93,22 @@ Rectangle{
                     fontSize: 14
                     font.bold: true
                     topPadding: dp(10)
-                    //  anchors.centerIn: parent
+                    maximumLineCount: 1
+                    onTextChanged: {
+                        let trackW=trackText.width
+                        let contW=trackContainer.width
+
+
+                        if(trackW>=contW){
+
+                           // seqTrackAnimator.start()
+
+
+
+                        }
+                    }
+
+                     anchors.centerIn: parent
 
                     SequentialAnimation{
                         id:seqTrackAnimator
@@ -124,32 +139,9 @@ Rectangle{
 
                     }
 
-                    NumberAnimation {
-
-                        target: trackText
-                        property: "x"
-                        duration: 10000
-                        from: trackContainer.width
-                        to:-trackText.width
-                        loops: Animation.Infinite
-                        id:trackAnimator
-                    }
-
-                    Component.onCompleted: {
 
 
-                        let trackW=trackText.width
-                        let contW=trackContainer.width
 
-
-                        if(trackW>=contW){
-                            trackAnimator.start()
-                        }else{
-                            trackText.width=contW
-
-                            //seqTrackAnimator.start()
-                        }
-                    }
                 }
             }
 
@@ -214,7 +206,7 @@ Rectangle{
                 Layout.maximumHeight: dp(50)
                 Layout.preferredHeight: dp(50)
                 onPlayClicked: {
-                   //to be implemented later
+                    //to be implemented later
                 }
 
             }
@@ -269,13 +261,14 @@ Rectangle{
                     PlayingQueue{
                         trackName: model.trackName
                         trackId:model.trackId
+                        artistName: model.artistName
                         isFavorite:model.isFavorite
                         isPlaying: model.isPlaying
 
                         width: parent.width
                         height: parent.height
                         onClicked: {
-                           // queueList.currentIndex=index
+                            // queueList.currentIndex=index
                             jmusicModel.playQueuedTrack(trackId)
                         }
 

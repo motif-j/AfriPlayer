@@ -190,6 +190,11 @@ Page{
                                     jmusicLogic.trackPlayed(tView.trackId)
                                 }
                             }
+
+                            onDoubleClicked: {
+                                 selectIndex(index)
+                                 jmusicLogic.trackPlayed(tView.trackId)
+                            }
                         }
                     }
                     highlight:Rectangle{

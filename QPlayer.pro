@@ -1,10 +1,16 @@
 # allows to add DEPLOYMENTFOLDERS and links to the Felgo library and QtCreator auto-completion
 CONFIG += felgo
+CONFIG +=file_copies
+
 QT +=core
 QT +=gui
 QT +=sql
 QT +=multimedia
 
+libtagfile.files=$$files("taglib/lib/*.dll")
+COPIES += libtagfile
+
+libtagfile.path=$$OUT_PWD
 # uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
 # for the remaining steps to build a custom Live Code Reload app see here: https://felgo.com/custom-code-reload-app/
 # CONFIG += felgo-live
@@ -21,8 +27,12 @@ PRODUCT_VERSION_CODE = 1
 # Not used if using Felgo Live
 PRODUCT_LICENSE_KEY = ""
 
+
+
+
 qmlFolder.source = qml
 DEPLOYMENTFOLDERS += qmlFolder # comment for publishing
+
 
 
 
@@ -47,7 +57,7 @@ DEPLOYMENTFOLDERS += assetsFolder
 SOURCES += main.cpp \
     db_jmalkiadbinterface.cpp \
     dm_tracksdataentry.cpp \
-    jmetaretriever.cpp \
+    file_jfileio.cpp \
     jmusiccontroller.cpp \
     jplaylistcontroller.cpp \
     jplaylistdataentry.cpp \
@@ -75,6 +85,7 @@ macx {
 
 DISTFILES += \
     android/src/com/afriktek/qplayer/TestClass.java \
+    qml/audio/SoundManager.qml \
     qml/components/PlayerBar2.qml \
     qml/components/PlayerBarController.qml \
     qml/components/TracksEmptyLIstView.qml \
@@ -118,7 +129,8 @@ DISTFILES += \
 HEADERS += \
     db_jmalkiadbinterface.h \
     dm_tracksdataentry.h \
-    jmetaretriever.h \
+    file_fileworker.h \
+    file_jfileio.h \
     jmodels.h \
     jmusiccontroller.h \
     jmusiccontrollerinterface.h \
@@ -127,3 +139,13 @@ HEADERS += \
     jplaylistdataentry.h \
     jrole.h \
     qmd_qtrack.h
+
+win32:CONFIG(release, debug|release):
+LIBS += "C:/Program Files (x86)/taglib/lib/libtag.dll.a"
+INCLUDEPATH += "C:/Program Files (x86)/taglib/include"
+DEPENDPATH += "C:/Program Files (x86)/taglib/include"
+
+INCLUDEPATH += $$PWD/.
+DEPENDPATH += $$PWD/.
+
+

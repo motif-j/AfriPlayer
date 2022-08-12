@@ -2,6 +2,7 @@
 #include <FelgoApplication>
 #include <QtQml>
 #include <QQmlApplicationEngine>
+#include <QDir>
 
 #include "jplaylistdataentry.h"
 #include "dm_tracksdataentry.h"
@@ -63,6 +64,7 @@ int main(int argc, char *argv[])
 
     qRegisterMetaType<JTrack>("JTrack");
     qRegisterMetaType<JPlaylist>("JPlaylist");
+    qRegisterMetaType<QDir>("QDir");
 
     // use this during development
     // for PUBLISHING, use the entry point below

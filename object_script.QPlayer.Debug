@@ -1,0 +1,15 @@
+debug/main.o
+debug/db_jmalkiadbinterface.o
+debug/dm_tracksdataentry.o
+debug/jmusiccontroller.o
+debug/jplaylistcontroller.o
+debug/jplaylistdataentry.o
+debug/qmd_qtrack.o
+debug/moc_db_jmalkiadbinterface.o
+debug/moc_dm_tracksdataentry.o
+debug/moc_jmusiccontroller.o
+debug/moc_jmusiccontrollerinterface.o
+debug/moc_jmusiccontrollerworker.o
+debug/moc_jplaylistcontroller.o
+debug/moc_jplaylistdataentry.o
+debug/moc_qmd_qtrack.o

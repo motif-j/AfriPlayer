@@ -18,7 +18,7 @@ Rectangle{
     signal clicked()
 
     color:isPlaying?Theme.backgroundColor:Theme.secondaryBackgroundColor
-    RowLayout{
+    ColumnLayout{
         width: root.width
         height: root.height
         spacing: dp(5)
@@ -37,6 +37,9 @@ Rectangle{
                 fontSize: 12
                 topPadding: dp(5)
                 Layout.alignment: Qt.AlignHCenter
+                width: root.width
+                maximumLineCount: 1
+                elide: Text.ElideRight
 
             }
             AppText{
@@ -45,6 +48,9 @@ Rectangle{
                 fontSize: 11
                 color: Theme.secondaryTextColor
                 Layout.alignment: Qt.AlignHCenter
+                width: root.width
+                maximumLineCount: 1
+                elide: Text.ElideRight
 
             }
         }

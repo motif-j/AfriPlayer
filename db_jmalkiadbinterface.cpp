@@ -264,7 +264,7 @@ QList<JTrack> *JMalkiaDbInterface::fetchPlaylistTracksFromRepo(int playlistId)
 
 
     if(playlistId==-1){
-       query="SELECT t.track_id, t.track_name,a.artist_name,ab.album_name, t.duration, t.file_url FROM tracks t LEFT JOIN artists a on t.artist_id=a.artist_id LEFT JOIN albums ab on ab.album_id=t.album_id ORDER BY t.track_id DESC ";
+        query="SELECT t.track_id, t.track_name,a.artist_name,ab.album_name, t.duration, t.file_url FROM tracks t LEFT JOIN artists a on t.artist_id=a.artist_id LEFT JOIN albums ab on ab.album_id=t.album_id ORDER BY t.track_id DESC ";
 
     }
 
@@ -275,7 +275,7 @@ QList<JTrack> *JMalkiaDbInterface::fetchPlaylistTracksFromRepo(int playlistId)
     auto isQueryPrepared=sqlQuery->prepare(query);
 
     if(playlistId!=-1){
-         sqlQuery->addBindValue(playlistId);
+        sqlQuery->addBindValue(playlistId);
     }
 
 
@@ -697,6 +697,145 @@ void JMalkiaDbInterface::massInsert()
         delete q;
     }
     qDebug("Mass insert Done");
+}
+
+void JMalkiaDbInterface::addNewTrack(JTrack track)
+{
+    QSqlQuery *q=new QSqlQuery(mDb);
+    q->prepare("INSERT INTO tracks (track_name, duration, artist_id, album_id, file_url) VALUES (?, ?, ?, ?, ?)");
+
+    int artistId=addNewArtist(track.artistName);
+    int album=albumId(track.albumName);
+
+
+
+    q->addBindValue(track.trackName);
+    q->addBindValue(track.duration);
+    q->addBindValue(artistId);
+    q->addBindValue(album);
+
+    q->addBindValue(track.fileUrl);
+
+    q->exec();
+
+
+    printError("Add New Track",q);
+    q->finish();
+    q=nullptr;
+    delete q;
+
+}
+
+int JMalkiaDbInterface::addNewArtist(QString artistName)
+{
+    QSqlQuery *q=new QSqlQuery(mDb);
+
+    q->prepare("SELECT artist_id FROM artists WHERE artist_name =? ");
+    q->addBindValue(artistName);
+
+    q->exec();
+
+
+
+    if(q->first()){
+
+        printError("Add New Artist ",q);
+
+        int id=q->value(0).toInt();
+        delete  q;
+        return id;
+    }
+
+
+
+    printError("Add New Artist ",q);
+
+
+    q=new QSqlQuery(mDb);
+
+    q->prepare("INSERT INTO artists (artist_name) VALUES (?) " );
+    q->addBindValue(artistName);
+
+    q->exec();
+
+    q->finish();
+    q->prepare("SELECT artist_id FROM artists WHERE artist_name = ?");
+    q->addBindValue(artistName);
+
+    q->exec();
+
+
+
+    if(q->first()){
+        printError("Add New Artist ",q);
+        int id=q->value(0).toInt();
+        delete  q;
+        return id;
+    }
+
+
+    printError("Add New Artist ",q);
+
+
+    delete q;
+
+    return 0;
+}
+
+int JMalkiaDbInterface::albumId(QString albumName)
+{
+    QSqlQuery *q=new QSqlQuery(mDb);
+
+    q->prepare("SELECT album_id FROM albums WHERE album_name = ?");
+    q->addBindValue(albumName);
+
+    q->exec();
+
+
+
+    if(q->first()){
+        printError("Add New Album SEL ",q);
+
+        int id=q->value(0).toInt();
+        delete  q;
+        return id;
+    }
+
+
+    printError("Add New Album SEL ",q);
+    q=new QSqlQuery(mDb);
+
+    q->prepare("INSERT INTO albums (album_name) VALUES (?) " );
+    q->addBindValue(albumName);
+
+    q->exec();
+
+    q->finish();
+    printError("Add New Album INS ",q);
+
+    q=new QSqlQuery(mDb);
+
+
+    q->prepare("SELECT album_id FROM albums WHERE album_name = ?");
+    q->addBindValue(albumName);
+
+    q->exec();
+
+
+
+    if(q->first()){
+        printError("Add New Album SEL2 ",q);
+
+
+        int id=q->value(0).toInt();
+        delete  q;
+        return id;
+    }
+
+
+    printError("Add New Album SEL2",q);
+    delete  q;
+    return 0;
 }
 
 

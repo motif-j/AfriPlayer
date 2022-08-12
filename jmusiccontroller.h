@@ -8,6 +8,10 @@
 #include <QSettings>
 #include "jmusiccontrollerworker.h"
 
+
+
+
+
 extern QString formatTrackTime(QTime);
 
 class JMusicController : public QObject
@@ -21,6 +25,7 @@ private:
         Q_UNUSED(parent)
 
         qDebug()<<"INITIALIZING MAIN CONTROLELR";
+
 
           QSettings settings("AfrikTek","Qplayer");
 

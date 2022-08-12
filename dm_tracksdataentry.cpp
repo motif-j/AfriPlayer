@@ -1,7 +1,8 @@
 #include "dm_tracksdataentry.h"
 #include <QTime>
 #include <QThread>
-#include <stdexcpt.h>
+
+
 
 
 

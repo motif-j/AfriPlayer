@@ -1,5 +1,6 @@
 import QtQuick 2.9
 import com.afriktek.qplayer 1.0
+import "../audio"
 
 //At All cost ensure this model is only instantiated once
 
@@ -16,6 +17,10 @@ Item {
 
     signal trackClicked(int trackId)
     property var  model: dataEntry
+
+    SoundManager{
+        id:soundManager
+    }
 
     TracksDataEntry{
         id:dataEntry
@@ -118,4 +123,7 @@ Item {
         jmusicController.toggleShuffle()
     }
 
+    Component.onCompleted: {
+        soundManager.play()
+    }
 }

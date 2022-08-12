@@ -65,8 +65,11 @@ public:
     QList<JTrack> *fetchNext10QueuedTracks(bool shuffle);
 
     void removeTrackFromPlaylist(int trackId,int playlistId);
-    void massInsert();
 
+    void massInsert();
+    void addNewTrack(JTrack track);
+    int addNewArtist(QString artistName);
+    int albumId(QString albumName);
 
     //constrctor
 

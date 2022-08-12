@@ -85,6 +85,12 @@ App {
     //all key events be handled globally
     NavigationStack{
         id:baseNavStack
+        focus: true
+        Keys.onPressed: function(event){
+            let key= event.key
+            appLogic.jkeyPressed(key)
+
+        }
 
 
         Page{
@@ -94,12 +100,7 @@ App {
 
             MainView{
                 id:mainView
-                focus: true
-                Keys.onPressed: function(event){
-                    let key= event.key
-                    appLogic.jkeyPressed(key)
 
-                }
 
             }
         }
