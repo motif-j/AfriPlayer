@@ -3,7 +3,7 @@
 #include<QObject>
 #include <QSettings>
 #include<QThread>
-#include "db_jmalkiadbinterface.h"
+#include "../database/db_jmalkiadbinterface.h"
 
 class JMusicControllerWorker : public QObject
 {

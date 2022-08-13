@@ -18,8 +18,8 @@
 #include <QDebug>
 #include <string>
 #include <wchar.h>
-#include "jmodels.h"
-#include "db_jmalkiadbinterface.h"
+#include "../models/jmodels.h"
+#include "../database/db_jmalkiadbinterface.h"
 
 class FilWorker : public QObject
 {

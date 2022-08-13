@@ -2,7 +2,7 @@
 #define JFILEIO_H
 
 #include <QObject>
-#include <file_fileworker.h>
+#include "../fileio/file_fileworker.h"
 #include <QThread>
 
 class JFileIO : public QObject

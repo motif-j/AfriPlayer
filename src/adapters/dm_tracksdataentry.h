@@ -6,12 +6,12 @@
 #include <QString>
 #include <QList>
 #include<QtGui>
-#include "jmodels.h"
+#include "../models/jmodels.h"
 #include <QVariant>
 #include <QDebug>
 #include <QVariantMap>
-#include "jrole.h"
-#include "jmusiccontroller.h"
+#include "../models/jrole.h"
+#include "../controllers/jmusiccontroller.h"
 #include <QSettings>
 
 

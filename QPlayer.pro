@@ -55,13 +55,14 @@ DEPLOYMENTFOLDERS += assetsFolder
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
-    db_jmalkiadbinterface.cpp \
-    dm_tracksdataentry.cpp \
-    file_jfileio.cpp \
-    jmusiccontroller.cpp \
-    jplaylistcontroller.cpp \
-    jplaylistdataentry.cpp \
-    qmd_qtrack.cpp
+    src/audio/jaudio.cpp \
+    src/database/db_jmalkiadbinterface.cpp \
+    src/adapters/dm_tracksdataentry.cpp \
+    src/fileio/file_jfileio.cpp \
+    src/controllers/jmusiccontroller.cpp \
+    src/controllers/jplaylistcontroller.cpp \
+    src/adapters/jplaylistdataentry.cpp \
+    src/utils/jsettings.cpp
 
 
 android {
@@ -127,18 +128,19 @@ DISTFILES += \
     qml/views/PlayerView.qml
 
 HEADERS += \
-    db_jmalkiadbinterface.h \
-    dm_tracksdataentry.h \
-    file_fileworker.h \
-    file_jfileio.h \
-    jmodels.h \
-    jmusiccontroller.h \
-    jmusiccontrollerinterface.h \
-    jmusiccontrollerworker.h \
-    jplaylistcontroller.h \
-    jplaylistdataentry.h \
-    jrole.h \
-    qmd_qtrack.h
+    src/audio/jaudio.h \
+   src/database/db_jmalkiadbinterface.h \
+    src/adapters/dm_tracksdataentry.h \
+    src/fileio/file_fileworker.h \
+   src/fileio/file_jfileio.h \
+    src/models/jmodels.h \
+    src/controllers/jmusiccontroller.h \
+    src/controllers/jmusiccontrollerinterface.h \
+    src/controllers/jmusiccontrollerworker.h \
+    src/controllers/jplaylistcontroller.h \
+    src/adapters/jplaylistdataentry.h \
+    src/models/jrole.h \
+    src/utils/jsettings.h
 
 win32:CONFIG(release, debug|release):
 LIBS += "C:/Program Files (x86)/taglib/lib/libtag.dll.a"

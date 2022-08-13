@@ -1,4 +1,4 @@
-#include "jmusiccontroller.h"
+#include "../controllers/jmusiccontroller.h"
 #include <QTime>
 
 
@@ -84,6 +84,7 @@ void JMusicController::handleFetchTrack(JTrack trackResult)
     trackMap["artistName"]=trackResult.artistName;
     trackMap["duration"]=formatedTime;
     trackMap["isFavorite"]=trackResult.isFavorite;
+    trackMap["colors"]=trackResult.colors;
 
 
     emit trackFetched(trackMap);

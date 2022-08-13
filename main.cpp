@@ -4,11 +4,12 @@
 #include <QQmlApplicationEngine>
 #include <QDir>
 
-#include "jplaylistdataentry.h"
-#include "dm_tracksdataentry.h"
-#include "db_jmalkiadbinterface.h"
 
-#include "jmusiccontrollerinterface.h"
+#include "src/adapters/jplaylistdataentry.h"
+#include "src/adapters/dm_tracksdataentry.h"
+#include "src/database/db_jmalkiadbinterface.h"
+
+#include "src/controllers/jmusiccontrollerinterface.h"
 #include <QString>
 
 

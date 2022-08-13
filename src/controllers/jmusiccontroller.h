@@ -9,9 +9,6 @@
 #include "jmusiccontrollerworker.h"
 
 
-
-
-
 extern QString formatTrackTime(QTime);
 
 class JMusicController : public QObject

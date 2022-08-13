@@ -7,9 +7,9 @@
 #include<QByteArray>
 #include<QList>
 #include<QDebug>
-#include "jrole.h"
-#include "jmodels.h"
-#include "jmusiccontroller.h"
+#include "../models/jrole.h"
+#include "../models/jmodels.h"
+#include "../controllers/jmusiccontroller.h"
 
 class JPlaylistDataEntry : public QAbstractListModel
 {

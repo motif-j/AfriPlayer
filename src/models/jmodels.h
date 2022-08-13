@@ -29,6 +29,8 @@ struct JTrack{
     QString fileUrl;
     QString albumName;
     QString artistName;
+    QString colors;
+
 
 
     bool operator ==(const JTrack &a) const{

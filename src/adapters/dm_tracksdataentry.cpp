@@ -1,4 +1,4 @@
-#include "dm_tracksdataentry.h"
+#include "../adapters/dm_tracksdataentry.h"
 #include <QTime>
 #include <QThread>
 
@@ -70,8 +70,11 @@ QVariant TracksDataEntry::data(const QModelIndex &index, int role) const
 
     case JRole::ROLE_ISPLAYING:
         return track.isPlaying;
-    }
 
+    case JRole::ROLE_COLORS:
+        return track.colors;
+
+    }
     return QVariant();
 
 }
@@ -339,7 +342,7 @@ void TracksDataEntry::playQueuedTrack(int trackId)
 
             if(oldIndex<0 || oldIndex>m_data.count()-1){
 
-                 //qDebug()<<"OUT OF BOUND EXC";
+                //qDebug()<<"OUT OF BOUND EXC";
                 //oldIndex=0;
                 bool hasFound=false;
                 for(JTrack t :m_data){
@@ -375,10 +378,10 @@ void TracksDataEntry::playQueuedTrack(int trackId)
             }else{
 
 
-                 int cIndex=getPlayingIndex(cId);
-                 if(cIndex>-1){
-                     oldIndex=cIndex;
-                 }
+                int cIndex=getPlayingIndex(cId);
+                if(cIndex>-1){
+                    oldIndex=cIndex;
+                }
                 pTrack=m_data.value(oldIndex);
 
                 pTrack.isPlaying=false;

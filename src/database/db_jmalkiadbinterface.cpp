@@ -1,4 +1,4 @@
-#include "db_jmalkiadbinterface.h"
+#include "../database/db_jmalkiadbinterface.h"
 
 #include <QVariant>
 #include <QSet>
@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QUrl>
 #include <QSettings>
+#include <QColor>
 
 
 QList<JTrack> *JMalkiaDbInterface::getTracks(const int lastId,const int limit)
@@ -18,7 +19,7 @@ QList<JTrack> *JMalkiaDbInterface::getTracks(const int lastId,const int limit)
 
     QSqlQuery *query =new QSqlQuery(mDb);
 
-    auto prepare= query->prepare("SELECT track_id,track_name,artist_name,album_name,duration,file_url FROM tracks t LEFT Join albums a on a.album_id=t.album_id LEFT JOIN artists art on art.artist_id=t.artist_id where track_id>? limit ?");
+    auto prepare= query->prepare("SELECT track_id,track_name,artist_name,album_name,duration,file_url,colors FROM tracks t LEFT Join albums a on a.album_id=t.album_id LEFT JOIN artists art on art.artist_id=t.artist_id where track_id>? limit ?");
 
     query->addBindValue(lastId);
     query->addBindValue(limit);
@@ -49,6 +50,7 @@ QList<JTrack> *JMalkiaDbInterface::getTracks(const int lastId,const int limit)
 
 
         QVariant *fileUrlVariant=new QVariant(query->value(5));
+        QVariant *colorsVariant=new QVariant(query->value(6));
 
 
 
@@ -59,6 +61,8 @@ QList<JTrack> *JMalkiaDbInterface::getTracks(const int lastId,const int limit)
         track.albumName=albumNameVariant->toString();
         track.fileUrl=fileUrlVariant->toString();
         track.isFavorite=isTrackFavorite(track.trackId);
+        track.colors=colorsVariant->toString();
+
 
 
         tempList->append(track);
@@ -78,6 +82,7 @@ QList<JTrack> *JMalkiaDbInterface::getTracks(const int lastId,const int limit)
         delete artistNameVariant;
         delete albumNameVariant;
         delete fileUrlVariant;
+        delete colorsVariant;
 
 
     }
@@ -91,7 +96,7 @@ QList<JTrack> *JMalkiaDbInterface::getTracks(const int lastId,const int limit)
 
 JTrack *JMalkiaDbInterface::getTrack(int trackId)
 {
-    QString query="SELECT track_id,track_name,artist_name,album_name,duration,file_url  FROM tracks t LEFT Join albums a on a.album_id=t.album_id LEFT JOIN artists art on art.artist_id=t.artist_id where track_id=?";
+    QString query="SELECT track_id,track_name,artist_name,album_name,duration,file_url,colors  FROM tracks t LEFT Join albums a on a.album_id=t.album_id LEFT JOIN artists art on art.artist_id=t.artist_id where track_id=?";
 
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
 
@@ -115,6 +120,7 @@ JTrack *JMalkiaDbInterface::getTrack(int trackId)
                 track->duration=sqlQuery->value(4).toLongLong();
                 track->fileUrl=sqlQuery->value(5).toString();
                 track->isFavorite=isTrackFavorite(track->trackId);
+                track->colors=sqlQuery->value(6).toString();
 
                 sqlQuery=nullptr;
                 delete sqlQuery;
@@ -260,11 +266,11 @@ QList<JTrack> *JMalkiaDbInterface::randomizedPlaylist()
 
 QList<JTrack> *JMalkiaDbInterface::fetchPlaylistTracksFromRepo(int playlistId)
 {
-    QString query="SELECT pT.track_id, t.track_name,a.artist_name,ab.album_name, t.duration, t.file_url FROM playlist_tracks pT INNER JOIN tracks t ON t.track_id=pT.track_id LEFT JOIN artists a on t.artist_id=a.artist_id LEFT JOIN albums ab on ab.album_id=t.album_id WHERE pT.pl_id=? ORDER BY pT.id DESC ";
+    QString query="SELECT pT.track_id, t.track_name,a.artist_name,ab.album_name, t.duration, t.file_url,t.colors FROM playlist_tracks pT INNER JOIN tracks t ON t.track_id=pT.track_id LEFT JOIN artists a on t.artist_id=a.artist_id LEFT JOIN albums ab on ab.album_id=t.album_id WHERE pT.pl_id=? ORDER BY pT.id DESC ";
 
 
     if(playlistId==-1){
-        query="SELECT t.track_id, t.track_name,a.artist_name,ab.album_name, t.duration, t.file_url FROM tracks t LEFT JOIN artists a on t.artist_id=a.artist_id LEFT JOIN albums ab on ab.album_id=t.album_id ORDER BY t.track_id DESC ";
+        query="SELECT t.track_id, t.track_name,a.artist_name,ab.album_name, t.duration, t.file_url ,t.colors FROM tracks t LEFT JOIN artists a on t.artist_id=a.artist_id LEFT JOIN albums ab on ab.album_id=t.album_id ORDER BY t.track_id DESC ";
 
     }
 
@@ -294,6 +300,7 @@ QList<JTrack> *JMalkiaDbInterface::fetchPlaylistTracksFromRepo(int playlistId)
                 track->duration=sqlQuery->value(4).toLongLong();
                 track->fileUrl=sqlQuery->value(5).toString();
                 track->isFavorite=isTrackFavorite(track->trackId);
+                track->colors=sqlQuery->value(6).toString();
 
 
 
@@ -313,7 +320,7 @@ QList<JTrack> *JMalkiaDbInterface::fetchPlaylistTracksFromRepo(int playlistId)
 
 QList<JTrack> *JMalkiaDbInterface::fetchRecentlyPlayedTracks()
 {
-    QString query="SELECT pT.track_id, t.track_name,a.artist_name,ab.album_name, t.duration, t.file_url , pT.rec_id FROM recently_played pT INNER JOIN tracks t ON t.track_id=pT.track_id LEFT JOIN artists a on t.artist_id=a.artist_id LEFT JOIN albums ab on ab.album_id=t.album_id  ORDER BY pT.rec_id  DESC LIMIT 5";
+    QString query="SELECT pT.track_id, t.track_name,a.artist_name,ab.album_name, t.duration, t.file_url ,t.colors , pT.rec_id FROM recently_played pT INNER JOIN tracks t ON t.track_id=pT.track_id LEFT JOIN artists a on t.artist_id=a.artist_id LEFT JOIN albums ab on ab.album_id=t.album_id  ORDER BY pT.rec_id  DESC LIMIT 5";
 
 
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
@@ -338,6 +345,7 @@ QList<JTrack> *JMalkiaDbInterface::fetchRecentlyPlayedTracks()
                 track->duration=sqlQuery->value(4).toLongLong();
                 track->fileUrl=sqlQuery->value(5).toString();
                 track->isFavorite=isTrackFavorite(track->trackId);
+                track->colors=sqlQuery->value(6).toString();
 
 
 
@@ -701,8 +709,25 @@ void JMalkiaDbInterface::massInsert()
 
 void JMalkiaDbInterface::addNewTrack(JTrack track)
 {
+    QStringList *colors=new QStringList;
+
+    for(int i=0;i<2;i++){
+        int red=QRandomGenerator::global()->bounded(0,255);
+        int green=QRandomGenerator::global()->bounded(0,255);
+        int blue=QRandomGenerator::global()->bounded(0,255);
+
+        QColor *color=new QColor(red,green,blue);
+        colors->append(color->name(QColor::HexRgb));
+
+        delete color;
+
+
+    }
+
+
+
     QSqlQuery *q=new QSqlQuery(mDb);
-    q->prepare("INSERT INTO tracks (track_name, duration, artist_id, album_id, file_url) VALUES (?, ?, ?, ?, ?)");
+    q->prepare("INSERT INTO tracks (track_name, duration, artist_id, album_id, file_url,colors) VALUES (?, ?, ?, ?, ?,?)");
 
     int artistId=addNewArtist(track.artistName);
     int album=albumId(track.albumName);
@@ -715,6 +740,7 @@ void JMalkiaDbInterface::addNewTrack(JTrack track)
     q->addBindValue(album);
 
     q->addBindValue(track.fileUrl);
+    q->addBindValue(colors->value(0).append("-").append(colors->value(1)));
 
     q->exec();
 
@@ -723,6 +749,8 @@ void JMalkiaDbInterface::addNewTrack(JTrack track)
     q->finish();
     q=nullptr;
     delete q;
+    delete colors;
+
 
 }
 

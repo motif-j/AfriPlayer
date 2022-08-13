@@ -6,7 +6,7 @@
 #include <QSqlError>
 #include <QList>
 #include <QSqlQuery>
-#include "jmodels.h"
+#include "../models/jmodels.h"
 #include <QDebug>
 #include <QVariant>
 #include <QThread>

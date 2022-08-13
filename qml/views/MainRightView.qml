@@ -247,7 +247,7 @@ Rectangle{
                 Layout.alignment: Qt.AlignHCenter
                 Layout.rightMargin: dp(10)
                 Layout.leftMargin: dp(10)
-                interactive: false
+                interactive: true
                 desktopScrollEnabled: true
                 emptyText.text: "No tracks in que"
                 model:jmusicModel.model

@@ -14,7 +14,25 @@ Item {
     Connections{
         id:appModelConn
 
+    }
 
 
+    function getColors(input){
+          if(isUndefined(input)){
+              let arr=["red","blue"]
+              return arr
+          }
+
+        let colorArr=input.split("-");
+
+        return colorArr
+    }
+
+    function isUndefined(input){
+
+        if(input===undefined){
+            return true
+        }
+        return false;
     }
 }

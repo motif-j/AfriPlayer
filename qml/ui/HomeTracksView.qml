@@ -13,10 +13,10 @@ Rectangle{
     property string albumName: ""
     property int  trackId: 0
     property bool isFavorite: false
+    property string  themeColor: ""
 
-    property color thumbnailColor: Qt.rgba(Math.random(255),Math.random(255),Math.random(255),1)
-    property color thumbnailColor2: Qt.rgba(Math.random(255),Math.random(255),Math.random(255),1)
-    property color thumbnailColor3: Qt.rgba(Math.random(155),Math.random(200),Math.random(55),1)
+    property color thumbnailColor: jappmodel.getColors(themeColor)[0]
+    property color thumbnailColor2: jappmodel.getColors(themeColor)[1]
 
 
     RowLayout{
@@ -89,9 +89,7 @@ Rectangle{
         onClicked: {
 
         }
-        onDoubleClicked: {
-            console.debug("Hello")
-        }
+
     }
 }
 

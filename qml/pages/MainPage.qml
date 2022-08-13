@@ -176,6 +176,8 @@ Page{
                             artistName: model.artistName
                             trackId: model.trackId
                              isFavorite: model.isFavorite
+                            themeColor:  model.colors
+
 
 
 

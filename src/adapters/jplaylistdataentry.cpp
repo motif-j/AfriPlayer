@@ -1,4 +1,4 @@
-#include "jplaylistdataentry.h"
+#include "../adapters/jplaylistdataentry.h"
 
 JPlaylistDataEntry::JPlaylistDataEntry(QObject *parent)
     : QAbstractListModel{parent}
