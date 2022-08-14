@@ -77,23 +77,17 @@ Rectangle {
             AppText {
 
 
-                text:{
-
-                    let duration=jmusicModel.playingTrack["duration"]
-
-                    if(isUndefined(duration)){
-                        return "00:00:00"
-                    }
-                    return duration
-                }
+                text:"00:00:00"
 
                 fontSize: 16
+                font.letterSpacing: dp(2)
                 font.family:  Constants.lcdFont.name
-                font.letterSpacing: dp(5)
+
                 antialiasing: true
                 color: Theme.secondaryTextColor
                 Layout.alignment: Qt.AlignLeft
                 Layout.leftMargin: dp(10)
+                Layout.preferredWidth:dp(50)
 
 
 
@@ -124,6 +118,7 @@ Rectangle {
                 color: Theme.secondaryTextColor
                 Layout.alignment: Qt.AlignRight
                 Layout.rightMargin: dp(10)
+                 Layout.preferredWidth: dp(50)
 
 
 

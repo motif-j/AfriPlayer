@@ -727,7 +727,7 @@ void JMalkiaDbInterface::addNewTrack(JTrack track)
 
 
     QSqlQuery *q=new QSqlQuery(mDb);
-    q->prepare("INSERT INTO tracks (track_name, duration, artist_id, album_id, file_url,colors) VALUES (?, ?, ?, ?, ?,?)");
+    q->prepare("INSERT INTO tracks (track_name, duration, artist_id, album_id, file_url,colors,year,date_added) VALUES (?, ?, ?, ?, ?,?,?,?)");
 
     int artistId=addNewArtist(track.artistName);
     int album=albumId(track.albumName);
@@ -741,6 +741,9 @@ void JMalkiaDbInterface::addNewTrack(JTrack track)
 
     q->addBindValue(track.fileUrl);
     q->addBindValue(colors->value(0).append("-").append(colors->value(1)));
+    q->addBindValue(track.releaseYear);
+    q->addBindValue(track.dateAdded);
+
 
     q->exec();
 
@@ -1001,5 +1004,59 @@ void JMalkiaDbInterface::removeTrackFromPlaylist(int trackId,int playlistId)
     }
     printError("Remove Track From Playlist ",sqlQuery);
     delete sqlQuery;
+}
+
+void JMalkiaDbInterface::addFolderToLibs(QString path)
+{
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+    sqlQuery->prepare("INSERT INTO music_libs (folder) VALUES (?) ");
+
+    sqlQuery->addBindValue(path);
+
+    sqlQuery->exec();
+
+    printError("Add Folder ",sqlQuery);
+
+    delete sqlQuery;
+
+}
+
+void JMalkiaDbInterface::removeFolder(QString path)
+{
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+    sqlQuery->prepare("DELETE FROM music_libs WHERE folder =? ");
+
+    sqlQuery->addBindValue(path);
+
+    sqlQuery->exec();
+
+    printError("Remove Folder ",sqlQuery);
+
+    delete sqlQuery;
+}
+
+QStringList JMalkiaDbInterface::getFolders()
+{
+    QStringList folders;
+
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+    sqlQuery->prepare("SELECT folder FROM music_libs ");
+
+    sqlQuery->exec();
+
+    while(sqlQuery->next()){
+
+        folders.append(sqlQuery->value(0).toString());
+
+    }
+
+    printError("Get Folders ",sqlQuery);
+
+    delete sqlQuery;
+
+    return folders;
 }
 

@@ -20,10 +20,15 @@ struct JTrack{
     int trackId;
     int artistId;
     int albumId;
+    int releaseYear;
+
+    long long dateAdded;
     long long duration;
+
     bool isFavorite=false;
     bool hasPlayed=false;
     bool isPlaying=false;
+
 
     QString trackName;
     QString fileUrl;

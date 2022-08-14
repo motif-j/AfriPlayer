@@ -55,6 +55,7 @@ DEPLOYMENTFOLDERS += assetsFolder
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
+    src/adapters/musicfoldermodel.cpp \
     src/audio/jaudio.cpp \
     src/database/db_jmalkiadbinterface.cpp \
     src/adapters/dm_tracksdataentry.cpp \
@@ -103,11 +104,19 @@ DISTFILES += \
     qml/models/PlayingQueModel.qml \
     qml/models/PlaylistPageDataModel.qml \
     qml/models/RightMusicInfoModel.qml \
+    qml/models/SettingsModel.qml \
     qml/pages/FavoriteTracksPage.qml \
     qml/pages/MainPage.qml \
     qml/pages/PlaylistPage.qml \
     qml/pages/SearchPage.qml \
+    qml/pages/SettingsPage.qml \
     qml/pages/TracksPage.qml \
+    qml/settings/LibraryView.qml \
+    qml/settings/PreferenceItem.qml \
+    qml/settings/UserInterface.qml \
+    qml/settings/models/FolderViewModel.qml \
+    qml/settings/setviews/FolderView.qml \
+    qml/settings/setviews/UiView.qml \
     qml/ui/HomeHeader.qml \
     qml/ui/HomePlaylistView.qml \
     qml/ui/HomeTracksView.qml \
@@ -128,6 +137,7 @@ DISTFILES += \
     qml/views/PlayerView.qml
 
 HEADERS += \
+    src/adapters/musicfoldermodel.h \
     src/audio/jaudio.h \
    src/database/db_jmalkiadbinterface.h \
     src/adapters/dm_tracksdataentry.h \

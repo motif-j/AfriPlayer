@@ -324,6 +324,7 @@ void TracksDataEntry::playPrevious()
 void TracksDataEntry::playQueuedTrack(int trackId)
 {
 
+
     if(playlistId==-2){
         if(!m_data.isEmpty()){
 
@@ -354,17 +355,26 @@ void TracksDataEntry::playQueuedTrack(int trackId)
                 }
 
                 if(!hasFound){
+                    qDebug()<<"ACTIVE INDEX "<<activeIndex;
+                    //  qDebug()<<"ACTIVE INDEX "<<activeIndex;
+
+                    if(activeIndex>0){
+                        activeIndex+=1;
+                    }else{
+
+                        activeIndex=0;
+                    }
 
                     pTrack= mController.getTrackSync(trackId);
                     pTrack.isPlaying=true;
 
                     emit beginInsertRows(QModelIndex(),0,0);
 
-                    m_data.insert(0,pTrack);
+                    m_data.insert(activeIndex,pTrack);
 
                     emit endInsertRows();
 
-                    activeIndex=0;
+                  //  activeIndex+=1;
 
                     emit activeIndexChanged();
 
@@ -378,6 +388,7 @@ void TracksDataEntry::playQueuedTrack(int trackId)
             }else{
 
 
+                qDebug()<<"REPLACING OLD FIGURES ";
                 int cIndex=getPlayingIndex(cId);
                 if(cIndex>-1){
                     oldIndex=cIndex;
@@ -402,19 +413,28 @@ void TracksDataEntry::playQueuedTrack(int trackId)
             if(oldIndex<0 || oldIndex>m_data.count()-1){
 
 
+                qDebug()<<"ACTIVE INDEX 2 "<<activeIndex;
+
                 //The item is not available so insert it at top
+                if(activeIndex>0){
 
+                    activeIndex+=1;
+                }else{
 
+                    activeIndex=0;
+                }
+
+                 qDebug()<<"ACTIVE INDEX 3 "<<activeIndex;
                 pTrack= mController.getTrackSync(trackId);
                 pTrack.isPlaying=true;
 
-                emit beginInsertRows(QModelIndex(),0,0);
+                emit beginInsertRows(QModelIndex(),activeIndex,activeIndex);
 
-                m_data.insert(0,pTrack);
+                m_data.insert(activeIndex,pTrack);
 
                 emit endInsertRows();
 
-                activeIndex=0;
+              //  activeIndex=0;
 
                 emit activeIndexChanged();
 
@@ -559,6 +579,8 @@ void TracksDataEntry::handlePlayingTrackFetched(QVariantMap trackMap)
 
 void TracksDataEntry::handleQueuedTracksFetched(QList<JTrack> *queuedTracks)
 {
+    setIsLoading(false);
+
 
     if(playlistId==-2){
 

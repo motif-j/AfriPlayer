@@ -41,6 +41,8 @@ App {
         Theme.navigationTabBar.titlePressedColor=JColors.pink500
 
 
+        Theme.listItem.backgroundColor=Theme.backgroundColor
+        Theme.listItem.badgeTextColor=Theme.textColor
 
 
 

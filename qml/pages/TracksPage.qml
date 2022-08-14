@@ -116,6 +116,7 @@ Page {
         iconLeft: IconType.play
         textColor: Theme.textColor
         backgroundColor: Theme.secondaryBackgroundColor
+        enabled: !tracksModel.loading
         onClicked: {
 
            // isLoading=true

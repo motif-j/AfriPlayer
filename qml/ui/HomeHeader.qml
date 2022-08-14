@@ -8,6 +8,8 @@ AppText{
     property bool bold: false
 
 
+
+
     text: title
     fontSize: 18
     font.bold: bold

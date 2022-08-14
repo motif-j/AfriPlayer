@@ -92,7 +92,9 @@ Item {
     }
 
     function queAll(){
+         dataEntry.mLoad()
         jmusicModel.addPlaylistToQue(-1,false)
+
     }
 
 }

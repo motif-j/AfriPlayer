@@ -137,7 +137,7 @@ Item {
 
                 NavigationStack{
 
-                    FavoriteTracksPage{
+                    SettingsPage{
                         anchors.fill: parent
 
                     }

@@ -66,12 +66,17 @@ public:
 
     void removeTrackFromPlaylist(int trackId,int playlistId);
 
+    void addFolderToLibs(QString path);
+    void removeFolder(QString path);
+    QStringList getFolders();
+
     void massInsert();
+
     void addNewTrack(JTrack track);
     int addNewArtist(QString artistName);
     int albumId(QString albumName);
 
-    //constrctor
+    //constructor
 
 
 private:

@@ -1,6 +1,7 @@
 #ifndef FILE_FILEWORKER_H
 #define FILE_FILEWORKER_H
 
+#include <QDateTime>
 #include <QDir>
 #include <QDirIterator>
 #include <QObject>
@@ -32,6 +33,35 @@ public:
 
 
 public slots:
+    void addFolderToLibs(QString path){
+
+        db.addFolderToLibs(path);
+        QThread::msleep(500);
+
+
+        loadFolders();
+
+    }
+
+    void removeFolder(QString path){
+
+
+        db.removeFolder(path);
+        QThread::msleep(500);
+
+
+        loadFolders();
+    }
+
+    void loadFolders(){
+
+        auto folders=db.getFolders();
+
+        QThread::msleep(500);
+
+        emit foldersFetched(folders);
+
+    }
 
     void queryAllDirectories(QDir directory){
 
@@ -41,30 +71,35 @@ public slots:
             return;
         }
         QStringList filters;
-        filters<<"*.m4a"<<"*.mp3"<<"*.wav"<<"*aac"<<"*.flac"<<"*.ogg";
+
+        filters<<"*.m4a"<<"*.mp3"<<"*.wav"<<"*.aac"<<"*.flac"<<"*.ogg";
 
         directory.setNameFilters(filters);
+
+        directory.setSorting(QDir::Time);
 
         QFileInfoList dirList=directory.entryInfoList();
 
 
+
         QDirIterator dirIterator(directory,QDirIterator::Subdirectories);
+
 
         while(dirIterator.hasNext()){
 
-            auto dirEntryPath=dirIterator.next();
+            auto *dirEntryPath=new QString(dirIterator.next());
 
-            QFileInfo dirInfo(dirEntryPath);
-
+            QFileInfo dirInfo(*dirEntryPath);
 
             if(dirInfo.isFile()){
+
+                QDateTime *lastMd=new QDateTime(dirInfo.lastModified());
+
                 QString path=dirInfo.path();
 
                 QByteArray fileName=QFile::encodeName(path.append("\\").append(dirInfo.fileName()));
 
                 const char  *encodedName=fileName.constData();
-
-
 
                 TagLib::FileRef *file=new TagLib::FileRef(encodedName);
 
@@ -73,10 +108,12 @@ public slots:
                     JTrack track;
                     QString suffix=dirInfo.suffix();
 
-                    QString title=file->tag()->title().toCString();
-                    QString album =file->tag()->album().toCString();
-                    QString artistName=file->tag()->artist().toCString();
+                    QString title=file->tag()->title().toCString(true);
+                    QString album =file->tag()->album().toCString(true);
+                    QString artistName=file->tag()->artist().toCString(true);
                     QString fileUrl=path.append("\\").append(dirInfo.fileName());
+                    int releaseYear=file->tag()->year();
+
 
                     long long duration=file->audioProperties()->lengthInMilliseconds();
 
@@ -97,10 +134,14 @@ public slots:
                     track.duration=duration;
                     track.fileUrl=fileUrl.trimmed();
                     track.artistName=artistName.simplified();
-
-
+                    track.releaseYear=releaseYear;
+                    track.dateAdded=lastMd->toMSecsSinceEpoch();
 
                     db.addNewTrack(track);
+
+                    delete lastMd;
+                    delete encodedName;
+                    delete file;
 
 
                     //                   TagLib::MPEG::File mpegFile(file->file()->name());
@@ -143,6 +184,7 @@ private:
 signals:
 
     void queryAllDirCompleted();
+    void foldersFetched(QStringList folders);
 
 };
 #endif // FILE_FILEWORKER_H

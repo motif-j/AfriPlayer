@@ -30,7 +30,7 @@ public:
         qDebug()<<"INITIALIZING INTERFACE";
 
         JFileIO &fileIo=JFileIO::getInstance();
-       //fileIo.queryDir();
+        //fileIo.queryDir();
 
 
 
@@ -40,12 +40,15 @@ public:
 
         connect(&musicController,&JMusicController::playingTrackFetched,this,&JMusicControllerInterface::playingTrackFetched);
 
+
         Q_PROPERTY(bool shuffle READ getShuffle WRITE setShuffle NOTIFY shuffleChanged)
         Q_PROPERTY(int activeTrackId READ getActiveTrackId WRITE setActiveTrackId NOTIFY activeTrackIdChanged)
 
         Q_PROPERTY(bool dynamicMode READ getDynamicMode WRITE setDynamicMode NOTIFY dynamicModeChanged)
 
+
         QSettings settings("AfrikTek","Qplayer");
+
         bool shuffle=settings.value("shuffle",false).toBool();
 
         setShuffle(shuffle);
@@ -85,6 +88,7 @@ public:
     bool getDynamicMode() const;
     void setDynamicMode(bool newDynamicMode);
 
+
 public slots:
     void  handleFetchedTrack(QVariantMap trackMap){
 
@@ -93,6 +97,7 @@ public slots:
     void handleFetchedPlayingTrack(QVariantMap map){
         emit playingTrackFetched(map);
     }
+
 
     //qml interface slots
 public slots:
@@ -129,6 +134,8 @@ public slots:
         settings.setValue("shuffle",shuffle);
 
         setShuffle(shuffle);
+
+
         musicController.addPlaylistToQueue(playlistId,false);
     }
 
@@ -159,11 +166,15 @@ signals:
 
     void dynamicModeChanged();
 
+    void busyChanged();
+
 private:
     JMusicController &musicController=JMusicController::getInstance();
     int activeTrackId;
     bool shuffle;
     bool dynamicMode;
+
+
 
 
 
@@ -181,6 +192,7 @@ inline void JMusicControllerInterface::setDynamicMode(bool newDynamicMode)
     dynamicMode = newDynamicMode;
     emit dynamicModeChanged();
 }
+
 
 
 

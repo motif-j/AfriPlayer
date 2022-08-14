@@ -107,6 +107,10 @@ public slots:
     void playNext();
     void playPrevious();
     void playQueuedTrack(int trackId);
+
+    void mLoad(){
+        setIsLoading(true);
+    }
    // void clearQueue();
 
 
