@@ -25,9 +25,9 @@ public:
     }
 
 public:
-    void queryDir(){
-        QDir dir("G:\\CIERA\\MotifFiles\\Muhimu\\Muzik");
-        emit queryAudioFilesInDir(dir);
+    void queryAudioFilesInDir(){
+      //  QDir dir("G:\\CIERA\\MotifFiles\\Muhimu\\Muzik");
+        emit queryAudioFilesInDirSig();
     }
 private:
 
@@ -38,7 +38,7 @@ private:
 
         connect(&fileIoThread,&QThread::finished,worker,&QObject::deleteLater);
         connect(worker,&FilWorker::queryAllDirCompleted,this,&JFileIO::onFileQueryCompleted);
-        connect(this,&JFileIO::queryAudioFilesInDir,worker,&FilWorker::queryAllDirectories);
+        connect(this,&JFileIO::queryAudioFilesInDirSig,worker,&FilWorker::queryAllDirectories);
 
         connect(this,&JFileIO::fetchFolders,worker,&FilWorker::loadFolders);
         connect(worker,&FilWorker::foldersFetched,this,&JFileIO::onFoldersFetched);
@@ -70,7 +70,8 @@ public:
     //worker signals
 signals:
 
-    void  queryAudioFilesInDir(QDir dir);
+    void  queryAudioFilesInDirSig();
+
     void addFolderSig(QString path);
     void deleteFolderSig(QString path);
     void fetchFolders();
@@ -79,6 +80,8 @@ signals:
     //interface signals
 signals:
  void foldersFetched(QStringList folders);
+ void queringCompleted();
+
 
 };
 

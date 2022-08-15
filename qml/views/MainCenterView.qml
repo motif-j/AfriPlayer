@@ -25,22 +25,32 @@ Item {
 
 
         Navigation{
+
+
+
             navigationMode:{
-             if(Theme.isAndroid ){
-                 if(Theme.isPortrait){
-                     return  navigationModeTabs
-                 }
+                if(Theme.isAndroid ){
+                    if(Theme.isPortrait){
+                        return  navigationModeTabs
+                    }
 
-                 return navigationModeDrawer
-             }else{
+                    return navigationModeDrawer
+                }else{
 
-                 return navigationModeDrawer
-             }
+                    return navigationModeDrawer
+                }
             }//fixDrawer?navigationModeDrawer:navigationModeTabs
             drawerFixed: fixDrawer()
             drawerMinifyEnabled: fixDrawer()?true:false
             headerView: Rectangle{
                 height: dp(100)
+
+                AppActivityIndicator{
+                    visible: jmusicModel.isQueryingFiles
+
+
+                }
+
 
 
             }

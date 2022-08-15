@@ -3,6 +3,7 @@
 
 #include <QAbstractItemModel>
 #include <QObject>
+#include <QSettings>
 #include <QString>
 #include <QStringList>
 #include "src/fileio/file_jfileio.h"
@@ -11,20 +12,23 @@ class MusicFolderModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int count READ getCount WRITE setCount NOTIFY countChanged)
-     Q_PROPERTY(bool loading READ getLoading WRITE setLoading NOTIFY loadingChanged)
+    Q_PROPERTY(bool loading READ getLoading WRITE setLoading NOTIFY loadingChanged)
+
 public:
-     MusicFolderModel(QObject *parent = nullptr){
+    MusicFolderModel(QObject *parent = nullptr){
 
         Q_UNUSED(parent)
 
 
-         connect(&fileIo,&JFileIO::foldersFetched,this,&MusicFolderModel::onFoldersFetched);
+        connect(&fileIo,&JFileIO::foldersFetched,this,&MusicFolderModel::onFoldersFetched);
+        // connect(&fileIo,&JFileIO::queringCompleted,this,&MusicFolderModel::onQueryingCompleted);
 
-          setLoading(true);
-         fileIo.getFolders();
+        setLoading(true);
+        fileIo.getFolders();
+
+       //settings.setValue("queryingFiles",false);
 
     }
-
 
 
 
@@ -37,14 +41,17 @@ public slots:
     void addFolder(QString path);
     void deleteFolder(int index);
 
+
 public slots:
-  void onFoldersFetched(QStringList folders);
+    void onFoldersFetched(QStringList folders);
 
 
 signals:
     void countChanged();
 
     void loadingChanged();
+
+    void isQueringFilesChanged();
 
 private:
 
@@ -55,12 +62,12 @@ private:
     bool loading;
 
 
-
 public:
     virtual int rowCount(const QModelIndex &parent) const override;
     virtual QVariant data(const QModelIndex &index, int role) const override;
     bool getLoading() const;
     void setLoading(bool newLoading);
+
 };
 
 #endif // MUSICFOLDERMODEL_H

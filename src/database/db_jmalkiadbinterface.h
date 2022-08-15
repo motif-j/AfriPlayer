@@ -69,6 +69,7 @@ public:
     void addFolderToLibs(QString path);
     void removeFolder(QString path);
     QStringList getFolders();
+    void deleteLibTracks(QString pattern);
 
     void massInsert();
 

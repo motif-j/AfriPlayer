@@ -355,7 +355,7 @@ void TracksDataEntry::playQueuedTrack(int trackId)
                 }
 
                 if(!hasFound){
-                    qDebug()<<"ACTIVE INDEX "<<activeIndex;
+                  //  qDebug()<<"ACTIVE INDEX "<<activeIndex;
                     //  qDebug()<<"ACTIVE INDEX "<<activeIndex;
 
                     if(activeIndex>0){
@@ -374,7 +374,7 @@ void TracksDataEntry::playQueuedTrack(int trackId)
 
                     emit endInsertRows();
 
-                  //  activeIndex+=1;
+                    //  activeIndex+=1;
 
                     emit activeIndexChanged();
 
@@ -388,7 +388,7 @@ void TracksDataEntry::playQueuedTrack(int trackId)
             }else{
 
 
-                qDebug()<<"REPLACING OLD FIGURES ";
+               // qDebug()<<"REPLACING OLD FIGURES ";
                 int cIndex=getPlayingIndex(cId);
                 if(cIndex>-1){
                     oldIndex=cIndex;
@@ -424,7 +424,7 @@ void TracksDataEntry::playQueuedTrack(int trackId)
                     activeIndex=0;
                 }
 
-                 qDebug()<<"ACTIVE INDEX 3 "<<activeIndex;
+               // qDebug()<<"ACTIVE INDEX 3 "<<activeIndex;
                 pTrack= mController.getTrackSync(trackId);
                 pTrack.isPlaying=true;
 
@@ -434,7 +434,7 @@ void TracksDataEntry::playQueuedTrack(int trackId)
 
                 emit endInsertRows();
 
-              //  activeIndex=0;
+                //  activeIndex=0;
 
                 emit activeIndexChanged();
 
@@ -466,8 +466,12 @@ void TracksDataEntry::playQueuedTrack(int trackId)
 
             emit activeIndexChanged();
 
+
         }
     }
+    //qDebug()<<"HERE";
+    mController.getPlayingTrack(trackId);
+
 
 }
 

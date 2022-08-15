@@ -1,5 +1,7 @@
 #include "musicfoldermodel.h"
 
+#include <QSettings>
+
 
 
 
@@ -27,7 +29,7 @@ void MusicFolderModel::deleteFolder(int index)
 
 
     if(index>=0 && index<m_data.count() ){
- setLoading(true);
+        setLoading(true);
         auto path=m_data.value(index);
         fileIo.deleteFolder(path);
     }
@@ -35,6 +37,7 @@ void MusicFolderModel::deleteFolder(int index)
 
 
 }
+
 
 void MusicFolderModel::onFoldersFetched(QStringList folders)
 {
@@ -56,11 +59,13 @@ void MusicFolderModel::onFoldersFetched(QStringList folders)
 
     setCount(m_data.count());
 
-     setLoading(false);
-   // qDebug()<<"Folders Fetched "<<folders.count();
+    setLoading(false);
+    // qDebug()<<"Folders Fetched "<<folders.count();
 
 
 }
+
+
 
 bool MusicFolderModel::getLoading() const
 {

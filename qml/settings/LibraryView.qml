@@ -62,13 +62,14 @@ Rectangle{
                 Layout.alignment: Qt.AlignHCenter
                 flat:false
                 radius: dp(5)
-                 enabled: !viewModel.isLoading
+                 enabled: !viewModel.isLoading && !jmusicModel.isQueryingFiles
                 text: "Synchronize Files"
                 iconLeft: IconType.refresh
                 textColor: Theme.textColor
                 backgroundColor: Theme.secondaryBackgroundColor
                 onClicked: {
 
+                    jmusicModel.syncAudioFiles()
                 }
             }
         }

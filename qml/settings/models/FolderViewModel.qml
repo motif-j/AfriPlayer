@@ -17,5 +17,8 @@ Item {
     function deleteFolder(currentIndex){
         dataEntry.deleteFolder(currentIndex)
     }
+    function synchronizeLib(){
+
+    }
 
 }

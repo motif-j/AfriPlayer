@@ -17,6 +17,7 @@ Item {
 
     signal trackClicked(int trackId)
     property var  model: dataEntry
+    property bool isQueryingFiles: jmusicController.isQueringFiles
 
     SoundManager{
         id:soundManager
@@ -121,6 +122,10 @@ Item {
     }
     function toggleShuffle(){
         jmusicController.toggleShuffle()
+    }
+
+    function syncAudioFiles(){
+        jmusicController.syncTracks()
     }
 
     Component.onCompleted: {

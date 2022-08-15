@@ -1060,3 +1060,24 @@ QStringList JMalkiaDbInterface::getFolders()
     return folders;
 }
 
+void JMalkiaDbInterface::deleteLibTracks(QString pattern)
+{
+    QStringList folders;
+
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+    sqlQuery->prepare("DELETE FROM tracks WHERE file_url like ? ");
+    QString pt="%";
+    sqlQuery->addBindValue(pt.append(pattern).append("%"));
+
+
+    sqlQuery->exec();
+
+
+    printError("DELETE FOLDER TRACKS ",sqlQuery);
+
+    delete sqlQuery;
+
+
+}
+

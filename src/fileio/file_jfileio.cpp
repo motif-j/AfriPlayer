@@ -4,6 +4,7 @@
 void JFileIO::onFileQueryCompleted()
 {
 
+    emit queringCompleted();
 }
 
 void JFileIO::onFoldersFetched(QStringList folders)

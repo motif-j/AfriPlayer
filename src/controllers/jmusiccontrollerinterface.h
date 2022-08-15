@@ -29,13 +29,15 @@ public:
         Q_UNUSED(parent)
         qDebug()<<"INITIALIZING INTERFACE";
 
-        JFileIO &fileIo=JFileIO::getInstance();
+
         //fileIo.queryDir();
 
 
 
         // qDebug()<<" PATH IS "<<path;
         //connect directly to the signals of the main controller
+        connect(&fileIo,&JFileIO::queringCompleted,this,&JMusicControllerInterface::onFilesQueried);
+
         connect(&musicController,&JMusicController::trackFetched,this,&JMusicControllerInterface::trackFetchedFromRepo);
 
         connect(&musicController,&JMusicController::playingTrackFetched,this,&JMusicControllerInterface::playingTrackFetched);
@@ -45,9 +47,11 @@ public:
         Q_PROPERTY(int activeTrackId READ getActiveTrackId WRITE setActiveTrackId NOTIFY activeTrackIdChanged)
 
         Q_PROPERTY(bool dynamicMode READ getDynamicMode WRITE setDynamicMode NOTIFY dynamicModeChanged)
-
+        Q_PROPERTY(bool isQueringFiles READ getIsQueringFiles WRITE setIsQueringFiles NOTIFY isQueringFilesChanged)
 
         QSettings settings("AfrikTek","Qplayer");
+        setIsQueringFiles(settings.value("queryingFiles",false).toBool());
+
 
         bool shuffle=settings.value("shuffle",false).toBool();
 
@@ -89,6 +93,9 @@ public:
     void setDynamicMode(bool newDynamicMode);
 
 
+    bool getIsQueringFiles() const;
+    void setIsQueringFiles(bool newIsQueringFiles);
+
 public slots:
     void  handleFetchedTrack(QVariantMap trackMap){
 
@@ -98,10 +105,25 @@ public slots:
         emit playingTrackFetched(map);
     }
 
+    void onFilesQueried(){
+        QSettings settings("AfrikTek","Qplayer");
+        settings.setValue("queryingFiles",false);
+
+        setIsQueringFiles(false);
+    }
 
     //qml interface slots
 public slots:
 
+    void syncTracks(){
+
+        QSettings settings("AfrikTek","Qplayer");
+        settings.setValue("queryingFiles",true);
+
+        setIsQueringFiles(true);
+        fileIo.queryAudioFilesInDir();
+
+    }
     void getTrack(int trackId){
         musicController.getTrack(trackId);
 
@@ -160,24 +182,28 @@ signals:
 
     void activeTrackIdChanged();
 
-
-
     void shuffleChanged();
 
     void dynamicModeChanged();
 
     void busyChanged();
 
+    void isQueringFilesChanged();
+
 private:
     JMusicController &musicController=JMusicController::getInstance();
+     JFileIO &fileIo=JFileIO::getInstance();
+
     int activeTrackId;
     bool shuffle;
     bool dynamicMode;
+    bool isQueringFiles;
 
 
 
 
 
+    // Q_PROPERTY(bool isQueringFiles READ getIsQueringFiles WRITE setIsQueringFiles NOTIFY isQueringFilesChanged)
 };
 
 inline bool JMusicControllerInterface::getDynamicMode() const
@@ -191,6 +217,19 @@ inline void JMusicControllerInterface::setDynamicMode(bool newDynamicMode)
         return;
     dynamicMode = newDynamicMode;
     emit dynamicModeChanged();
+}
+
+inline bool JMusicControllerInterface::getIsQueringFiles() const
+{
+    return isQueringFiles;
+}
+
+inline void JMusicControllerInterface::setIsQueringFiles(bool newIsQueringFiles)
+{
+    if (isQueringFiles == newIsQueringFiles)
+        return;
+    isQueringFiles = newIsQueringFiles;
+    emit isQueringFilesChanged();
 }
 
 
