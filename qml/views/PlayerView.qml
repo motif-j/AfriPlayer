@@ -4,6 +4,7 @@ import QtGraphicalEffects 1.15
 import QtQuick.Layouts 1.3
 import "../components"
 import com.afriktek.qplayer 1.0
+import QtQuick.Controls 2.15
 
 Rectangle {
     color: Theme.backgroundColor
@@ -23,6 +24,7 @@ Rectangle {
         source: baseImg
         radius:25
     }
+
     Column{
         anchors.centerIn: parent
         AppText{
@@ -65,19 +67,20 @@ Rectangle {
     }
 
 
-    Column{
+    ColumnLayout{
         width: parent.width
         anchors.bottom:root.bottom
+
         anchors.bottomMargin: dp(10)
 
         RowLayout{
-            width: parent.width
-
-
+            id:controllerRow
+            Layout.alignment: Qt.AlignHCenter
+            spacing: dp(20)
             AppText {
 
 
-                text:"00:00:00"
+                text:soundManager.ftime
 
                 fontSize: 16
                 font.letterSpacing: dp(2)
@@ -97,7 +100,7 @@ Rectangle {
             PlayerBarController{
                 Layout.alignment: Qt.AlignHCenter
                 Layout.maximumWidth: dp(200)
-                Layout.fillWidth: true
+                Layout.fillWidth: false
             }
 
             AppText {
@@ -120,19 +123,83 @@ Rectangle {
                 Layout.rightMargin: dp(10)
                  Layout.preferredWidth: dp(50)
 
-
+               Layout.fillWidth: false
 
 
             }
 
         }
 
+
+
         AppSlider{
-            width: parent.width
+            id:slider
+            width: controllerRow.width
+            from:0
+            to:soundManager.trackTime
+            value: soundManager.trackPosition
+            Layout.alignment: Qt.AlignHCenter|Qt.AlignBottom
+
+            onMoved: {
+                soundManager.seek(slider.value)
+
+            }
+
+
+
 
         }
     }
 
+
+
+    Dial{
+        id:control
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.margins: dp(10)
+        from: 0
+        to:100
+        value: soundManager.maxVolume
+
+//        background: Rectangle {
+//              x: control.width / 2 - width / 2
+//              y: control.height / 2 - height / 2
+//              width: Math.max(64, Math.min(control.width, control.height))
+//              height: width
+//              color: "transparent"
+//              radius: width / 2
+//              border.color: Theme.tintColor
+//              opacity: control.enabled ? 1 : 0.3
+//          }
+
+//          handle: Rectangle {
+//              id: handleItem
+//              x: control.background.x + control.background.width / 2 - width / 2
+//              y: control.background.y + control.background.height / 2 - height / 2
+//              width: 16
+//              height: 16
+//              color: control.pressed ? "#17a81a" : "#21be2b"
+//              radius: 8
+//              antialiasing: true
+//              opacity: control.enabled ? 1 : 0.3
+//              transform: [
+//                  Translate {
+//                      y: -Math.min(control.background.width, control.background.height) * 0.4 + handleItem.height / 2
+//                  },
+//                  Rotation {
+//                      angle: control.angle
+//                      origin.x: handleItem.width / 2
+//                      origin.y: handleItem.height / 2
+//                  }
+//              ]
+//          }
+
+        onMoved: {
+
+            soundManager.setVolume(control.value)
+        }
+    }
 
 
     function isUndefined(input){
@@ -142,5 +209,6 @@ Rectangle {
         }
         return false
     }
+
 
 }

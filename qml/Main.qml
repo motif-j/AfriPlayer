@@ -7,7 +7,7 @@ import "components"
 import "./utilities"
 import "./logics"
 import "./models"
-
+import "./audio"
 
 App {
 
@@ -83,6 +83,10 @@ App {
             console.debug("closes")
         }
     }
+    SoundManager{
+        id:soundManager
+    }
+
 
     //all key events be handled globally
     NavigationStack{

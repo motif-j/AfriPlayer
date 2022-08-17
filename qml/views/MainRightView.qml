@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Felgo 3.0
 import QtQuick.Layouts 1.3
+import QtQuick.Controls 2.5
 import com.afriktek.qplayer 1.0
 import "../components"
 import "../ui"
@@ -168,23 +169,18 @@ Rectangle{
 
             }
 
-            AppSlider{
+            ProgressBar{
                 Layout.maximumWidth:  dp(200)
                 Layout.alignment: Qt.AlignHCenter
-                trackColor:JColors.pink100
-                knobColor: JColors.purple100
+               // trackColor:JColors.pink100
+               // knobColor: JColors.purple100
+                from:0
+                to:soundManager.trackTime
+                value: soundManager.trackPosition
             }
             AppText {
                 id:timerText
-                text:{
-
-                    let duration=jmusicModel.playingTrack["duration"]
-
-                    if(isUndefined(duration)){
-                        return "00:00:00"
-                    }
-                    return duration
-                }
+                text:soundManager.ftime
 
                 fontSize: 16
                 font.family:  Constants.lcdFont.name

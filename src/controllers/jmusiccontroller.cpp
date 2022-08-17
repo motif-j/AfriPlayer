@@ -85,6 +85,7 @@ void JMusicController::handleFetchTrack(JTrack trackResult)
     trackMap["duration"]=formatedTime;
     trackMap["isFavorite"]=trackResult.isFavorite;
     trackMap["colors"]=trackResult.colors;
+    trackMap["fileUrl"]=trackResult.fileUrl;
 
 
     emit trackFetched(trackMap);
@@ -111,9 +112,11 @@ void JMusicController::handlePlayingTrackFetched(JTrack trackResult)
     trackMap["artistName"]=trackResult.artistName;
     trackMap["duration"]=formatedTime;
      trackMap["isFavorite"]=trackResult.isFavorite;
+     trackMap["fileUrl"]=trackResult.fileUrl;
 
      //que the track
      //queueTrack(trackResult.trackId);
+
     emit playingTrackFetched(trackMap);
 
 }

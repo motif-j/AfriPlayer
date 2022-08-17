@@ -152,10 +152,11 @@ public slots:
 
     void addPlaylistToQueue(int playlistId,bool shuffle){
 
-        QSettings settings("AfrikTek","Qplayer");
-        settings.setValue("shuffle",shuffle);
+        Q_UNUSED(shuffle)
+        //QSettings settings("AfrikTek","Qplayer");
+        //settings.setValue("shuffle",shuffle);
 
-        setShuffle(shuffle);
+       // setShuffle(shuffle);
 
 
         musicController.addPlaylistToQueue(playlistId,false);

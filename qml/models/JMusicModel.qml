@@ -1,6 +1,6 @@
 import QtQuick 2.9
 import com.afriktek.qplayer 1.0
-import "../audio"
+
 
 //At All cost ensure this model is only instantiated once
 
@@ -19,9 +19,6 @@ Item {
     property var  model: dataEntry
     property bool isQueryingFiles: jmusicController.isQueringFiles
 
-    SoundManager{
-        id:soundManager
-    }
 
     TracksDataEntry{
         id:dataEntry
@@ -42,6 +39,8 @@ Item {
 
         onPlayingTrackFetched: function(trackMap){
             playingTrack=trackMap
+
+            soundManager.play()
         }
 
     }
@@ -106,13 +105,25 @@ Item {
     }
 
     function playNext(){
-        dataEntry.playNext()
+        if(!soundManager.isBusy){
+            dataEntry.playNext()
+        }
+
+
     }
     function playPrevious(){
-        dataEntry.playPrevious()
+        if(!soundManager.isBusy){
+             dataEntry.playPrevious()
+        }
+
+
     }
     function playQueuedTrack(trackId){
-        dataEntry.playQueuedTrack(trackId)
+        if(!soundManager.isBusy){
+             dataEntry.playQueuedTrack(trackId)
+        }
+
+
     }
 
     function addPlaylistToQue(playlistId,shuffle){
@@ -128,7 +139,5 @@ Item {
         jmusicController.syncTracks()
     }
 
-    Component.onCompleted: {
-        soundManager.play()
-    }
+
 }

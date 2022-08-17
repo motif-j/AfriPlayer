@@ -52,11 +52,12 @@ GridLayout{
         }
     }
     IconButton{
-        icon: IconType.playcircle
+        icon: soundManager.isPlaying?IconType.pause: IconType.playcircle
         Layout.fillWidth: true
         size: dp(30)
         color: JColors.purple100
         onClicked: {
+            soundManager.play()
             playClicked();
         }
 
