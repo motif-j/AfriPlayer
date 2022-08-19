@@ -214,10 +214,13 @@ void JAudio::onPlaybackStatusChanged(Vlc::State state)
     case Vlc::Stopped:
         setIsPlaying(false);
         setPlaybackStatus(1);
+
+        qDebug()<<"Stopped";
         break;
     case Vlc::Ended:
+        setPlayNext(1);
         setIsPlaying(false);
-        setPlaybackStatus(1);
+
         break;
     case Vlc::Error:
         break;
@@ -230,6 +233,19 @@ void JAudio::onPlaybackStatusChanged(Vlc::State state)
 void JAudio::onEngineLockedChanged(bool locked)
 {
     setCanPlay(!locked);
+}
+
+int JAudio::getPlayNext() const
+{
+    return playNext;
+}
+
+void JAudio::setPlayNext(int newPlayNext)
+{
+    if (playNext == newPlayNext)
+        return;
+    playNext = newPlayNext;
+    emit playNextChanged();
 }
 
 

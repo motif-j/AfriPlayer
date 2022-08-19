@@ -25,10 +25,29 @@ Item {
 
         }
         onPositionChanged: {
-            trackPosition=position
+
+
+            if(position>duration){
+                trackPosition=duration
+            }else{
+               trackPosition=position
+            }
+
+            let percP=getPercentagePlay(duration,position)
+
+            console.debug(percP)
+              if(percP>80){
+                  jmusicModel.playNext()
+              }
+
         }
         onDurationChanged: {
             trackTime=duration;
+        }
+
+        onPlayNextChanged: {
+            console.debug("NExt")
+            jmusicModel.playNext()
         }
 
     }
@@ -55,6 +74,11 @@ Item {
        jmediaPlayer.seek(position)
     }
 
+    function getPercentagePlay(duration,position){
+        let perc=position/duration *100
+
+        return perc;
+    }
 
 
 }
