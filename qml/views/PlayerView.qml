@@ -159,7 +159,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.margins: dp(10)
         from: 0
-        to:100
+        to:200
         value: soundManager.maxVolume
 
 //        background: Rectangle {

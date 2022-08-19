@@ -13,6 +13,8 @@
 #include "src/controllers/jmusiccontrollerinterface.h"
 #include "src/audio/jaudio.h"
 #include <QString>
+//#include <VLCQtQml/QmlPlayer.h>
+//#include <VLCQtCore/Common.h>
 
 
 // uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
@@ -42,6 +44,9 @@ int main(int argc, char *argv[])
    // QCoreApplication::setOrganizationDomain("afriktek.com");
    // QCoreApplication::setApplicationName("QPlayer");
 
+   // VlcCommon::setPluginPath(app.applicationDirPath()+"plugins");
+
+
     FelgoApplication felgo;
 
     // Use platform-specific fonts instead of Felgo's default font
@@ -65,6 +70,10 @@ int main(int argc, char *argv[])
     qmlRegisterType<JPlaylistDataEntry>("com.afriktek.qplayer",1,0,"JPlaylistModel");
     qmlRegisterType<MusicFolderModel>("com.afriktek.qplayer",1,0,"FolderDataEntry");
     qmlRegisterType<JAudio>("com.afriktek.qplayer",1,0,"JAudio");
+
+
+  //  qmlRegisterType<VlcQmlPlayer>("com.afriktek.qplayer",1,0,"JAudioPlayer");
+    // qmlRegisterType<QmlPlayer>("com.afriktek.qplayer",1,0,"JAudio");
 
     qRegisterMetaType<JTrack>("JTrack");
     qRegisterMetaType<JPlaylist>("JPlaylist");

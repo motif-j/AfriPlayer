@@ -8,7 +8,13 @@
 #include <QDebug>
 #include <QTime>
 #include <QPropertyAnimation>
-#include <QSettings>
+#include "src/utils/jsettings.h"
+
+#include "src/engine/audioengine.h"
+
+
+
+
 
 extern QString formatTrackTime(QTime);
 
@@ -23,14 +29,13 @@ class JAudio : public QObject
     Q_PROPERTY(int playerVolume READ getPlayerVolume WRITE setPlayerVolume NOTIFY playerVolumeChanged)
     Q_PROPERTY(int playingId READ getPlayingId WRITE setPlayingId NOTIFY playingIdChanged)
     Q_PROPERTY(int playbackStatus READ getPlaybackStatus WRITE setPlaybackStatus NOTIFY playbackStatusChanged)
-    Q_PROPERTY(bool mediaFinished READ getMediaFinished WRITE setMediaFinished NOTIFY mediaFinishedChanged)
-    Q_PROPERTY(int prefferedVolume READ getPrefferedVolume WRITE setPrefferedVolume NOTIFY prefferedVolumeChanged)
+
 
 
 public:
     explicit JAudio(QObject *parent = nullptr);
 
-    QMediaPlayer *player1;
+
 
     int getPosition() const;
     void setPosition(int newPosition);
@@ -56,44 +61,46 @@ public:
     int getPlaybackStatus() const;
     void setPlaybackStatus(int newPlaybackStatus);
 
-    bool getMediaFinished() const;
-    void setMediaFinished(bool newMediaFinished);
-
-    int getPrefferedVolume() const;
-    void setPrefferedVolume(int newPrefferedVolume);
 
 public slots:
     void play(QString fileUrl,int trackId);
     void pause();
     void setVolume(double volume);
-    void setPrefVolMax(double volume);
-
     void seek(int newPosition);
     void resume();
 
 public slots:
     void onPositionChanged(qint64);
     void onError(QMediaPlayer::Error error);
-    void onMediaStatusChanged(QMediaPlayer::MediaStatus status);
-    void onPlaybackStatusChanged(QMediaPlayer::State state);
+    void onPlaybackStatusChanged(Vlc::State state);
+
+private slots:
+    void onFaderValueChanged(const QVariant &value);
+   void  onFaderFinished();
+
 
 private:
+    QVariantAnimation *faderAnim;
     JMalkiaDbInterface &db=JMalkiaDbInterface::getInstace();
+    AudioEngine *playerEngine;
+    JSettings &appSettings=JSettings::getInstance();
+
 
     int position=0;
     int duration=0;
 
-    int prefferedVolume=20;
 
     int playingId;
     int playerVolume;
     bool isPlaying=false;
-    bool mediaFinished;
     int playbackStatus; //0=playing;1=stopped;2;paused
-    bool canPlay=false;
+    bool canPlay=true;
 
     QString timeElapsed;
 
+private:
+    void fadeOutPlayer();
+    void fadeInPlayer();
 
 signals:
 
@@ -106,7 +113,7 @@ signals:
     void playerVolumeChanged();
     void playingIdChanged();
     void playbackStatusChanged();
-    void mediaFinishedChanged();
+
     void prefferedVolumeChanged();
 };
 

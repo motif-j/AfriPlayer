@@ -1,26 +1,35 @@
 #include "jaudio.h"
-#include <QAudioProbe>
 
+
+
+#include <QFile>
 
 
 JAudio::JAudio(QObject *parent)
     : QObject{parent}
 {
-    QSettings settings("AfrikTek","Qplayer");
-
-    auto vol=settings.value("volume",20).toInt();
-
-    qDebug()<<"Vol  "<<vol;
-    setPrefferedVolume(vol);
-
-    player1=new QMediaPlayer(parent,QMediaPlayer::StreamPlayback);
-    player1->setVolume(vol);
 
 
-    connect(player1,SIGNAL(error(QMediaPlayer::Error)),this,SLOT(onError(QMediaPlayer::Error)));
-    connect (player1,SIGNAL(positionChanged(qint64)),this,SLOT(onPositionChanged(qint64)));
-    connect(player1,&QMediaPlayer::mediaStatusChanged,this,&JAudio::onMediaStatusChanged);
-    connect(player1,&QMediaPlayer::stateChanged,this,&JAudio::onPlaybackStatusChanged);
+    //inst=libvlc_new(0,NULL);
+
+    playerEngine=new AudioEngine(this);
+
+    faderAnim=new QVariantAnimation(this);
+    faderAnim->setDuration(5000);
+
+
+    connect(faderAnim,&QVariantAnimation::valueChanged,this,&JAudio::onFaderValueChanged);
+    connect(faderAnim,&QVariantAnimation::finished,this,&JAudio::onFaderFinished);
+
+    connect(playerEngine,&AudioEngine::playbackStateChanged,this,&JAudio::onPlaybackStatusChanged);
+
+    // player
+
+    //  connect(player1,SIGNAL(error(QMediaPlayer::Error)),this,SLOT(onError(QMediaPlayer::Error)));
+    //  connect (player1,SIGNAL(positionChanged(qint64)),this,SLOT(onPositionChanged(qint64)));
+    //  connect(player1,&QMediaPlayer::mediaStatusChanged,this,&JAudio::onMediaStatusChanged);
+    ///  connect(player1,&QMediaPlayer::stateChanged,this,&JAudio::onPlaybackStatusChanged);
+
 
 }
 
@@ -41,56 +50,121 @@ void JAudio::setPosition(int newPosition)
 
 void JAudio::play(QString fileUrl,int trackId)
 {
+    if(canPlay){
 
 
-    player1->stop();
+        if(trackId==playingId){
 
-    player1->setMedia(QUrl::fromLocalFile(fileUrl));
+            switch (playerEngine->getPlayerState()) {
 
-    auto t=db.getTrack(trackId);
+            case Vlc::Idle:
+            {
+                fadeOutPlayer();
+                setIsPlaying(true);
 
-    setDuration(t->duration);
-    playingId=t->trackId;
+                playerEngine->loadAudio(fileUrl);
+
+                auto t=db.getTrack(trackId);
+
+                setDuration(t->duration);
+                playingId=t->trackId;
+
+                playerEngine->play();
+            }
+                break;
+            case Vlc::Opening:
+            {
+
+            }
+                break;
+            case Vlc::Buffering:
+
+            {
+
+            }
+                break;
+            case Vlc::Playing:
+            {
+                setIsPlaying(false);
+                fadeInPlayer();
 
 
+            }
+                break;
+            case Vlc::Paused:
+            {
+                fadeOutPlayer();
+                setIsPlaying(true);
+                playerEngine->play();
+            }
+                break;
+            case Vlc::Stopped:
+            {
+                fadeOutPlayer();
 
-    // player1->play();
+                setIsPlaying(true);
+                playerEngine->loadAudio(fileUrl);
+
+                auto t=db.getTrack(trackId);
+
+                setDuration(t->duration);
+                playingId=t->trackId;
+
+                playerEngine->play();
+            }
+                break;
+            case Vlc::Ended:
+                break;
+            case Vlc::Error:
+                break;
+
+            }
+
+        }else{
+            fadeOutPlayer();
+            setIsPlaying(true);
+            playerEngine->loadAudio(fileUrl);
+
+            auto t=db.getTrack(trackId);
+
+            setDuration(t->duration);
+            playingId=t->trackId;
+
+            playerEngine->play();
+        }
+    }
 }
+
 
 void JAudio::pause()
 {
+    if(canPlay){
 
-
-
-    player1->pause();
+        playerEngine->pause();
+    }
 }
 
 void JAudio::setVolume(double volume)
 {
 
-    player1->setVolume(volume);
+    playerEngine->setVolume(static_cast<int>(volume));
+
 
 }
 
-void JAudio::setPrefVolMax(double volume)
-{
-
-    int vol=static_cast<int>(volume);
-
-    QSettings settings("AfrikTek","Qplayer");
-    settings.setValue("volume",vol);
-    setPrefferedVolume(vol);
-}
 
 void JAudio::seek(int newPosition)
 {
-    player1->setPosition(newPosition);
+    //player1->setPosition(newPosition);
 
 }
 
 void JAudio::resume()
 {
-    player1->play();
+  if(canPlay){
+
+    playerEngine->resume();
+  }
 }
 
 void JAudio::onPositionChanged(qint64 newPos)
@@ -119,111 +193,102 @@ void JAudio::onPositionChanged(qint64 newPos)
 
 void JAudio::onError(QMediaPlayer::Error error)
 {
-    switch (error) {
-    case QMediaPlayer::NoError:
-        break;
-    case QMediaPlayer::FormatError:
-        break;
-    case QMediaPlayer::NetworkError:
-        break;
-    case QMediaPlayer::AccessDeniedError:
-        break;
-    case QMediaPlayer::ServiceMissingError:
-        break;
-    case QMediaPlayer::MediaIsPlaylist:
-        break;
+    //    switch (error) {
+    //    case QMediaPlayer::NoError:
+    //        break;
+    //    case QMediaPlayer::FormatError:
+    //        break;
+    //    case QMediaPlayer::NetworkError:
+    //        break;
+    //    case QMediaPlayer::AccessDeniedError:
+    //        break;
+    //    case QMediaPlayer::ServiceMissingError:
+    //        break;
+    //    case QMediaPlayer::MediaIsPlaylist:
+    //        break;
 
-    case QMediaPlayer::ResourceError:
-        qDebug()<<"Error "<<player1->errorString();
-        break;
+    //    case QMediaPlayer::ResourceError:
+    //        qDebug()<<"Error "<<player1->errorString();
+    //        break;
 
-    }
+    //    }
 
-    setMediaFinished(true);
+
 }
 
-void JAudio::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
-{
-    switch (status) {
-    case QMediaPlayer::UnknownMediaStatus:
-        qDebug()<<"Unknown Media";
-        break;
-    case QMediaPlayer::NoMedia:
-        qDebug()<<"No media";
-        break;
-    case QMediaPlayer::LoadingMedia:
-        qDebug()<<"Loading";
-        break;
-    case QMediaPlayer::LoadedMedia:
 
-        setMediaFinished(false);
-        player1->play();
 
-        break;
-    case QMediaPlayer::StalledMedia:
-        qDebug()<<"Stalled";
-        break;
-    case QMediaPlayer::BufferingMedia:
-        qDebug()<<"Bufferring";
-        break;
-    case QMediaPlayer::BufferedMedia:
-        qDebug()<<"Buffered";
-        break;
-    case QMediaPlayer::EndOfMedia:
-        setMediaFinished(true);
-        break;
-    case QMediaPlayer::InvalidMedia:
-        setMediaFinished(false);
-        qDebug()<<"Invalid";
-        break;
-
-    }
-}
-
-void JAudio::onPlaybackStatusChanged(QMediaPlayer::State state)
+void JAudio::onPlaybackStatusChanged(Vlc::State state)
 {
     switch (state) {
-    case QMediaPlayer::StoppedState:
-        setIsPlaying(false);
-        setPlaybackStatus(1);
+    case Vlc::Idle:
         break;
-    case QMediaPlayer::PlayingState:
+    case Vlc::Opening:
+        break;
+    case Vlc::Buffering:
+        break;
+    case Vlc::Playing:
         setIsPlaying(true);
         setPlaybackStatus(0);
         break;
-    case QMediaPlayer::PausedState:
+    case Vlc::Paused:
         setIsPlaying(false);
         setPlaybackStatus(2);
         break;
+    case Vlc::Stopped:
+        setIsPlaying(false);
+        setPlaybackStatus(1);
+        break;
+    case Vlc::Ended:
+        break;
+    case Vlc::Error:
+        break;
+
+
 
     }
 }
 
-int JAudio::getPrefferedVolume() const
+void JAudio::onFaderValueChanged(const QVariant &value)
 {
-    return prefferedVolume;
+    setVolume(value.toInt());
+
+
+    // setPlayerVolume(value.toInt());
+
 }
 
-void JAudio::setPrefferedVolume(int newPrefferedVolume)
+void JAudio::onFaderFinished()
 {
-    if (prefferedVolume == newPrefferedVolume)
-        return;
-    prefferedVolume = newPrefferedVolume;
-    emit prefferedVolumeChanged();
+    setCanPlay(true);
+    if(faderAnim->currentValue().toInt()==0){
+        playerEngine->pause();
+    }
+
+}
+void JAudio::fadeOutPlayer()
+{
+
+    setCanPlay(false);
+    faderAnim->setStartValue(0);
+    faderAnim->setEndValue(100);
+    faderAnim->start();
+    // locked=true;
+    // emit lockedChanged(true);
 }
 
-bool JAudio::getMediaFinished() const
+void JAudio::fadeInPlayer()
 {
-    return mediaFinished;
+    setCanPlay(false);
+    faderAnim->setStartValue(100);
+    faderAnim->setEndValue(0);
+    faderAnim->start();
+    //locked=false;
+    // emit lockedChanged(false);
 }
 
-void JAudio::setMediaFinished(bool newMediaFinished)
-{
-    if (mediaFinished == newMediaFinished)
-        return;
-    mediaFinished = newMediaFinished;
-    emit mediaFinishedChanged();
-}
+
+
 
 int JAudio::getPlaybackStatus() const
 {
@@ -261,7 +326,7 @@ void JAudio::setPlayerVolume(int newPlayerVolume)
     if (playerVolume == newPlayerVolume)
         return;
     playerVolume = newPlayerVolume;
-    setVolume(newPlayerVolume);
+
     emit playerVolumeChanged();
 }
 

@@ -7,10 +7,16 @@ QT +=gui
 QT +=sql
 QT +=multimedia
 
+
 libtagfile.files=$$files("taglib/lib/*.dll")
 COPIES += libtagfile
-
 libtagfile.path=$$OUT_PWD
+
+vlcfile.files=$$files("vlc/bin/*.dll")
+COPIES += vlcfile
+vlcfile.path=$$OUT_PWD
+
+
 # uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
 # for the remaining steps to build a custom Live Code Reload app see here: https://felgo.com/custom-code-reload-app/
 # CONFIG += felgo-live
@@ -27,13 +33,14 @@ PRODUCT_VERSION_CODE = 1
 # Not used if using Felgo Live
 PRODUCT_LICENSE_KEY = ""
 
+taglibFolder.source=taglib
+DEPLOYMENTFOLDERS+=taglibFolder
 
-
+vlcplugins.source=vlc/bin/plugins
+DEPLOYMENTFOLDERS += vlcplugins
 
 qmlFolder.source = qml
 DEPLOYMENTFOLDERS += qmlFolder # comment for publishing
-
-
 
 
 assetsFolder.source = assets
@@ -59,6 +66,7 @@ SOURCES += main.cpp \
     src/audio/jaudio.cpp \
     src/database/db_jmalkiadbinterface.cpp \
     src/adapters/dm_tracksdataentry.cpp \
+    src/engine/audioengine.cpp \
     src/fileio/file_jfileio.cpp \
     src/controllers/jmusiccontroller.cpp \
     src/controllers/jplaylistcontroller.cpp \
@@ -141,6 +149,7 @@ HEADERS += \
     src/audio/jaudio.h \
    src/database/db_jmalkiadbinterface.h \
     src/adapters/dm_tracksdataentry.h \
+    src/engine/audioengine.h \
     src/fileio/file_fileworker.h \
    src/fileio/file_jfileio.h \
     src/models/jmodels.h \
@@ -152,12 +161,24 @@ HEADERS += \
     src/models/jrole.h \
     src/utils/jsettings.h
 
+#TAG LIB
 win32:CONFIG(release, debug|release):
-LIBS += "C:/Program Files (x86)/taglib/lib/libtag.dll.a"
-INCLUDEPATH += "C:/Program Files (x86)/taglib/include"
-DEPENDPATH += "C:/Program Files (x86)/taglib/include"
+LIBS += $$PWD/taglib/lib/libtag.dll.a
+INCLUDEPATH +=  $$PWD/taglib/include
+DEPENDPATH +=  $$PWD/taglib/include
+
+#VLC
+win32:CONFIG(release, debug|release):
+LIBS += $$PWD/vlc/lib/libVLCQtCore.dll.a
+
+
+
+INCLUDEPATH +=  $$PWD/vlc/include
+DEPENDPATH +=  $$PWD/vlc/include
+
 
 INCLUDEPATH += $$PWD/.
 DEPENDPATH += $$PWD/.
+
 
 
