@@ -7,21 +7,19 @@ AudioEngine::AudioEngine(QObject *parent)
 
 
 
+
     vlcInstance=new VlcInstance(VlcCommon::args(),this);
-    player1=new VlcMediaPlayer(vlcInstance);
+
+
     faderAnim=new QVariantAnimation(this);
-    faderAnim->setDuration(2000);
+    faderAnim->setDuration(1000);
+    faderAnim->setStartValue(0);
+    faderAnim->setEndValue(appSettings.getVolume());
 
 
     connect(faderAnim,&QVariantAnimation::valueChanged,this,&AudioEngine::onFaderValueChanged);
     connect(faderAnim,&QVariantAnimation::finished,this,&AudioEngine::onFaderFinished);
 
-
-    connect(player1,&VlcMediaPlayer::end,this,&AudioEngine::onMediaEnded);
-    connect(player1,SIGNAL(VlcMediaPlayer::buffering(float)),this,SLOT(AudioEngine::onBuffer(float)));
-    connect(player1,&VlcMediaPlayer::error,this,&AudioEngine::onError);
-    connect(player1,&VlcMediaPlayer::playing,this,&AudioEngine::onPlaying);
-    connect(player1,&VlcMediaPlayer::stateChanged,this,&AudioEngine::onStateChanged);
 
     //connect
 }
@@ -40,87 +38,286 @@ Vlc::State AudioEngine::getPlayerState() const
 
 void AudioEngine::setVolume(int volume)
 {
-    if(audio==nullptr)
+    if(activeAudio()==nullptr)
     {
         qDebug()<<"NULL P";
         return;
 
     }
-    audio->setVolume(volume);
+
+    activeAudio()->setVolume(volume);
 
 }
 
 void AudioEngine::play()
 {
 
-  //  fadeOutPlayer();
+    //  fadeOutPlayer();
 
-  if(activeMedia==nullptr || locked)
-      return;
+    if(activeMedia1==nullptr || locked || activePlayer()==nullptr)
+        return;
 
-  fadeOutPlayer();
+    fadeVolume();
 
-  player1->play();
+    activePlayer()->play();
 }
 
 void AudioEngine::resume()
 {
-    if(locked){
+    if(locked || activePlayer()==nullptr){
         return;
     }
-    fadeOutPlayer();
-    player1->resume();
+    antState=STATE_WILLSTART;
+    fadeVolume();
+    activePlayer()->resume();
 }
 
 void AudioEngine::pause()
 
 {
-    if(locked){
+    if(locked || activePlayer()==nullptr){
         return;
     }
 
-    fadeInPlayer();
-  //  player1->pause();
+    antState=STATE_WILLPAUSE;
+    fadeVolume();
+
 
 
 }
 
-void AudioEngine::fadeOutPlayer()
+void AudioEngine::seek(int time)
+{
+  if(activePlayer()==nullptr){
+      return;
+  }
+
+  activePlayer()->setTime(time);
+}
+
+void AudioEngine::fadeVolume()
 {
 
     faderAnim->setStartValue(0);
-    faderAnim->setEndValue(100);
+    faderAnim->setEndValue(appSettings.getVolume());
     faderAnim->start();
     locked=true;
     emit lockedChanged(true);
 }
 
-void AudioEngine::fadeInPlayer()
+
+
+VlcMediaPlayer *AudioEngine::activePlayer()
 {
-    faderAnim->setStartValue(100);
-    faderAnim->setEndValue(0);
-    faderAnim->start();
-    locked=true;
-    emit lockedChanged(true);
+    if(player1==nullptr){
+        return player2;
+    }
+
+    return player1;
+}
+
+VlcAudio *AudioEngine::activeAudio()
+{
+    if(audio1==nullptr){
+        return audio2;
+    }
+
+    return audio1;
+}
+
+VlcMedia *AudioEngine::activeMedia()
+{
+    if(activeMedia1==nullptr){
+        return activeMedia2;
+    }
+
+    return activeMedia1;
+}
+
+void AudioEngine::initialiazeListeners(VlcMediaPlayer *player)
+{
+
+    qDebug()<<"INITIALIZING LISTENERS";
+
+
+    connect(player,&VlcMediaPlayer::end,this,&AudioEngine::onMediaEnded);
+    connect(player,SIGNAL(VlcMediaPlayer::buffering(float)),this,SLOT(AudioEngine::onBuffer(float)));
+    connect(player,&VlcMediaPlayer::error,this,&AudioEngine::onError);
+    connect(player,&VlcMediaPlayer::playing,this,&AudioEngine::onPlaying);
+    connect(player,&VlcMediaPlayer::stateChanged,this,&AudioEngine::onStateChanged);
+    connect(player,&VlcMediaPlayer::positionChanged,this,&AudioEngine::onPositionChanged);
+
+}
+
+void AudioEngine::disconnectListeners(VlcMediaPlayer *player)
+{
+    disconnect(player,&VlcMediaPlayer::end,this,&AudioEngine::onMediaEnded);
+    disconnect(player,SIGNAL(VlcMediaPlayer::buffering(float)),this,SLOT(AudioEngine::onBuffer(float)));
+    disconnect(player,&VlcMediaPlayer::error,this,&AudioEngine::onError);
+    disconnect(player,&VlcMediaPlayer::playing,this,&AudioEngine::onPlaying);
+    disconnect(player,&VlcMediaPlayer::stateChanged,this,&AudioEngine::onStateChanged);
+    disconnect(player,&VlcMediaPlayer::positionChanged,this,&AudioEngine::onPositionChanged);
 }
 
 
 
 void AudioEngine::loadAudio(QString fileUrl)
 {
+    qDebug()<<"LOADING AUDIO ";
+
     if(locked){
         return;
     }
 
-    activeMedia=nullptr;
-    activeMedia=new VlcMedia(fileUrl,true,vlcInstance);
-    player1->openOnly(activeMedia);
+    if(playerState==Vlc::State::Playing){
+        qDebug()<<"LOADING AUDIO STATE PLAYING";
+        /*
+         *This is a case where a player is still active and playing but we need to play another track
+         *First we would need to fade in the active player and fade out the new player
+         *To determine the active player we will use  the state
+         *
+         *Initialize the inactive player start it and fade other player
+         *Since the active player might be playing its better to acces each player natively
+        */
+
+        if(activePlayerState==PLAYER1){
+
+            qDebug()<<" active player is 1 so intialize 2 " ;
+
+            if(player2!=nullptr){
+                player2->stop();
+                player2=nullptr;
+            }
+
+            player2=new VlcMediaPlayer(vlcInstance);
+            audio2=player2->audio();
+
+            if(player1!=nullptr){
+                disconnectListeners(player1);
+            }
+            initialiazeListeners(player2);
+            activePlayerState=PLAYER2;
+
+            activeMedia2=new VlcMedia(fileUrl,true,vlcInstance);
+            player2->openOnly(activeMedia2);
+
+            player2->play();
+        }else{
+            qDebug()<<" active player is 2 so intialize 1 " ;
+            if(player1!=nullptr){
+                player1->stop();
+                player1=nullptr;
+            }
+            player1=new VlcMediaPlayer(vlcInstance);
+            audio1=player1->audio();
+            activePlayerState=PLAYER1;
+
+            if(player2!=nullptr){
+                disconnectListeners(player2);
+            }
+
+            initialiazeListeners(player1);
+            activeMedia1=new VlcMedia(fileUrl,true,vlcInstance);
+            player1->openOnly(activeMedia1);
+
+            player1->play();
+        }
+
+        //  initialiazeListeners();
+
+        antState=STATE_WILLLOAD;
+
+
+        //fadeVolume();
+        this->fileUrl=fileUrl;
+
+    }else{
+        qDebug()<<"LOADING AUDIO STATE NOT PLAYING";
+        antState=STATE_WILLSTART;
+
+
+        if(activePlayer()==nullptr){
+            qDebug()<<"ACTIVE PLAYER == null";
+            /*
+             * Initially all players will be nullptr so Initialize any of the  players
+             *
+
+            */
+            player1=new VlcMediaPlayer(vlcInstance);
+            player2=nullptr;
+
+            activeMedia2=nullptr;
+
+            activePlayerState=PLAYER1;
+
+            if(player2!=nullptr){
+                disconnectListeners(player2);
+            }
+
+            initialiazeListeners(player1);
+
+
+            audio1=player1->audio();
+            audio2=nullptr;
+
+
+            activeMedia1=new VlcMedia(fileUrl,true,vlcInstance);
+            activePlayer()->openOnly(activeMedia1);
+
+            activePlayer()->play();
+        }else{
+            /*
+             *The player is active so we need to initialize the null player and kill the other player
+             *Since there is no active player we just need to start the player
+             *
+            */
+
+
+
+            qDebug()<<" ACTIVE PLAYER NOT NULL ";
+
+            if(activePlayer()==player1){
+
+
+                activeMedia1=new VlcMedia(fileUrl,true,vlcInstance);
+
+                activePlayerState=PLAYER1;
+
+
+
+            }else{
+
+                activePlayerState=PLAYER2;
+
+
+                activeMedia2=new VlcMedia(fileUrl,true,vlcInstance);
+
+            }
+
+
+
+            initialiazeListeners(activePlayer());
+
+            activePlayer()->openOnly(activeMedia());
+
+            activePlayer()->play();
+
+
+
+        }
+
+
+
+    }
+
+    fadeVolume();
 
 
 }
 
 void AudioEngine::onMediaEnded()
 {
+
 
 }
 
@@ -136,7 +333,10 @@ void AudioEngine::onError()
 
 void AudioEngine::onPlaying()
 {
-    qDebug()<<"Me is Playing";
+    int volume=appSettings.getVolume();
+
+
+    setVolume(volume);
 
 }
 
@@ -144,53 +344,142 @@ void AudioEngine::onStateChanged()
 {
     playerState=player1->state();
 
-    switch (playerState) {
-    case Vlc::Idle:
-        break;
-    case Vlc::Opening:
-        break;
-    case Vlc::Buffering:
-        break;
-    case Vlc::Playing:
-    {
-
-        //check if audio is initialized
-        if(audio==nullptr){
-            //initialize the audio when playback starts
-            audio=player1->audio();
-        }
-    }
-        break;
-    case Vlc::Paused:
-        break;
-    case Vlc::Stopped:
-        break;
-    case Vlc::Ended:
-        break;
-    case Vlc::Error:
-        break;
-
-    }
-
-
 
     emit playbackStateChanged(playerState);
 
 
 }
 
+void AudioEngine::onPositionChanged(float position)
+{
+    if(activePlayer()!=nullptr){
+
+
+
+        emit positionChanged(position,activePlayer()->time());
+    }
+
+}
+
 void AudioEngine::onFaderValueChanged(const QVariant &value)
 {
 
-    setVolume(value.toInt());
+    /*
+       * There are two scenarios here:
+       * 1. When there are 2 active players- i.e STATEWILL LOAD
+       *    Change the volumes separately for each player
+       * 2. When there is only one active player i.e STATEWILL PAUSE
+       *    Set main volume directly
+       *
+      */
+
+    int incrVal=value.toInt();
+    int decVal= std::abs(appSettings.getVolume()-incrVal);
+
+
+
+    switch (antState) {
+    case AudioEngine::STATE_WILLSTART:
+        setVolume(incrVal);
+        break;
+    case AudioEngine::STATE_NOTHING:
+    {
+    }
+        break;
+    case AudioEngine::STATE_WILLLOAD:
+    {
+        //Here we need to set the player volumes individually
+
+
+        if(activePlayerState==PLAYER1){
+            // qDebug()<<"active player 1 volume "<<incrVal;
+            if(audio1!=nullptr){
+
+                //increase this volume
+                audio1->setVolume(incrVal);
+            }
+
+            if(audio2!=nullptr){
+                //decrease this volume
+                audio2->setVolume(decVal);
+
+            }
+
+        }else{
+
+            if(audio2!=nullptr){
+                //increase this volume
+
+                audio2->setVolume(incrVal);
+            }
+
+            if(audio1!=nullptr){
+                //decrease this volume
+                audio1->setVolume(decVal);
+
+            }
+            //qDebug()<<"ACTIVE PLAYER == 2 "<<vol;
+        }
+
+
+    }
+        break;
+    case AudioEngine::STATE_WILLPAUSE:
+    {
+
+        setVolume(decVal);
+    }
+        break;
+
+    }
+
+
 
 }
 
 void AudioEngine::onFaderFinished()
 {
-    if(faderAnim->currentValue().toInt()==0){
-        player1->pause();
+    switch (antState) {
+    case AudioEngine::STATE_WILLSTART:
+
+        break;
+    case AudioEngine::STATE_NOTHING:
+        qDebug()<<"Just chilling ";
+        break;
+    case AudioEngine::STATE_WILLLOAD:
+    {
+        if(activePlayerState==PLAYER1){
+            if(player2!=nullptr){
+                player2->stop();
+            }
+
+            player2=nullptr;
+            audio2=nullptr;
+            activeMedia2=nullptr;
+        }else{
+            if(player1!=nullptr){
+                player1->stop();
+            }
+
+            player1=nullptr;
+            audio1=nullptr;
+            activeMedia1=nullptr;
+        }
+
+        //initialiazeListeners();
     }
+        break;
+    case AudioEngine::STATE_WILLPAUSE:
+    {
+
+        activePlayer()->pause();
+
+
+    }
+        break;
+
+    }
+
     locked=false;
     lockedChanged(false);
 }

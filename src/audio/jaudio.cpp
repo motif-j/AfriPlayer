@@ -10,18 +10,14 @@ JAudio::JAudio(QObject *parent)
 {
 
 
-    //inst=libvlc_new(0,NULL);
-
     playerEngine=new AudioEngine(this);
 
-    faderAnim=new QVariantAnimation(this);
-    faderAnim->setDuration(5000);
-
-
-    connect(faderAnim,&QVariantAnimation::valueChanged,this,&JAudio::onFaderValueChanged);
-    connect(faderAnim,&QVariantAnimation::finished,this,&JAudio::onFaderFinished);
+    int volume=appSettings.getVolume();
+    setPlayerVolume(volume);
 
     connect(playerEngine,&AudioEngine::playbackStateChanged,this,&JAudio::onPlaybackStatusChanged);
+    connect(playerEngine,&AudioEngine::lockedChanged,this,&JAudio::onEngineLockedChanged);
+    connect(playerEngine,&AudioEngine::positionChanged,this,&JAudio::onPositionChanged);
 
     // player
 
@@ -51,7 +47,7 @@ void JAudio::setPosition(int newPosition)
 void JAudio::play(QString fileUrl,int trackId)
 {
     if(canPlay){
-
+        qDebug("Engine unlocked");
 
         if(trackId==playingId){
 
@@ -59,17 +55,8 @@ void JAudio::play(QString fileUrl,int trackId)
 
             case Vlc::Idle:
             {
-                fadeOutPlayer();
-                setIsPlaying(true);
 
-                playerEngine->loadAudio(fileUrl);
-
-                auto t=db.getTrack(trackId);
-
-                setDuration(t->duration);
-                playingId=t->trackId;
-
-                playerEngine->play();
+                 reloadTrack(fileUrl,trackId);
             }
                 break;
             case Vlc::Opening:
@@ -86,34 +73,26 @@ void JAudio::play(QString fileUrl,int trackId)
             case Vlc::Playing:
             {
                 setIsPlaying(false);
-                fadeInPlayer();
+                playerEngine->pause();
 
 
             }
                 break;
             case Vlc::Paused:
             {
-                fadeOutPlayer();
+
                 setIsPlaying(true);
-                playerEngine->play();
+                playerEngine->resume();
             }
                 break;
             case Vlc::Stopped:
             {
-                fadeOutPlayer();
 
-                setIsPlaying(true);
-                playerEngine->loadAudio(fileUrl);
-
-                auto t=db.getTrack(trackId);
-
-                setDuration(t->duration);
-                playingId=t->trackId;
-
-                playerEngine->play();
+                reloadTrack(fileUrl,trackId);
             }
                 break;
             case Vlc::Ended:
+                reloadTrack(fileUrl,trackId);
                 break;
             case Vlc::Error:
                 break;
@@ -121,17 +100,11 @@ void JAudio::play(QString fileUrl,int trackId)
             }
 
         }else{
-            fadeOutPlayer();
-            setIsPlaying(true);
-            playerEngine->loadAudio(fileUrl);
 
-            auto t=db.getTrack(trackId);
-
-            setDuration(t->duration);
-            playingId=t->trackId;
-
-            playerEngine->play();
+            reloadTrack(fileUrl,trackId);
         }
+    }else{
+        qDebug("engine locked ");
     }
 }
 
@@ -147,6 +120,8 @@ void JAudio::pause()
 void JAudio::setVolume(double volume)
 {
 
+    appSettings.setVolume(static_cast<int>(volume));
+   // setPlayerVolume()
     playerEngine->setVolume(static_cast<int>(volume));
 
 
@@ -156,18 +131,19 @@ void JAudio::setVolume(double volume)
 void JAudio::seek(int newPosition)
 {
     //player1->setPosition(newPosition);
+    playerEngine->seek(newPosition);
 
 }
 
 void JAudio::resume()
 {
-  if(canPlay){
+    if(canPlay){
 
-    playerEngine->resume();
-  }
+        playerEngine->resume();
+    }
 }
 
-void JAudio::onPositionChanged(qint64 newPos)
+void JAudio::onPositionChanged(float position,int newPos)
 {
 
     setPosition(newPos);
@@ -240,6 +216,8 @@ void JAudio::onPlaybackStatusChanged(Vlc::State state)
         setPlaybackStatus(1);
         break;
     case Vlc::Ended:
+        setIsPlaying(false);
+        setPlaybackStatus(1);
         break;
     case Vlc::Error:
         break;
@@ -249,42 +227,24 @@ void JAudio::onPlaybackStatusChanged(Vlc::State state)
     }
 }
 
-void JAudio::onFaderValueChanged(const QVariant &value)
+void JAudio::onEngineLockedChanged(bool locked)
 {
-    setVolume(value.toInt());
-
-
-    // setPlayerVolume(value.toInt());
-
+    setCanPlay(!locked);
 }
 
-void JAudio::onFaderFinished()
-{
-    setCanPlay(true);
-    if(faderAnim->currentValue().toInt()==0){
-        playerEngine->pause();
-    }
 
-}
-void JAudio::fadeOutPlayer()
-{
 
-    setCanPlay(false);
-    faderAnim->setStartValue(0);
-    faderAnim->setEndValue(100);
-    faderAnim->start();
-    // locked=true;
-    // emit lockedChanged(true);
-}
-
-void JAudio::fadeInPlayer()
+void JAudio::reloadTrack(QString trackUrl, int trackId)
 {
-    setCanPlay(false);
-    faderAnim->setStartValue(100);
-    faderAnim->setEndValue(0);
-    faderAnim->start();
-    //locked=false;
-    // emit lockedChanged(false);
+    setIsPlaying(true);
+    playerEngine->loadAudio(trackUrl);
+
+    auto t=db.getTrack(trackId);
+
+    setDuration(t->duration);
+    playingId=t->trackId;
+
+
 }
 
 

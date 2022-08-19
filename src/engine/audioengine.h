@@ -13,6 +13,7 @@
 #include <VLCQtCore/Enums.h>
 #include <VLCQtCore/Media.h>
 #include "src/utils/jsettings.h"
+#include <math.h>
 
 class AudioEngine : public QObject
 {
@@ -22,19 +23,44 @@ public:
 
     ~AudioEngine();
 
+    enum AnticipatedState
+    {
+        STATE_NOTHING=0,
+        STATE_WILLLOAD=1,
+        STATE_WILLPAUSE=2,
+        STATE_WILLSTART=3
+
+    };
+
+    enum ActivePlayer{
+        PLAYER1=0,
+        PLAYER2=1
+    };
 
 private:
     VlcInstance *vlcInstance;
-    VlcMediaPlayer *player1;
-    VlcAudio *audio=nullptr;
-    VlcMedia *activeMedia;
+
+    VlcMediaPlayer *player1=nullptr;
+    VlcMediaPlayer *player2=nullptr;
+
+
+
+    VlcAudio *audio1=nullptr;
+    VlcAudio *audio2=nullptr;
+
+    VlcMedia *activeMedia1;
+    VlcMedia *activeMedia2;
+
     Vlc::State playerState;
     QVariantAnimation *faderAnim;
 
     JSettings &appSettings=JSettings::getInstance();
+    AnticipatedState antState=STATE_WILLPAUSE;
+    ActivePlayer activePlayerState=PLAYER1;
 
     bool locked=false;
     int maxVolume=appSettings.getVolume();
+    QString fileUrl;
 
     //getters
 public:
@@ -48,10 +74,17 @@ public:
     void resume();
     void pause();
 
+    void seek(int time);
 private:
-    void fadeOutPlayer();
-    void fadeInPlayer();
+    void fadeVolume();
 
+
+    VlcMediaPlayer *activePlayer();
+    VlcAudio *activeAudio();
+
+    VlcMedia *activeMedia();
+    void initialiazeListeners(VlcMediaPlayer *player);
+    void disconnectListeners(VlcMediaPlayer *player);
 
     //Receivers
 private  slots:
@@ -60,6 +93,8 @@ private  slots:
     void onError();
     void onPlaying();
     void onStateChanged();
+    void onPositionChanged(float position);
+
     void onFaderValueChanged(const QVariant &value);
     void  onFaderFinished();
 
@@ -69,6 +104,7 @@ private:
 signals:
     void playbackStateChanged(Vlc::State playbackState);
     void lockedChanged(bool locked);
+    void positionChanged(float position,int time);
 
 };
 

@@ -7,7 +7,7 @@
 #include "src/database/db_jmalkiadbinterface.h"
 #include <QDebug>
 #include <QTime>
-#include <QPropertyAnimation>
+
 #include "src/utils/jsettings.h"
 
 #include "src/engine/audioengine.h"
@@ -70,17 +70,16 @@ public slots:
     void resume();
 
 public slots:
-    void onPositionChanged(qint64);
+    void onPositionChanged(float,int);
     void onError(QMediaPlayer::Error error);
     void onPlaybackStatusChanged(Vlc::State state);
+    void onEngineLockedChanged(bool locked);
 
-private slots:
-    void onFaderValueChanged(const QVariant &value);
-   void  onFaderFinished();
+
 
 
 private:
-    QVariantAnimation *faderAnim;
+
     JMalkiaDbInterface &db=JMalkiaDbInterface::getInstace();
     AudioEngine *playerEngine;
     JSettings &appSettings=JSettings::getInstance();
@@ -98,9 +97,9 @@ private:
 
     QString timeElapsed;
 
+
 private:
-    void fadeOutPlayer();
-    void fadeInPlayer();
+    void reloadTrack(QString trackUrl,int trackId);
 
 signals:
 
@@ -114,7 +113,7 @@ signals:
     void playingIdChanged();
     void playbackStatusChanged();
 
-    void prefferedVolumeChanged();
+
 };
 
 #endif // JAUDIO_H
