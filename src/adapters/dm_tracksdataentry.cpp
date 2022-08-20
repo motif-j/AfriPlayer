@@ -200,6 +200,10 @@ void TracksDataEntry::playNext()
     QSettings settings("AfrikTek","Qplayer");
     if(playlistId==-2){
 
+        if(activeIndex==m_data.count()-1){
+            return;
+        }
+
         if(!m_data.isEmpty()){
 
             int cId=settings.value("playingTrackId",0).toInt();
@@ -265,6 +269,9 @@ void TracksDataEntry::playPrevious()
     QSettings settings("AfrikTek","Qplayer");
 
     if(playlistId==-2){
+        if(activeIndex==0){
+            return;
+        }
         //activeIndex=getPlayingIndex();
 
         if(!m_data.isEmpty()){

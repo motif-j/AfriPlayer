@@ -17,8 +17,9 @@ Item {
     //0=playing;1=stopped;2;paused
     JAudio{
         id:jmediaPlayer
+
         onTrackLengthChanged: {
-            console.debug(trackLength)
+
             fduration=trackLength
         }
 
@@ -27,7 +28,6 @@ Item {
         }
         onCanPlayChanged: {
             isBusy=!canPlay
-
 
         }
         onPositionChanged: {
@@ -38,8 +38,6 @@ Item {
             }else{
                 trackPosition=position
             }
-
-
 
                 if(initiatePlayNext(duration,position)){
                     jmusicModel.playNext()
@@ -77,14 +75,25 @@ Item {
         jmediaPlayer.setVolume(newValue)
     }
     function seek(position){
-        jmediaPlayer.seek(position)
+
+             jmediaPlayer.seek(position)
+
+
+
     }
 
     function initiatePlayNext(duration,position){
 
         let diff=duration-position
 
-        return diff<2000;
+        if(duration>20000){
+             return diff<2000;
+        }
+
+        let perc=(position/duration) *100
+
+        return perc>95
+
     }
 
     function getPercentagePlay(duration,position){

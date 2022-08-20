@@ -519,12 +519,17 @@ distclean: debug-distclean release-distclean  FORCE
 	-$(DEL_FILE) Makefile
 	-$(DEL_FILE) .qmake.stash
 
-first: $(first) targetwinxcopy
+first: $(first) copydeploymentfolders targetwinxcopy
 
 targetwinxcopy:
 	cmd /c xcopy /q /y C:\Qt\5.15.2\mingw81_64\lib\openssl\. F:\Programing\QtWorld\QPlayer
 	cmd /c xcopy /q /y C:\Qt\5.15.2\mingw81_64\lib\vcruntime140.dll F:\Programing\QtWorld\QPlayer
 	
+
+first: $(first) copydeploymentfolders targetwinxcopy
+
+copydeploymentfolders:
+	@echo Copying application data... && $(COPY_DIR) "F:\Programing\QtWorld\QPlayer\vlc\bin\plugins" "F:\Programing\QtWorld\QPlayer\plugins"
 
 debug-mocclean:
 	$(MAKE) -f $(MAKEFILE).Debug mocclean

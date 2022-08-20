@@ -113,9 +113,9 @@ Rectangle {
                 color: Theme.secondaryTextColor
                 Layout.alignment: Qt.AlignRight
                 Layout.rightMargin: dp(10)
-                 Layout.preferredWidth: dp(50)
+                Layout.preferredWidth: dp(50)
 
-               Layout.fillWidth: false
+                Layout.fillWidth: false
 
 
             }
@@ -125,7 +125,7 @@ Rectangle {
 
 
 
-        ProgressBar{
+        Slider{
             id:slider
             width: controllerRow.width
             from:0
@@ -133,20 +133,37 @@ Rectangle {
             value: soundManager.trackPosition
             Layout.alignment: Qt.AlignHCenter|Qt.AlignBottom
 
+            onMoved: {
+                soundManager.seek(slider.value);
+            }
+
             background: Rectangle{
                 implicitHeight: dp(4)
                 implicitWidth: parent.width
                 radius: 3
 
                 color: Theme.secondaryBackgroundColor
-            }
-            contentItem:Rectangle{
 
-                radius:3
-                color: Theme.tintColor
-                height: parent.height
-                width: slider.visualPosition*parent.width
+                Rectangle{
+                    height: parent.height
+                     width: slider.visualPosition*parent.width
+                    radius: 3
+
+                    color: Theme.tintLightColor
+                }
             }
+            handle:Rectangle{
+                x: slider.visualPosition*parent.width -dp(10)//slider.leftPadding + slider.visualPosition * (slider.availableWidth - width)
+                y: (slider.availableHeight / 2)-dp(5)
+                radius:3
+                height:dp(20)
+                width:dp(20)
+                color: Theme.tintColor
+
+
+            }
+
+
 
         }
     }
@@ -162,38 +179,38 @@ Rectangle {
         to:200
         value: soundManager.maxVolume
 
-//        background: Rectangle {
-//              x: control.width / 2 - width / 2
-//              y: control.height / 2 - height / 2
-//              width: Math.max(64, Math.min(control.width, control.height))
-//              height: width
-//              color: "transparent"
-//              radius: width / 2
-//              border.color: Theme.tintColor
-//              opacity: control.enabled ? 1 : 0.3
-//          }
+        //        background: Rectangle {
+        //              x: control.width / 2 - width / 2
+        //              y: control.height / 2 - height / 2
+        //              width: Math.max(64, Math.min(control.width, control.height))
+        //              height: width
+        //              color: "transparent"
+        //              radius: width / 2
+        //              border.color: Theme.tintColor
+        //              opacity: control.enabled ? 1 : 0.3
+        //          }
 
-//          handle: Rectangle {
-//              id: handleItem
-//              x: control.background.x + control.background.width / 2 - width / 2
-//              y: control.background.y + control.background.height / 2 - height / 2
-//              width: 16
-//              height: 16
-//              color: control.pressed ? "#17a81a" : "#21be2b"
-//              radius: 8
-//              antialiasing: true
-//              opacity: control.enabled ? 1 : 0.3
-//              transform: [
-//                  Translate {
-//                      y: -Math.min(control.background.width, control.background.height) * 0.4 + handleItem.height / 2
-//                  },
-//                  Rotation {
-//                      angle: control.angle
-//                      origin.x: handleItem.width / 2
-//                      origin.y: handleItem.height / 2
-//                  }
-//              ]
-//          }
+        //          handle: Rectangle {
+        //              id: handleItem
+        //              x: control.background.x + control.background.width / 2 - width / 2
+        //              y: control.background.y + control.background.height / 2 - height / 2
+        //              width: 16
+        //              height: 16
+        //              color: control.pressed ? "#17a81a" : "#21be2b"
+        //              radius: 8
+        //              antialiasing: true
+        //              opacity: control.enabled ? 1 : 0.3
+        //              transform: [
+        //                  Translate {
+        //                      y: -Math.min(control.background.width, control.background.height) * 0.4 + handleItem.height / 2
+        //                  },
+        //                  Rotation {
+        //                      angle: control.angle
+        //                      origin.x: handleItem.width / 2
+        //                      origin.y: handleItem.height / 2
+        //                  }
+        //              ]
+        //          }
 
         onMoved: {
 

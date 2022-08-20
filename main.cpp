@@ -13,6 +13,7 @@
 #include "src/controllers/jmusiccontrollerinterface.h"
 #include "src/audio/jaudio.h"
 #include <QString>
+
 //#include <VLCQtQml/QmlPlayer.h>
 //#include <VLCQtCore/Common.h>
 

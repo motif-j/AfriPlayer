@@ -1,6 +1,7 @@
 # allows to add DEPLOYMENTFOLDERS and links to the Felgo library and QtCreator auto-completion
 CONFIG += felgo
 CONFIG +=file_copies
+CONFIG +=link_pkgconfig
 
 QT +=core
 QT +=gui
@@ -8,13 +9,6 @@ QT +=sql
 QT +=multimedia
 
 
-libtagfile.files=$$files("taglib/lib/*.dll")
-COPIES += libtagfile
-libtagfile.path=$$OUT_PWD
-
-vlcfile.files=$$files("vlc/bin/*.dll")
-COPIES += vlcfile
-vlcfile.path=$$OUT_PWD
 
 
 # uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
@@ -33,11 +27,21 @@ PRODUCT_VERSION_CODE = 1
 # Not used if using Felgo Live
 PRODUCT_LICENSE_KEY = ""
 
-taglibFolder.source=taglib
-DEPLOYMENTFOLDERS+=taglibFolder
+
+win32{
+
+libtagfile.files=$$files("taglib/bin/*.dll")
+COPIES += libtagfile
+libtagfile.path=$$OUT_PWD
+
+vlcfile.files=$$files("vlc/bin/*.dll")
+COPIES += vlcfile
+vlcfile.path=$$OUT_PWD
+
 
 vlcplugins.source=vlc/bin/plugins
 DEPLOYMENTFOLDERS += vlcplugins
+}
 
 qmlFolder.source = qml
 DEPLOYMENTFOLDERS += qmlFolder # comment for publishing
@@ -96,6 +100,7 @@ macx {
 DISTFILES += \
     android/src/com/afriktek/qplayer/TestClass.java \
     qml/audio/SoundManager.qml \
+    qml/components/JIconButton.qml \
     qml/components/PlayerBar2.qml \
     qml/components/PlayerBarController.qml \
     qml/components/TracksEmptyLIstView.qml \
@@ -161,24 +166,38 @@ HEADERS += \
     src/models/jrole.h \
     src/utils/jsettings.h
 
-#TAG LIB
-win32:CONFIG(release, debug|release):
-LIBS += $$PWD/taglib/lib/libtag.dll.a
-INCLUDEPATH +=  $$PWD/taglib/include
-DEPENDPATH +=  $$PWD/taglib/include
-
-#VLC
-win32:CONFIG(release, debug|release):
-LIBS += $$PWD/vlc/lib/libVLCQtCore.dll.a
-
-
-
-INCLUDEPATH +=  $$PWD/vlc/include
-DEPENDPATH +=  $$PWD/vlc/include
-
 
 INCLUDEPATH += $$PWD/.
 DEPENDPATH += $$PWD/.
 
 
 
+##VLC
+unix|win32: LIBS += -L'C:/Program Files (x86)/VLC-Qt/lib/' -llibVLCQtCore.dll
+
+INCLUDEPATH += 'C:/Program Files (x86)/VLC-Qt/include'
+DEPENDPATH += 'C:/Program Files (x86)/VLC-Qt/include'
+
+#TAG LIB
+unix|win32: LIBS += -L'C:/Program Files (x86)/taglib/lib/' -llibtag.dll
+
+INCLUDEPATH += 'C:/Program Files (x86)/taglib/include'
+DEPENDPATH += 'C:/Program Files (x86)/taglib/include'
+
+
+#PKGCONFIG +=gstreamer-1.0 glib-2.0 gobject-2.0 gstreamer-app-1.0 gstreamer-pbutils-1.0
+
+#unix|win32: LIBS += -LC:/gstreamer/1.0/mingw_x86_64/lib/ -lglib-2.0
+
+#INCLUDEPATH += C:/gstreamer/1.0/mingw_x86_64/include/glib-2.0
+#DEPENDPATH += C:/gstreamer/1.0/mingw_x86_64/include/glib-2.0
+
+#unix|win32: LIBS += -LC:/gstreamer/1.0/mingw_x86_64/lib/ -lgstreamer-1.0
+
+#INCLUDEPATH += C:/gstreamer/1.0/mingw_x86_64/include/gstreamer-1.0
+#DEPENDPATH += C:/gstreamer/1.0/mingw_x86_64/include/gstreamer-1.0
+
+#unix|win32: LIBS += -LC:/gstreamer/1.0/mingw_x86_64/lib/ -lgobject-2.0
+
+#INCLUDEPATH += C:/gstreamer/1.0/mingw_x86_64/include/glib-2.0/gobject
+#DEPENDPATH += C:/gstreamer/1.0/mingw_x86_64/include/glib-2.0/gobject

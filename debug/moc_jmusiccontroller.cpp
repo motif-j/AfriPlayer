@@ -7,7 +7,7 @@
 *****************************************************************************/
 
 #include <memory>
-#include "../jmusiccontroller.h"
+#include "../src/controllers/jmusiccontroller.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #include <QtCore/QList>

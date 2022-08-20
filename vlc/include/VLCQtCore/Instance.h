@@ -28,7 +28,6 @@ class VlcModuleDescription;
 
 struct libvlc_instance_t;
 
-
 /*!
     \class VlcInstance Instance.h VLCQtCore/Instance.h
     \ingroup VLCQtCore
@@ -62,7 +61,6 @@ public:
         \return libvlc instance (libvlc_instance_t *)
     */
     libvlc_instance_t *core();
-
 
     /*!
         \brief Returns libvlc initialisation status.

@@ -7,6 +7,7 @@
 #include <QVariant>
 #include <QVariantAnimation>
 #include <VLCQtCore/Audio.h>
+#include <VLCQtCore/Video.h>
 #include <VLCQtCore/MediaPlayer.h>
 #include <VLCQtCore/Instance.h>
 #include <VLCQtCore/Common.h>
@@ -33,8 +34,9 @@ public:
     };
 
     enum ActivePlayer{
-        PLAYER1=0,
-        PLAYER2=1
+        PLAYER1=1,
+        PLAYER2=2,
+        PLAYER_NONE=3
     };
 
 private:
@@ -55,7 +57,7 @@ private:
 
     JSettings &appSettings=JSettings::getInstance();
     AnticipatedState antState=STATE_WILLPAUSE;
-    ActivePlayer activePlayerState=PLAYER1;
+    ActivePlayer activePlayerState=PLAYER_NONE;
 
     bool locked=false;
     int maxVolume=appSettings.getVolume();

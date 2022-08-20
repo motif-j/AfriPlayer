@@ -90,7 +90,7 @@ public slots:
                 qDebug()<<"Query "<<directory->path();
                 QStringList filters;
 
-                filters<<"*.m4a"<<"*.mp3"<<"*.wav"<<"*.aac"<<"*.flac"<<"*.ogg";
+                filters<<"*.m4a"<<"*.mp3"<<"*.wav"<<"*.aac"<<"*.flac"<<"*.ogg"<<"*.mp4"<<"*.mkv";
 
                 directory->setNameFilters(filters);
 

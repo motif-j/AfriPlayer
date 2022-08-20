@@ -7,7 +7,7 @@
 *****************************************************************************/
 
 #include <memory>
-#include "../jmusiccontrollerinterface.h"
+#include "../src/controllers/jmusiccontrollerinterface.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_JMusicControllerInterface_t {
-    QByteArrayData data[28];
-    char stringdata0[399];
+    QByteArrayData data[33];
+    char stringdata0[474];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -44,35 +44,42 @@ QT_MOC_LITERAL(8, 93, 19), // "playingTrackFetched"
 QT_MOC_LITERAL(9, 113, 20), // "activeTrackIdChanged"
 QT_MOC_LITERAL(10, 134, 14), // "shuffleChanged"
 QT_MOC_LITERAL(11, 149, 18), // "dynamicModeChanged"
-QT_MOC_LITERAL(12, 168, 18), // "handleFetchedTrack"
-QT_MOC_LITERAL(13, 187, 25), // "handleFetchedPlayingTrack"
-QT_MOC_LITERAL(14, 213, 3), // "map"
-QT_MOC_LITERAL(15, 217, 8), // "getTrack"
-QT_MOC_LITERAL(16, 226, 7), // "trackId"
-QT_MOC_LITERAL(17, 234, 15), // "getPlayingTrack"
-QT_MOC_LITERAL(18, 250, 12), // "trackClicked"
-QT_MOC_LITERAL(19, 263, 24), // "addTrackToRecentlyPlayed"
-QT_MOC_LITERAL(20, 288, 18), // "addTrackToPlaylist"
-QT_MOC_LITERAL(21, 307, 10), // "playlistId"
-QT_MOC_LITERAL(22, 318, 13), // "addTrackToQue"
-QT_MOC_LITERAL(23, 332, 18), // "addPlaylistToQueue"
-QT_MOC_LITERAL(24, 351, 7), // "shuffle"
-QT_MOC_LITERAL(25, 359, 13), // "toggleShuffle"
-QT_MOC_LITERAL(26, 373, 13), // "activeTrackId"
-QT_MOC_LITERAL(27, 387, 11) // "dynamicMode"
+QT_MOC_LITERAL(12, 168, 11), // "busyChanged"
+QT_MOC_LITERAL(13, 180, 21), // "isQueringFilesChanged"
+QT_MOC_LITERAL(14, 202, 18), // "handleFetchedTrack"
+QT_MOC_LITERAL(15, 221, 25), // "handleFetchedPlayingTrack"
+QT_MOC_LITERAL(16, 247, 3), // "map"
+QT_MOC_LITERAL(17, 251, 14), // "onFilesQueried"
+QT_MOC_LITERAL(18, 266, 10), // "syncTracks"
+QT_MOC_LITERAL(19, 277, 8), // "getTrack"
+QT_MOC_LITERAL(20, 286, 7), // "trackId"
+QT_MOC_LITERAL(21, 294, 15), // "getPlayingTrack"
+QT_MOC_LITERAL(22, 310, 12), // "trackClicked"
+QT_MOC_LITERAL(23, 323, 24), // "addTrackToRecentlyPlayed"
+QT_MOC_LITERAL(24, 348, 18), // "addTrackToPlaylist"
+QT_MOC_LITERAL(25, 367, 10), // "playlistId"
+QT_MOC_LITERAL(26, 378, 13), // "addTrackToQue"
+QT_MOC_LITERAL(27, 392, 18), // "addPlaylistToQueue"
+QT_MOC_LITERAL(28, 411, 7), // "shuffle"
+QT_MOC_LITERAL(29, 419, 13), // "toggleShuffle"
+QT_MOC_LITERAL(30, 433, 13), // "activeTrackId"
+QT_MOC_LITERAL(31, 447, 11), // "dynamicMode"
+QT_MOC_LITERAL(32, 459, 14) // "isQueringFiles"
 
     },
     "JMusicControllerInterface\0QML.Element\0"
     "auto\0QML.Singleton\0true\0trackFetchedFromRepo\0"
     "\0trackMap\0playingTrackFetched\0"
     "activeTrackIdChanged\0shuffleChanged\0"
-    "dynamicModeChanged\0handleFetchedTrack\0"
-    "handleFetchedPlayingTrack\0map\0getTrack\0"
+    "dynamicModeChanged\0busyChanged\0"
+    "isQueringFilesChanged\0handleFetchedTrack\0"
+    "handleFetchedPlayingTrack\0map\0"
+    "onFilesQueried\0syncTracks\0getTrack\0"
     "trackId\0getPlayingTrack\0trackClicked\0"
     "addTrackToRecentlyPlayed\0addTrackToPlaylist\0"
     "playlistId\0addTrackToQue\0addPlaylistToQueue\0"
     "shuffle\0toggleShuffle\0activeTrackId\0"
-    "dynamicMode"
+    "dynamicMode\0isQueringFiles"
 };
 #undef QT_MOC_LITERAL
 
@@ -82,35 +89,39 @@ static const uint qt_meta_data_JMusicControllerInterface[] = {
        8,       // revision
        0,       // classname
        2,   14, // classinfo
-      15,   18, // methods
-       3,  134, // properties
+      19,   18, // methods
+       4,  158, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       5,       // signalCount
+       7,       // signalCount
 
  // classinfo: key, value
        1,    2,
        3,    4,
 
  // signals: name, argc, parameters, tag, flags
-       5,    1,   93,    6, 0x06 /* Public */,
-       8,    1,   96,    6, 0x06 /* Public */,
-       9,    0,   99,    6, 0x06 /* Public */,
-      10,    0,  100,    6, 0x06 /* Public */,
-      11,    0,  101,    6, 0x06 /* Public */,
+       5,    1,  113,    6, 0x06 /* Public */,
+       8,    1,  116,    6, 0x06 /* Public */,
+       9,    0,  119,    6, 0x06 /* Public */,
+      10,    0,  120,    6, 0x06 /* Public */,
+      11,    0,  121,    6, 0x06 /* Public */,
+      12,    0,  122,    6, 0x06 /* Public */,
+      13,    0,  123,    6, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      12,    1,  102,    6, 0x0a /* Public */,
-      13,    1,  105,    6, 0x0a /* Public */,
-      15,    1,  108,    6, 0x0a /* Public */,
-      17,    1,  111,    6, 0x0a /* Public */,
-      18,    1,  114,    6, 0x0a /* Public */,
-      19,    1,  117,    6, 0x0a /* Public */,
-      20,    2,  120,    6, 0x0a /* Public */,
-      22,    1,  125,    6, 0x0a /* Public */,
-      23,    2,  128,    6, 0x0a /* Public */,
-      25,    0,  133,    6, 0x0a /* Public */,
+      14,    1,  124,    6, 0x0a /* Public */,
+      15,    1,  127,    6, 0x0a /* Public */,
+      17,    0,  130,    6, 0x0a /* Public */,
+      18,    0,  131,    6, 0x0a /* Public */,
+      19,    1,  132,    6, 0x0a /* Public */,
+      21,    1,  135,    6, 0x0a /* Public */,
+      22,    1,  138,    6, 0x0a /* Public */,
+      23,    1,  141,    6, 0x0a /* Public */,
+      24,    2,  144,    6, 0x0a /* Public */,
+      26,    1,  149,    6, 0x0a /* Public */,
+      27,    2,  152,    6, 0x0a /* Public */,
+      29,    0,  157,    6, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QVariantMap,    7,
@@ -118,28 +129,34 @@ static const uint qt_meta_data_JMusicControllerInterface[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
 
  // slots: parameters
     QMetaType::Void, QMetaType::QVariantMap,    7,
-    QMetaType::Void, QMetaType::QVariantMap,   14,
-    QMetaType::Void, QMetaType::Int,   16,
-    QMetaType::Void, QMetaType::Int,   16,
-    QMetaType::Void, QMetaType::Int,   16,
-    QMetaType::Void, QMetaType::Int,   16,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int,   16,   21,
-    QMetaType::Void, QMetaType::Int,   16,
-    QMetaType::Void, QMetaType::Int, QMetaType::Bool,   21,   24,
+    QMetaType::Void, QMetaType::QVariantMap,   16,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,   20,
+    QMetaType::Void, QMetaType::Int,   20,
+    QMetaType::Void, QMetaType::Int,   20,
+    QMetaType::Void, QMetaType::Int,   20,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,   20,   25,
+    QMetaType::Void, QMetaType::Int,   20,
+    QMetaType::Void, QMetaType::Int, QMetaType::Bool,   25,   28,
     QMetaType::Void,
 
  // properties: name, type, flags
-      24, QMetaType::Bool, 0x00495103,
-      26, QMetaType::Int, 0x00495103,
-      27, QMetaType::Bool, 0x00495103,
+      28, QMetaType::Bool, 0x00495103,
+      30, QMetaType::Int, 0x00495103,
+      31, QMetaType::Bool, 0x00495103,
+      32, QMetaType::Bool, 0x00495103,
 
  // properties: notify_signal_id
        3,
        2,
        4,
+       6,
 
        0        // eod
 };
@@ -155,16 +172,20 @@ void JMusicControllerInterface::qt_static_metacall(QObject *_o, QMetaObject::Cal
         case 2: _t->activeTrackIdChanged(); break;
         case 3: _t->shuffleChanged(); break;
         case 4: _t->dynamicModeChanged(); break;
-        case 5: _t->handleFetchedTrack((*reinterpret_cast< QVariantMap(*)>(_a[1]))); break;
-        case 6: _t->handleFetchedPlayingTrack((*reinterpret_cast< QVariantMap(*)>(_a[1]))); break;
-        case 7: _t->getTrack((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 8: _t->getPlayingTrack((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 9: _t->trackClicked((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 10: _t->addTrackToRecentlyPlayed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 11: _t->addTrackToPlaylist((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 12: _t->addTrackToQue((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 13: _t->addPlaylistToQueue((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
-        case 14: _t->toggleShuffle(); break;
+        case 5: _t->busyChanged(); break;
+        case 6: _t->isQueringFilesChanged(); break;
+        case 7: _t->handleFetchedTrack((*reinterpret_cast< QVariantMap(*)>(_a[1]))); break;
+        case 8: _t->handleFetchedPlayingTrack((*reinterpret_cast< QVariantMap(*)>(_a[1]))); break;
+        case 9: _t->onFilesQueried(); break;
+        case 10: _t->syncTracks(); break;
+        case 11: _t->getTrack((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 12: _t->getPlayingTrack((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 13: _t->trackClicked((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 14: _t->addTrackToRecentlyPlayed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 15: _t->addTrackToPlaylist((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 16: _t->addTrackToQue((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 17: _t->addPlaylistToQueue((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
+        case 18: _t->toggleShuffle(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -204,6 +225,20 @@ void JMusicControllerInterface::qt_static_metacall(QObject *_o, QMetaObject::Cal
                 return;
             }
         }
+        {
+            using _t = void (JMusicControllerInterface::*)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&JMusicControllerInterface::busyChanged)) {
+                *result = 5;
+                return;
+            }
+        }
+        {
+            using _t = void (JMusicControllerInterface::*)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&JMusicControllerInterface::isQueringFilesChanged)) {
+                *result = 6;
+                return;
+            }
+        }
     }
 #ifndef QT_NO_PROPERTIES
     else if (_c == QMetaObject::ReadProperty) {
@@ -214,6 +249,7 @@ void JMusicControllerInterface::qt_static_metacall(QObject *_o, QMetaObject::Cal
         case 0: *reinterpret_cast< bool*>(_v) = _t->getShuffle(); break;
         case 1: *reinterpret_cast< int*>(_v) = _t->getActiveTrackId(); break;
         case 2: *reinterpret_cast< bool*>(_v) = _t->getDynamicMode(); break;
+        case 3: *reinterpret_cast< bool*>(_v) = _t->getIsQueringFiles(); break;
         default: break;
         }
     } else if (_c == QMetaObject::WriteProperty) {
@@ -224,6 +260,7 @@ void JMusicControllerInterface::qt_static_metacall(QObject *_o, QMetaObject::Cal
         case 0: _t->setShuffle(*reinterpret_cast< bool*>(_v)); break;
         case 1: _t->setActiveTrackId(*reinterpret_cast< int*>(_v)); break;
         case 2: _t->setDynamicMode(*reinterpret_cast< bool*>(_v)); break;
+        case 3: _t->setIsQueringFiles(*reinterpret_cast< bool*>(_v)); break;
         default: break;
         }
     } else if (_c == QMetaObject::ResetProperty) {
@@ -260,29 +297,29 @@ int JMusicControllerInterface::qt_metacall(QMetaObject::Call _c, int _id, void *
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 15)
+        if (_id < 19)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 15;
+        _id -= 19;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 15)
+        if (_id < 19)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 15;
+        _id -= 19;
     }
 #ifndef QT_NO_PROPERTIES
     else if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty
             || _c == QMetaObject::ResetProperty || _c == QMetaObject::RegisterPropertyMetaType) {
         qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 4;
     } else if (_c == QMetaObject::QueryPropertyDesignable) {
-        _id -= 3;
+        _id -= 4;
     } else if (_c == QMetaObject::QueryPropertyScriptable) {
-        _id -= 3;
+        _id -= 4;
     } else if (_c == QMetaObject::QueryPropertyStored) {
-        _id -= 3;
+        _id -= 4;
     } else if (_c == QMetaObject::QueryPropertyEditable) {
-        _id -= 3;
+        _id -= 4;
     } else if (_c == QMetaObject::QueryPropertyUser) {
-        _id -= 3;
+        _id -= 4;
     }
 #endif // QT_NO_PROPERTIES
     return _id;
@@ -318,6 +355,18 @@ void JMusicControllerInterface::shuffleChanged()
 void JMusicControllerInterface::dynamicModeChanged()
 {
     QMetaObject::activate(this, &staticMetaObject, 4, nullptr);
+}
+
+// SIGNAL 5
+void JMusicControllerInterface::busyChanged()
+{
+    QMetaObject::activate(this, &staticMetaObject, 5, nullptr);
+}
+
+// SIGNAL 6
+void JMusicControllerInterface::isQueringFilesChanged()
+{
+    QMetaObject::activate(this, &staticMetaObject, 6, nullptr);
 }
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE

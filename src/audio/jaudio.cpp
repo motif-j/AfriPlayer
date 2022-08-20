@@ -224,8 +224,8 @@ void JAudio::onPlaybackStatusChanged(Vlc::State state)
         qDebug()<<"Stopped";
         break;
     case Vlc::Ended:
-        setPlayNext(1);
-        setIsPlaying(false);
+       // setPlayNext(1);
+       // setIsPlaying(false);
 
         break;
     case Vlc::Error:

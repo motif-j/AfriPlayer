@@ -7,7 +7,7 @@
 *****************************************************************************/
 
 #include <memory>
-#include "../db_jmalkiadbinterface.h"
+#include "../src/database/db_jmalkiadbinterface.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)

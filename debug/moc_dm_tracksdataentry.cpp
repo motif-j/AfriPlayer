@@ -7,7 +7,7 @@
 *****************************************************************************/
 
 #include <memory>
-#include "../dm_tracksdataentry.h"
+#include "../src/adapters/dm_tracksdataentry.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #include <QtCore/QList>
@@ -23,8 +23,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_TracksDataEntry_t {
-    QByteArrayData data[52];
-    char stringdata0[805];
+    QByteArrayData data[53];
+    char stringdata0[811];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -68,23 +68,24 @@ QT_MOC_LITERAL(31, 469, 8), // "newIndex"
 QT_MOC_LITERAL(32, 478, 8), // "playNext"
 QT_MOC_LITERAL(33, 487, 12), // "playPrevious"
 QT_MOC_LITERAL(34, 500, 15), // "playQueuedTrack"
-QT_MOC_LITERAL(35, 516, 19), // "handleFetchedTracks"
-QT_MOC_LITERAL(36, 536, 14), // "QList<JTrack>*"
-QT_MOC_LITERAL(37, 551, 6), // "tracks"
-QT_MOC_LITERAL(38, 558, 26), // "handleFetchedPlaylstTracks"
-QT_MOC_LITERAL(39, 585, 26), // "handleActiveTrackIdChanged"
-QT_MOC_LITERAL(40, 612, 27), // "handleRecentlyFetchedTracks"
-QT_MOC_LITERAL(41, 640, 25), // "handlePlayingTrackFetched"
-QT_MOC_LITERAL(42, 666, 8), // "trackMap"
-QT_MOC_LITERAL(43, 675, 25), // "handleQueuedTracksFetched"
-QT_MOC_LITERAL(44, 701, 12), // "queuedTracks"
-QT_MOC_LITERAL(45, 714, 28), // "handleSoloQueuedTrackFetched"
-QT_MOC_LITERAL(46, 743, 6), // "JTrack"
-QT_MOC_LITERAL(47, 750, 5), // "track"
-QT_MOC_LITERAL(48, 756, 12), // "doneFetching"
-QT_MOC_LITERAL(49, 769, 9), // "isLoading"
-QT_MOC_LITERAL(50, 779, 13), // "activeTrackId"
-QT_MOC_LITERAL(51, 793, 11) // "activeIndex"
+QT_MOC_LITERAL(35, 516, 5), // "mLoad"
+QT_MOC_LITERAL(36, 522, 19), // "handleFetchedTracks"
+QT_MOC_LITERAL(37, 542, 14), // "QList<JTrack>*"
+QT_MOC_LITERAL(38, 557, 6), // "tracks"
+QT_MOC_LITERAL(39, 564, 26), // "handleFetchedPlaylstTracks"
+QT_MOC_LITERAL(40, 591, 26), // "handleActiveTrackIdChanged"
+QT_MOC_LITERAL(41, 618, 27), // "handleRecentlyFetchedTracks"
+QT_MOC_LITERAL(42, 646, 25), // "handlePlayingTrackFetched"
+QT_MOC_LITERAL(43, 672, 8), // "trackMap"
+QT_MOC_LITERAL(44, 681, 25), // "handleQueuedTracksFetched"
+QT_MOC_LITERAL(45, 707, 12), // "queuedTracks"
+QT_MOC_LITERAL(46, 720, 28), // "handleSoloQueuedTrackFetched"
+QT_MOC_LITERAL(47, 749, 6), // "JTrack"
+QT_MOC_LITERAL(48, 756, 5), // "track"
+QT_MOC_LITERAL(49, 762, 12), // "doneFetching"
+QT_MOC_LITERAL(50, 775, 9), // "isLoading"
+QT_MOC_LITERAL(51, 785, 13), // "activeTrackId"
+QT_MOC_LITERAL(52, 799, 11) // "activeIndex"
 
     },
     "TracksDataEntry\0countChanged\0\0count\0"
@@ -101,7 +102,7 @@ QT_MOC_LITERAL(51, 793, 11) // "activeIndex"
     "loadQuedTracks\0addTrackToQue\0"
     "incrementIndex\0decrementIndex\0"
     "newListIndex\0newIndex\0playNext\0"
-    "playPrevious\0playQueuedTrack\0"
+    "playPrevious\0playQueuedTrack\0mLoad\0"
     "handleFetchedTracks\0QList<JTrack>*\0"
     "tracks\0handleFetchedPlaylstTracks\0"
     "handleActiveTrackIdChanged\0"
@@ -120,48 +121,49 @@ static const uint qt_meta_data_TracksDataEntry[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      32,   14, // methods
-       5,  254, // properties
+      33,   14, // methods
+       5,  260, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
       11,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,  174,    2, 0x06 /* Public */,
-       4,    0,  177,    2, 0x06 /* Public */,
-       5,    0,  178,    2, 0x06 /* Public */,
-       6,    0,  179,    2, 0x06 /* Public */,
-       7,    1,  180,    2, 0x06 /* Public */,
-       9,    2,  183,    2, 0x06 /* Public */,
-      12,    2,  188,    2, 0x06 /* Public */,
-      15,    0,  193,    2, 0x06 /* Public */,
-      16,    2,  194,    2, 0x06 /* Public */,
-      18,    0,  199,    2, 0x06 /* Public */,
-      19,    1,  200,    2, 0x06 /* Public */,
+       1,    1,  179,    2, 0x06 /* Public */,
+       4,    0,  182,    2, 0x06 /* Public */,
+       5,    0,  183,    2, 0x06 /* Public */,
+       6,    0,  184,    2, 0x06 /* Public */,
+       7,    1,  185,    2, 0x06 /* Public */,
+       9,    2,  188,    2, 0x06 /* Public */,
+      12,    2,  193,    2, 0x06 /* Public */,
+      15,    0,  198,    2, 0x06 /* Public */,
+      16,    2,  199,    2, 0x06 /* Public */,
+      18,    0,  204,    2, 0x06 /* Public */,
+      19,    1,  205,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      20,    0,  203,    2, 0x0a /* Public */,
-      21,    2,  204,    2, 0x0a /* Public */,
-      22,    0,  209,    2, 0x0a /* Public */,
-      23,    0,  210,    2, 0x0a /* Public */,
-      24,    1,  211,    2, 0x0a /* Public */,
-      25,    2,  214,    2, 0x0a /* Public */,
-      26,    0,  219,    2, 0x0a /* Public */,
-      27,    1,  220,    2, 0x0a /* Public */,
-      28,    0,  223,    2, 0x0a /* Public */,
-      29,    0,  224,    2, 0x0a /* Public */,
-      30,    1,  225,    2, 0x0a /* Public */,
-      32,    0,  228,    2, 0x0a /* Public */,
-      33,    0,  229,    2, 0x0a /* Public */,
-      34,    1,  230,    2, 0x0a /* Public */,
-      35,    1,  233,    2, 0x0a /* Public */,
-      38,    1,  236,    2, 0x0a /* Public */,
-      39,    1,  239,    2, 0x0a /* Public */,
-      40,    1,  242,    2, 0x0a /* Public */,
-      41,    1,  245,    2, 0x0a /* Public */,
-      43,    1,  248,    2, 0x0a /* Public */,
-      45,    1,  251,    2, 0x0a /* Public */,
+      20,    0,  208,    2, 0x0a /* Public */,
+      21,    2,  209,    2, 0x0a /* Public */,
+      22,    0,  214,    2, 0x0a /* Public */,
+      23,    0,  215,    2, 0x0a /* Public */,
+      24,    1,  216,    2, 0x0a /* Public */,
+      25,    2,  219,    2, 0x0a /* Public */,
+      26,    0,  224,    2, 0x0a /* Public */,
+      27,    1,  225,    2, 0x0a /* Public */,
+      28,    0,  228,    2, 0x0a /* Public */,
+      29,    0,  229,    2, 0x0a /* Public */,
+      30,    1,  230,    2, 0x0a /* Public */,
+      32,    0,  233,    2, 0x0a /* Public */,
+      33,    0,  234,    2, 0x0a /* Public */,
+      34,    1,  235,    2, 0x0a /* Public */,
+      35,    0,  238,    2, 0x0a /* Public */,
+      36,    1,  239,    2, 0x0a /* Public */,
+      39,    1,  242,    2, 0x0a /* Public */,
+      40,    1,  245,    2, 0x0a /* Public */,
+      41,    1,  248,    2, 0x0a /* Public */,
+      42,    1,  251,    2, 0x0a /* Public */,
+      44,    1,  254,    2, 0x0a /* Public */,
+      46,    1,  257,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::Int,    3,
@@ -191,20 +193,21 @@ static const uint qt_meta_data_TracksDataEntry[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,   17,
-    QMetaType::Void, 0x80000000 | 36,   37,
-    QMetaType::Void, 0x80000000 | 36,    2,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 37,   38,
+    QMetaType::Void, 0x80000000 | 37,    2,
     QMetaType::Void, QMetaType::Int,    8,
-    QMetaType::Void, 0x80000000 | 36,    2,
-    QMetaType::Void, QMetaType::QVariantMap,   42,
-    QMetaType::Void, 0x80000000 | 36,   44,
-    QMetaType::Void, 0x80000000 | 46,   47,
+    QMetaType::Void, 0x80000000 | 37,    2,
+    QMetaType::Void, QMetaType::QVariantMap,   43,
+    QMetaType::Void, 0x80000000 | 37,   45,
+    QMetaType::Void, 0x80000000 | 47,   48,
 
  // properties: name, type, flags
        3, QMetaType::Int, 0x00495107,
-      48, QMetaType::Bool, 0x00495103,
       49, QMetaType::Bool, 0x00495103,
-      50, QMetaType::Int, 0x00495103,
+      50, QMetaType::Bool, 0x00495103,
       51, QMetaType::Int, 0x00495103,
+      52, QMetaType::Int, 0x00495103,
 
  // properties: notify_signal_id
        0,
@@ -247,13 +250,14 @@ void TracksDataEntry::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
         case 22: _t->playNext(); break;
         case 23: _t->playPrevious(); break;
         case 24: _t->playQueuedTrack((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 25: _t->handleFetchedTracks((*reinterpret_cast< QList<JTrack>*(*)>(_a[1]))); break;
-        case 26: _t->handleFetchedPlaylstTracks((*reinterpret_cast< QList<JTrack>*(*)>(_a[1]))); break;
-        case 27: _t->handleActiveTrackIdChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 28: _t->handleRecentlyFetchedTracks((*reinterpret_cast< QList<JTrack>*(*)>(_a[1]))); break;
-        case 29: _t->handlePlayingTrackFetched((*reinterpret_cast< QVariantMap(*)>(_a[1]))); break;
-        case 30: _t->handleQueuedTracksFetched((*reinterpret_cast< QList<JTrack>*(*)>(_a[1]))); break;
-        case 31: _t->handleSoloQueuedTrackFetched((*reinterpret_cast< JTrack(*)>(_a[1]))); break;
+        case 25: _t->mLoad(); break;
+        case 26: _t->handleFetchedTracks((*reinterpret_cast< QList<JTrack>*(*)>(_a[1]))); break;
+        case 27: _t->handleFetchedPlaylstTracks((*reinterpret_cast< QList<JTrack>*(*)>(_a[1]))); break;
+        case 28: _t->handleActiveTrackIdChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 29: _t->handleRecentlyFetchedTracks((*reinterpret_cast< QList<JTrack>*(*)>(_a[1]))); break;
+        case 30: _t->handlePlayingTrackFetched((*reinterpret_cast< QVariantMap(*)>(_a[1]))); break;
+        case 31: _t->handleQueuedTracksFetched((*reinterpret_cast< QList<JTrack>*(*)>(_a[1]))); break;
+        case 32: _t->handleSoloQueuedTrackFetched((*reinterpret_cast< JTrack(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -401,13 +405,13 @@ int TracksDataEntry::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 32)
+        if (_id < 33)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 32;
+        _id -= 33;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 32)
+        if (_id < 33)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 32;
+        _id -= 33;
     }
 #ifndef QT_NO_PROPERTIES
     else if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty

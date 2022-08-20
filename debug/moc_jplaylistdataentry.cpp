@@ -7,7 +7,7 @@
 *****************************************************************************/
 
 #include <memory>
-#include "../jplaylistdataentry.h"
+#include "../src/adapters/jplaylistdataentry.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #include <QtCore/QList>

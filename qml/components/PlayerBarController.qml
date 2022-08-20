@@ -21,21 +21,27 @@ GridLayout{
     signal playClicked();
 
     IconButton{
-        icon: isFavorite ?IconType.heart:IconType.hearto
+        icon: IconType.fastbackward
         Layout.fillWidth: true
         size: dp(18)
         color: JColors.purple100
         onClicked: {
-            let trackId=0
-            if(!isUndefined(jmusicModel.playingTrack["trackId"])){
-                trackId=jmusicModel.playingTrack["trackId"]
-            }
+            let initPos=soundManager.trackPosition-5000
+             if(initPos<0){
+                 initPos=0
+             }
 
-            if(trackId>0){
-                jmusicModel.addTrackToPlaylist(trackId,1)
-            }else{
-                console.debug("invalid id")
-            }
+            soundManager.seek(initPos)
+//            let trackId=0
+//            if(!isUndefined(jmusicModel.playingTrack["trackId"])){
+//                trackId=jmusicModel.playingTrack["trackId"]
+//            }
+
+//            if(trackId>0){
+//                jmusicModel.addTrackToPlaylist(trackId,1)
+//            }else{
+//                console.debug("invalid id")
+//            }
 
 
         }
@@ -74,11 +80,19 @@ GridLayout{
         }
     }
     IconButton{
-        icon: IconType.plus
+        icon: IconType.fastforward
         Layout.fillWidth: true
         size: dp(18)
         color: JColors.purple100
 
+        onClicked: {
+            let initPos=soundManager.trackPosition+5000
+             if(initPos>soundManager.trackTime){
+                 initPos=soundManager.trackTime
+             }
+
+            soundManager.seek(initPos)
+        }
 
     }
 
