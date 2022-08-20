@@ -170,13 +170,30 @@ Rectangle{
             }
 
             ProgressBar{
+                id:progress
                 Layout.maximumWidth:  dp(200)
                 Layout.alignment: Qt.AlignHCenter
+                height: dp(3)
+                width: dp(200)
                // trackColor:JColors.pink100
                // knobColor: JColors.purple100
                 from:0
                 to:soundManager.trackTime
                 value: soundManager.trackPosition
+                background: Rectangle{
+                    implicitHeight: dp(4)
+                    implicitWidth: parent.width
+                    radius: 3
+
+                    color: Theme.backgroundColor
+                }
+                contentItem:Rectangle{
+
+                    radius:3
+                    color: Theme.tintColor
+                    height: parent.height
+                    width: progress.visualPosition*parent.width
+                }
             }
             AppText {
                 id:timerText

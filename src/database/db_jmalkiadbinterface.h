@@ -74,6 +74,8 @@ public:
     void massInsert();
 
     void addNewTrack(JTrack track);
+    void updateTrack(JTrack track);
+
     int addNewArtist(QString artistName);
     int albumId(QString albumName);
 

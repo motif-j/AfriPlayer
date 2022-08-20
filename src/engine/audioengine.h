@@ -44,7 +44,6 @@ private:
     VlcMediaPlayer *player2=nullptr;
 
 
-
     VlcAudio *audio1=nullptr;
     VlcAudio *audio2=nullptr;
 
@@ -75,6 +74,8 @@ public:
     void pause();
 
     void seek(int time);
+
+    int trackLength();
 private:
     void fadeVolume();
 

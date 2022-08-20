@@ -757,6 +757,12 @@ void JMalkiaDbInterface::addNewTrack(JTrack track)
 
 }
 
+void JMalkiaDbInterface::updateTrack(JTrack track)
+{
+
+
+}
+
 int JMalkiaDbInterface::addNewArtist(QString artistName)
 {
     QSqlQuery *q=new QSqlQuery(mDb);

@@ -146,24 +146,15 @@ void JAudio::resume()
 void JAudio::onPositionChanged(float position,int newPos)
 {
 
+    Q_UNUSED(position)
     setPosition(newPos);
-
-
-    QTime *time =new QTime(0,0,0,0);
-
-    QTime *nT=new QTime(time->addMSecs(newPos));
-
-
-
-    QString *formatedTime=new QString(formatTrackTime(*nT));
 
     // qDebug()<<formatedTime;
 
+    auto formatedTime=getFormattedTime(newPos);
     setTimeElapsed(*formatedTime);
 
-    time=nullptr;
-    delete time;
-    delete nT;
+
     delete formatedTime;
 }
 
@@ -204,8 +195,23 @@ void JAudio::onPlaybackStatusChanged(Vlc::State state)
     case Vlc::Buffering:
         break;
     case Vlc::Playing:
+    {
+
         setIsPlaying(true);
         setPlaybackStatus(0);
+        if(duration==0){
+            playerEngine->pause();
+            setDuration(playerEngine->trackLength());
+            playerEngine->resume();
+
+            auto l=getFormattedTime(duration);
+
+            setTrackLength(*l);
+            delete l;
+        }
+
+    }
+
         break;
     case Vlc::Paused:
         setIsPlaying(false);
@@ -223,6 +229,7 @@ void JAudio::onPlaybackStatusChanged(Vlc::State state)
 
         break;
     case Vlc::Error:
+        qDebug()<<"Error occured on engine";
         break;
 
 
@@ -233,6 +240,19 @@ void JAudio::onPlaybackStatusChanged(Vlc::State state)
 void JAudio::onEngineLockedChanged(bool locked)
 {
     setCanPlay(!locked);
+}
+
+const QString &JAudio::getTrackLength() const
+{
+    return trackLength;
+}
+
+void JAudio::setTrackLength(const QString &newTrackLength)
+{
+    if (trackLength == newTrackLength)
+        return;
+    trackLength = newTrackLength;
+    emit trackLengthChanged();
 }
 
 int JAudio::getPlayNext() const
@@ -259,7 +279,31 @@ void JAudio::reloadTrack(QString trackUrl, int trackId)
 
     setDuration(t->duration);
     playingId=t->trackId;
+    if(duration>0){
+        auto l=getFormattedTime(duration);
 
+        setTrackLength(*l);
+    }
+
+
+}
+
+QString *JAudio::getFormattedTime(int time)
+{
+
+    QTime *timer =new QTime(0,0,0,0);
+
+    QTime *nT=new QTime(timer->addMSecs(time));
+
+
+
+    QString *formatedTime=new QString(formatTrackTime(*nT));
+
+    timer=nullptr;
+    delete timer;
+    delete nT;
+
+    return formatedTime;
 
 }
 

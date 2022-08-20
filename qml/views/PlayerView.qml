@@ -104,15 +104,7 @@ Rectangle {
             }
 
             AppText {
-                text:{
-
-                    let duration=jmusicModel.playingTrack["duration"]
-
-                    if(isUndefined(duration)){
-                        return "00:00:00"
-                    }
-                    return duration
-                }
+                text:soundManager.fduration
 
                 fontSize: 16
                 font.family:  Constants.lcdFont.name
@@ -132,7 +124,8 @@ Rectangle {
 
 
 
-        AppSlider{
+
+        ProgressBar{
             id:slider
             width: controllerRow.width
             from:0
@@ -140,13 +133,20 @@ Rectangle {
             value: soundManager.trackPosition
             Layout.alignment: Qt.AlignHCenter|Qt.AlignBottom
 
-            onMoved: {
-                soundManager.seek(slider.value)
+            background: Rectangle{
+                implicitHeight: dp(4)
+                implicitWidth: parent.width
+                radius: 3
 
+                color: Theme.secondaryBackgroundColor
             }
+            contentItem:Rectangle{
 
-
-
+                radius:3
+                color: Theme.tintColor
+                height: parent.height
+                width: slider.visualPosition*parent.width
+            }
 
         }
     }

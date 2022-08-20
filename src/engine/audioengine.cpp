@@ -95,6 +95,15 @@ void AudioEngine::seek(int time)
   activePlayer()->setTime(time);
 }
 
+int AudioEngine::trackLength()
+{
+   if(activePlayer()==nullptr){
+       return 0;
+   }
+
+   return activePlayer()->length();
+}
+
 void AudioEngine::fadeVolume()
 {
 
@@ -328,7 +337,7 @@ void AudioEngine::onBuffer(float valuePercent)
 
 void AudioEngine::onError()
 {
-
+   qDebug()<<"Error ";
 }
 
 void AudioEngine::onPlaying()
@@ -345,6 +354,9 @@ void AudioEngine::onStateChanged()
     playerState=player1->state();
 
 
+    if(playerState==Vlc::State::Error){
+         qDebug()<<"Error ";
+    }
     emit playbackStateChanged(playerState);
 
 

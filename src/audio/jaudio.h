@@ -31,6 +31,7 @@ class JAudio : public QObject
     Q_PROPERTY(int playbackStatus READ getPlaybackStatus WRITE setPlaybackStatus NOTIFY playbackStatusChanged)
     Q_PROPERTY(int playNext READ getPlayNext WRITE setPlayNext NOTIFY playNextChanged)
 
+    Q_PROPERTY(QString trackLength READ getTrackLength WRITE setTrackLength NOTIFY trackLengthChanged)
 public:
     explicit JAudio(QObject *parent = nullptr);
 
@@ -63,6 +64,9 @@ public:
 
     int getPlayNext() const;
     void setPlayNext(int newPlayNext);
+
+    const QString &getTrackLength() const;
+    void setTrackLength(const QString &newTrackLength);
 
 public slots:
     void play(QString fileUrl,int trackId);
@@ -99,10 +103,13 @@ private:
     int playNext=0;
 
     QString timeElapsed;
+    QString trackLength;
 
 
 private:
     void reloadTrack(QString trackUrl,int trackId);
+    QString *getFormattedTime(int time);
+
 
 
 signals:
@@ -118,6 +125,7 @@ signals:
     void playbackStatusChanged();
 
     void playNextChanged();
+    void trackLengthChanged();
 };
 
 #endif // JAUDIO_H
