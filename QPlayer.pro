@@ -71,6 +71,7 @@ SOURCES += main.cpp \
     src/database/db_jmalkiadbinterface.cpp \
     src/adapters/dm_tracksdataentry.cpp \
     src/engine/audioengine.cpp \
+    src/engine/audioenginedroid.cpp \
     src/fileio/file_jfileio.cpp \
     src/controllers/jmusiccontroller.cpp \
     src/controllers/jplaylistcontroller.cpp \
@@ -99,6 +100,7 @@ macx {
 
 DISTFILES += \
     android/src/com/afriktek/qplayer/TestClass.java \
+    android/src/com/afriktek/qplayer/media/MediaService.java \
     qml/audio/SoundManager.qml \
     qml/components/JIconButton.qml \
     qml/components/PlayerBar2.qml \
@@ -173,7 +175,7 @@ INCLUDEPATH += $$PWD/.
 DEPENDPATH += $$PWD/.
 
 
-
+win32{
 ##VLC
 unix|win32: LIBS += -L'C:/Program Files (x86)/VLC-Qt/lib/' -llibVLCQtCore.dll
 
@@ -186,20 +188,6 @@ unix|win32: LIBS += -L'C:/Program Files (x86)/taglib/lib/' -llibtag.dll
 INCLUDEPATH += 'C:/Program Files (x86)/taglib/include'
 DEPENDPATH += 'C:/Program Files (x86)/taglib/include'
 
+}
 
-#PKGCONFIG +=gstreamer-1.0 glib-2.0 gobject-2.0 gstreamer-app-1.0 gstreamer-pbutils-1.0
 
-#unix|win32: LIBS += -LC:/gstreamer/1.0/mingw_x86_64/lib/ -lglib-2.0
-
-#INCLUDEPATH += C:/gstreamer/1.0/mingw_x86_64/include/glib-2.0
-#DEPENDPATH += C:/gstreamer/1.0/mingw_x86_64/include/glib-2.0
-
-#unix|win32: LIBS += -LC:/gstreamer/1.0/mingw_x86_64/lib/ -lgstreamer-1.0
-
-#INCLUDEPATH += C:/gstreamer/1.0/mingw_x86_64/include/gstreamer-1.0
-#DEPENDPATH += C:/gstreamer/1.0/mingw_x86_64/include/gstreamer-1.0
-
-#unix|win32: LIBS += -LC:/gstreamer/1.0/mingw_x86_64/lib/ -lgobject-2.0
-
-#INCLUDEPATH += C:/gstreamer/1.0/mingw_x86_64/include/glib-2.0/gobject
-#DEPENDPATH += C:/gstreamer/1.0/mingw_x86_64/include/glib-2.0/gobject

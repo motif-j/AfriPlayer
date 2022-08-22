@@ -102,7 +102,7 @@ Rectangle{
 
                         if(trackW>=contW){
 
-                           // seqTrackAnimator.start()
+                           seqTrackAnimator.start()
 
 
 
@@ -226,8 +226,8 @@ Rectangle{
             PlayerBar2{
                 Layout.maximumWidth: dp(220)
                 Layout.alignment: Qt.AlignHCenter
-                Layout.maximumHeight: dp(50)
-                Layout.preferredHeight: dp(50)
+              //  Layout.maximumHeight: dp(50)
+                //Layout.preferredHeight: dp(50)
 
             }
 

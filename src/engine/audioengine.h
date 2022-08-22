@@ -6,6 +6,8 @@
 #include <QString>
 #include <QVariant>
 #include <QVariantAnimation>
+
+#ifdef Q_OS_WINDOWS
 #include <VLCQtCore/Audio.h>
 #include <VLCQtCore/Video.h>
 #include <VLCQtCore/MediaPlayer.h>
@@ -13,6 +15,9 @@
 #include <VLCQtCore/Common.h>
 #include <VLCQtCore/Enums.h>
 #include <VLCQtCore/Media.h>
+
+#endif
+
 #include "src/utils/jsettings.h"
 #include <math.h>
 
@@ -23,6 +28,17 @@ public:
     explicit AudioEngine(QObject *parent = nullptr);
 
     ~AudioEngine();
+
+    enum PlayerState{
+        Idle=0,
+        Opening=1,
+        Buffering=2,
+        Playing=3,
+        Paused=4,
+        Stopped=5,
+        Ended=6,
+        Error=7
+    };
 
     enum AnticipatedState
     {
@@ -40,6 +56,9 @@ public:
     };
 
 private:
+
+#ifdef Q_OS_WINDOWS
+
     VlcInstance *vlcInstance;
 
     VlcMediaPlayer *player1=nullptr;
@@ -51,8 +70,8 @@ private:
 
     VlcMedia *activeMedia1;
     VlcMedia *activeMedia2;
-
-    Vlc::State playerState;
+#endif
+    PlayerState playerState;
     QVariantAnimation *faderAnim;
 
     JSettings &appSettings=JSettings::getInstance();
@@ -65,7 +84,7 @@ private:
 
     //getters
 public:
-    Vlc::State getPlayerState() const;
+    PlayerState getPlayerState() const;
 
     //functions
 public:
@@ -83,12 +102,22 @@ private:
     void fadeVolume(int duration=1000);
 
 
+#if defined Q_OS_WINDOWS
     VlcMediaPlayer *activePlayer();
     VlcAudio *activeAudio();
 
     VlcMedia *activeMedia();
+
+    bool isDesktop();
     void initialiazeListeners(VlcMediaPlayer *player);
     void disconnectListeners(VlcMediaPlayer *player);
+
+#elif defined Q_OS_ANDROID
+    int *activePlayer();
+
+   // void initialiazeListeners(VlcMediaPlayer *player);
+  //  void disconnectListeners(VlcMediaPlayer *player);
+#endif
 
     //Receivers
 private  slots:
@@ -106,7 +135,7 @@ private:
 
 
 signals:
-    void playbackStateChanged(Vlc::State playbackState);
+    void playbackStateChanged(PlayerState playbackState);
     void lockedChanged(bool locked);
     void positionChanged(float position,int time);
 

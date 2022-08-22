@@ -51,11 +51,7 @@ Item {
 
                 }
 
-
-
             }
-
-
 
             NavigationItem{
                 title:"Home"
@@ -63,7 +59,6 @@ Item {
 
                 NavigationStack{
                     id:centerNavStack
-
 
                     MainPage{
                         anchors.fill: parent

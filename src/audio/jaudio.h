@@ -78,7 +78,7 @@ public slots:
 public slots:
     void onPositionChanged(float,int);
     void onError(QMediaPlayer::Error error);
-    void onPlaybackStatusChanged(Vlc::State state);
+    void onPlaybackStatusChanged(AudioEngine::PlayerState state);
     void onEngineLockedChanged(bool locked);
 
 

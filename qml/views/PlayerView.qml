@@ -169,56 +169,6 @@ Rectangle {
     }
 
 
-
-    Dial{
-        id:control
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.margins: dp(10)
-        from: 0
-        to:200
-        value: soundManager.maxVolume
-
-        //        background: Rectangle {
-        //              x: control.width / 2 - width / 2
-        //              y: control.height / 2 - height / 2
-        //              width: Math.max(64, Math.min(control.width, control.height))
-        //              height: width
-        //              color: "transparent"
-        //              radius: width / 2
-        //              border.color: Theme.tintColor
-        //              opacity: control.enabled ? 1 : 0.3
-        //          }
-
-        //          handle: Rectangle {
-        //              id: handleItem
-        //              x: control.background.x + control.background.width / 2 - width / 2
-        //              y: control.background.y + control.background.height / 2 - height / 2
-        //              width: 16
-        //              height: 16
-        //              color: control.pressed ? "#17a81a" : "#21be2b"
-        //              radius: 8
-        //              antialiasing: true
-        //              opacity: control.enabled ? 1 : 0.3
-        //              transform: [
-        //                  Translate {
-        //                      y: -Math.min(control.background.width, control.background.height) * 0.4 + handleItem.height / 2
-        //                  },
-        //                  Rotation {
-        //                      angle: control.angle
-        //                      origin.x: handleItem.width / 2
-        //                      origin.y: handleItem.height / 2
-        //                  }
-        //              ]
-        //          }
-
-        onMoved: {
-
-            soundManager.setVolume(control.value)
-        }
-    }
-
-
     function isUndefined(input){
 
         if(input===undefined){

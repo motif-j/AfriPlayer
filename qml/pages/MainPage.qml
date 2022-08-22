@@ -61,7 +61,7 @@ Page{
                 Layout.columnSpan: baseGrid.columns>1?2:1
 
                 Rectangle{
-                    height:Theme.isAndroid?dp(110):dp(80)
+                    height:dp(40)
                     width: page.width
                     color: Theme.backgroundColor
                 }

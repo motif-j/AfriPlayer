@@ -53,24 +53,24 @@ void JAudio::play(QString fileUrl,int trackId)
 
             switch (playerEngine->getPlayerState()) {
 
-            case Vlc::Idle:
+            case AudioEngine::PlayerState::Idle:
             {
 
                  reloadTrack(fileUrl,trackId);
             }
                 break;
-            case Vlc::Opening:
+            case AudioEngine::PlayerState::Opening:
             {
 
             }
                 break;
-            case Vlc::Buffering:
+            case AudioEngine::PlayerState::Buffering:
 
             {
 
             }
                 break;
-            case Vlc::Playing:
+            case AudioEngine::PlayerState::Playing:
             {
                 setIsPlaying(false);
                 playerEngine->pause();
@@ -78,23 +78,23 @@ void JAudio::play(QString fileUrl,int trackId)
 
             }
                 break;
-            case Vlc::Paused:
+            case AudioEngine::PlayerState::Paused:
             {
 
                 setIsPlaying(true);
                 playerEngine->resume();
             }
                 break;
-            case Vlc::Stopped:
+            case AudioEngine::PlayerState::Stopped:
             {
 
                 reloadTrack(fileUrl,trackId);
             }
                 break;
-            case Vlc::Ended:
+            case AudioEngine::PlayerState::Ended:
                 reloadTrack(fileUrl,trackId);
                 break;
-            case Vlc::Error:
+            case AudioEngine::PlayerState::Error:
                 break;
 
             }
@@ -185,16 +185,16 @@ void JAudio::onError(QMediaPlayer::Error error)
 
 
 
-void JAudio::onPlaybackStatusChanged(Vlc::State state)
+void JAudio::onPlaybackStatusChanged(AudioEngine::PlayerState state)
 {
     switch (state) {
-    case Vlc::Idle:
+    case AudioEngine::PlayerState::Idle:
         break;
-    case Vlc::Opening:
+    case AudioEngine::PlayerState::Opening:
         break;
-    case Vlc::Buffering:
+    case AudioEngine::PlayerState::Buffering:
         break;
-    case Vlc::Playing:
+    case AudioEngine::PlayerState::Playing:
     {
 
         setIsPlaying(true);
@@ -213,22 +213,22 @@ void JAudio::onPlaybackStatusChanged(Vlc::State state)
     }
 
         break;
-    case Vlc::Paused:
+    case AudioEngine::PlayerState::Paused:
         setIsPlaying(false);
         setPlaybackStatus(2);
         break;
-    case Vlc::Stopped:
+    case AudioEngine::PlayerState::Stopped:
         setIsPlaying(false);
         setPlaybackStatus(1);
 
         qDebug()<<"Stopped";
         break;
-    case Vlc::Ended:
+    case AudioEngine::PlayerState::Ended:
        // setPlayNext(1);
        // setIsPlaying(false);
 
         break;
-    case Vlc::Error:
+    case AudioEngine::PlayerState::Error:
         qDebug()<<"Error occured on engine";
         break;
 

@@ -9,6 +9,8 @@
 #include <QString>
 #include <QStringList>
 #include <QThread>
+
+#ifdef Q_OS_WINDOWS
 #include "taglib/taglib.h"
 #include <taglib/fileref.h>
 #include <taglib/tfile.h>
@@ -16,6 +18,9 @@
 #include <taglib/id3v2tag.h>
 #include <taglib/mpegfile.h>
 #include <taglib/attachedpictureframe.h>
+
+#endif
+
 #include <QDebug>
 #include <string>
 #include <wchar.h>
@@ -71,6 +76,8 @@ public slots:
     }
 
     void queryAllDirectories(){
+
+#ifdef Q_OS_WIN32
 
         // QThread::msleep(10000);
         auto dirs=db.getFolders();
@@ -204,6 +211,8 @@ public slots:
 
 
 
+#endif
+
 
         emit queryAllDirCompleted();
 
@@ -211,6 +220,7 @@ public slots:
 
 private:
     JMalkiaDbInterface &db=JMalkiaDbInterface::getInstace();
+    void queryAllDirDroid();
 
 signals:
 
