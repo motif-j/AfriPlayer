@@ -5,6 +5,7 @@
 #include <QtQml/qqml.h>
 #include "jmusiccontroller.h"
 #include "../fileio/file_jfileio.h"
+#include "src/utils/jsettings.h"
 
 
 /*
@@ -21,6 +22,13 @@ class JMusicControllerInterface : public QObject
     Q_OBJECT
     QML_ELEMENT
     QML_SINGLETON
+
+    Q_PROPERTY(bool shuffle READ getShuffle WRITE setShuffle NOTIFY shuffleChanged)
+    Q_PROPERTY(int activeTrackId READ getActiveTrackId WRITE setActiveTrackId NOTIFY activeTrackIdChanged)
+
+    Q_PROPERTY(bool dynamicMode READ getDynamicMode WRITE setDynamicMode NOTIFY dynamicModeChanged)
+    Q_PROPERTY(bool isQueringFiles READ getIsQueringFiles WRITE setIsQueringFiles NOTIFY isQueringFilesChanged)
+    Q_PROPERTY(bool crossFade READ getCrossFade WRITE setCrossFade NOTIFY crossFadeChanged)
 
 
 public:
@@ -43,19 +51,15 @@ public:
         connect(&musicController,&JMusicController::playingTrackFetched,this,&JMusicControllerInterface::playingTrackFetched);
 
 
-        Q_PROPERTY(bool shuffle READ getShuffle WRITE setShuffle NOTIFY shuffleChanged)
-        Q_PROPERTY(int activeTrackId READ getActiveTrackId WRITE setActiveTrackId NOTIFY activeTrackIdChanged)
-
-        Q_PROPERTY(bool dynamicMode READ getDynamicMode WRITE setDynamicMode NOTIFY dynamicModeChanged)
-        Q_PROPERTY(bool isQueringFiles READ getIsQueringFiles WRITE setIsQueringFiles NOTIFY isQueringFilesChanged)
 
         QSettings settings("AfrikTek","Qplayer");
         setIsQueringFiles(settings.value("queryingFiles",false).toBool());
 
 
         bool shuffle=settings.value("shuffle",false).toBool();
-
         setShuffle(shuffle);
+
+        setCrossFade(appSettings.getCrossfade());
     }
 
     ~JMusicControllerInterface() {
@@ -96,6 +100,9 @@ public:
     bool getIsQueringFiles() const;
     void setIsQueringFiles(bool newIsQueringFiles);
 
+    bool getCrossFade() const;
+    void setCrossFade(bool newCrossFade);
+
 public slots:
     void  handleFetchedTrack(QVariantMap trackMap){
 
@@ -115,6 +122,11 @@ public slots:
     //qml interface slots
 public slots:
 
+    void toggleCrossfade(bool value){
+
+        appSettings.setCrossfade(value);
+        setCrossFade(value);
+    }
     void syncTracks(){
 
         QSettings settings("AfrikTek","Qplayer");
@@ -191,20 +203,25 @@ signals:
 
     void isQueringFilesChanged();
 
+    void crossFadeChanged();
+
 private:
     JMusicController &musicController=JMusicController::getInstance();
      JFileIO &fileIo=JFileIO::getInstance();
+     JSettings &appSettings=JSettings::getInstance();
 
     int activeTrackId;
     bool shuffle;
     bool dynamicMode;
     bool isQueringFiles;
+    bool crossFade;
 
 
 
 
 
     // Q_PROPERTY(bool isQueringFiles READ getIsQueringFiles WRITE setIsQueringFiles NOTIFY isQueringFilesChanged)
+
 };
 
 inline bool JMusicControllerInterface::getDynamicMode() const
@@ -231,6 +248,19 @@ inline void JMusicControllerInterface::setIsQueringFiles(bool newIsQueringFiles)
         return;
     isQueringFiles = newIsQueringFiles;
     emit isQueringFilesChanged();
+}
+
+inline bool JMusicControllerInterface::getCrossFade() const
+{
+    return crossFade;
+}
+
+inline void JMusicControllerInterface::setCrossFade(bool newCrossFade)
+{
+    if (crossFade == newCrossFade)
+        return;
+    crossFade = newCrossFade;
+    emit crossFadeChanged();
 }
 
 

@@ -18,6 +18,7 @@ Item {
     signal trackClicked(int trackId)
     property var  model: dataEntry
     property bool isQueryingFiles: jmusicController.isQueringFiles
+    property bool crossFade: jmusicController.crossFade
 
 
     TracksDataEntry{
@@ -113,14 +114,14 @@ Item {
     }
     function playPrevious(){
         if(!soundManager.isBusy){
-             dataEntry.playPrevious()
+            dataEntry.playPrevious()
         }
 
 
     }
     function playQueuedTrack(trackId){
         if(!soundManager.isBusy){
-             dataEntry.playQueuedTrack(trackId)
+            dataEntry.playQueuedTrack(trackId)
         }
 
 
@@ -128,7 +129,7 @@ Item {
 
     function addPlaylistToQue(playlistId,shuffle){
 
-      dataEntry.clearPlaylist()
+        dataEntry.clearPlaylist()
         jmusicController.addPlaylistToQueue(playlistId,shuffle)
     }
     function toggleShuffle(){
@@ -138,6 +139,8 @@ Item {
     function syncAudioFiles(){
         jmusicController.syncTracks()
     }
-
+    function toggleCrossFade(nVal){
+        jmusicController.toggleCrossfade(nVal);
+    }
 
 }

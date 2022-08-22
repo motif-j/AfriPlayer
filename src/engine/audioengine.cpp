@@ -88,8 +88,6 @@ void AudioEngine::pause()
     antState=STATE_WILLPAUSE;
     fadeVolume();
 
-
-
 }
 
 void AudioEngine::seek(int time)
@@ -114,11 +112,18 @@ int AudioEngine::trackLength()
     return activePlayer()->length();
 }
 
-void AudioEngine::fadeVolume()
+bool AudioEngine::crossFade()
+{
+    return appSettings.getCrossfade();
+}
+
+void AudioEngine::fadeVolume(int duration )
 {
     locked=true;
     emit lockedChanged(true);
 
+
+    faderAnim->setDuration(duration);
     faderAnim->setStartValue(0);
     faderAnim->setEndValue(appSettings.getVolume());
     faderAnim->start();
@@ -159,7 +164,7 @@ VlcMedia *AudioEngine::activeMedia()
 void AudioEngine::initialiazeListeners(VlcMediaPlayer *player)
 {
 
-    qDebug()<<"INITIALIZING LISTENERS";
+    qDebug()<<"INITIALIZING LISTENERS "<<activePlayerState;
 
 
     connect(player,&VlcMediaPlayer::end,this,&AudioEngine::onMediaEnded);
@@ -173,6 +178,7 @@ void AudioEngine::initialiazeListeners(VlcMediaPlayer *player)
 
 void AudioEngine::disconnectListeners(VlcMediaPlayer *player)
 {
+    qDebug()<<"DISCONNECTING  "<<activePlayerState;
     disconnect(player,&VlcMediaPlayer::end,this,&AudioEngine::onMediaEnded);
     //disconnect(player,SIGNAL(VlcMediaPlayer::buffering(float)),this,SLOT(AudioEngine::onBuffer(float)));
     disconnect(player,&VlcMediaPlayer::error,this,&AudioEngine::onError);
@@ -194,11 +200,11 @@ void AudioEngine::loadAudio(QString fileUrl)
     switch (activePlayerState) {
     case AudioEngine::PLAYER1:
     {
-
+        activePlayerState=PLAYER2;
         disconnectListeners(player1);
 
         initialiazeListeners(player2);
-        activePlayerState=PLAYER2;
+
 
         activeMedia2=new VlcMedia(fileUrl,true,vlcInstance);
         player2->openOnly(activeMedia2);
@@ -209,12 +215,8 @@ void AudioEngine::loadAudio(QString fileUrl)
     case AudioEngine::PLAYER2:
 
     {
-
-
-        activePlayerState=PLAYER1;
-
-
         disconnectListeners(player2);
+        activePlayerState=PLAYER1;
 
 
         initialiazeListeners(player1);
@@ -228,12 +230,9 @@ void AudioEngine::loadAudio(QString fileUrl)
     case AudioEngine::PLAYER_NONE:
     {
         //This state means there is no player currently running so we can initialize any of the available
-
-        activePlayerState=PLAYER1;
-
-
         disconnectListeners(player2);
 
+        activePlayerState=PLAYER1;
 
         initialiazeListeners(player1);
 
@@ -252,117 +251,8 @@ void AudioEngine::loadAudio(QString fileUrl)
 
     fadeVolume();
 
-//    if(activePlayerState==PLAYER_NONE){
 
 
-//        if(playerState==Vlc::State::Playing){
-
-//            /*
-//         *This is a case where a player is still active and playing but we need to play another track
-//         *First we would need to fade in the active player and fade out the new player
-//         *To determine the active player we will use  the state
-//         *
-//         *Initialize the inactive player start it and fade other player
-//         *Since the active player might be playing its better to acces each player natively
-//        */
-
-//            if(activePlayerState==PLAYER1){
-
-//                disconnectListeners(player1);
-
-//                initialiazeListeners(player2);
-//                activePlayerState=PLAYER2;
-
-//                activeMedia2=new VlcMedia(fileUrl,true,vlcInstance);
-//                player2->openOnly(activeMedia2);
-
-//                player2->play();
-//            }else{
-
-//                activePlayerState=PLAYER1;
-
-
-//                disconnectListeners(player2);
-
-
-//                initialiazeListeners(player1);
-//                activeMedia1=new VlcMedia(fileUrl,true,vlcInstance);
-//                player1->openOnly(activeMedia1);
-
-//                player1->play();
-//            }
-
-
-
-
-
-//            this->fileUrl=fileUrl;
-
-//        }else{
-
-//            antState=STATE_WILLSTART;
-
-
-//            if(activePlayerState==PLAYER_NONE){
-
-//                activePlayerState=PLAYER1;
-
-
-//                disconnectListeners(player2);
-
-
-//                initialiazeListeners(player1);
-
-
-//                activeMedia1=new VlcMedia(fileUrl,true,vlcInstance);
-//                player1->openOnly(activeMedia1);
-
-//                player1->play();
-//            }else{
-//                /*
-//             *The player is active so we need to initialize the null player and kill the other player
-//             *Since there is no active player we just need to start the player
-//             *
-//            */
-
-//                qDebug()<<" ACTIVE PLAYER NOT NULL ";
-
-//                if(activePlayerState==PLAYER1){
-
-
-//                    activeMedia1=new VlcMedia(fileUrl,true,vlcInstance);
-
-//                    activePlayerState=PLAYER1;
-
-
-
-//                }else{
-
-//                    activePlayerState=PLAYER2;
-
-
-//                    activeMedia2=new VlcMedia(fileUrl,true,vlcInstance);
-
-//                }
-
-
-//                initialiazeListeners(activePlayer());
-
-//                activePlayer()->openOnly(activeMedia());
-
-//                activePlayer()->play();
-
-
-//            }
-
-
-
-//        }
-
-
-
-
-//    }
 
 }
 
@@ -393,7 +283,7 @@ void AudioEngine::onPlaying()
 
 void AudioEngine::onStateChanged()
 {
-    playerState=player1->state();
+    playerState=activePlayer()->state();
 
 
     if(playerState==Vlc::State::Error){
@@ -425,8 +315,9 @@ void AudioEngine::onFaderValueChanged(const QVariant &value)
        *
       */
 
+    int maxVolume=appSettings.getVolume();
     int incrVal=value.toInt();
-    int decVal= std::abs(appSettings.getVolume()-incrVal);
+    int decVal= std::abs(maxVolume-incrVal);
 
 
 
@@ -441,9 +332,12 @@ void AudioEngine::onFaderValueChanged(const QVariant &value)
         break;
     case AudioEngine::STATE_WILLLOAD:
     {
+        //to realize  the fade effect increment the volume by a slighter margin
+
 
 
         if(activePlayerState==PLAYER1){
+
 
             audio1->setVolume(incrVal);
 
@@ -452,6 +346,7 @@ void AudioEngine::onFaderValueChanged(const QVariant &value)
             //            }
 
         }else{
+
 
             audio2->setVolume(incrVal);
 
@@ -487,13 +382,13 @@ void AudioEngine::onFaderFinished()
         break;
     case AudioEngine::STATE_WILLLOAD:
     {
-        //        if(activePlayerState==PLAYER1){
+        if(activePlayerState==PLAYER1){
 
-        //            player2->stop();
+            player2->stop();
 
-        //        }else{
-        //            player1->stop();
-        //        }
+        }else{
+            player1->stop();
+        }
 
 
     }

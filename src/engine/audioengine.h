@@ -78,8 +78,9 @@ public:
     void seek(int time);
 
     int trackLength();
+    bool crossFade();
 private:
-    void fadeVolume();
+    void fadeVolume(int duration=1000);
 
 
     VlcMediaPlayer *activePlayer();

@@ -125,10 +125,12 @@ DISTFILES += \
     qml/pages/SettingsPage.qml \
     qml/pages/TracksPage.qml \
     qml/settings/LibraryView.qml \
+    qml/settings/PlaybackView.qml \
     qml/settings/PreferenceItem.qml \
     qml/settings/UserInterface.qml \
     qml/settings/models/FolderViewModel.qml \
     qml/settings/setviews/FolderView.qml \
+    qml/settings/setviews/SwitchPreference.qml \
     qml/settings/setviews/UiView.qml \
     qml/ui/HomeHeader.qml \
     qml/ui/HomePlaylistView.qml \

@@ -15,6 +15,7 @@ Page {
     ListModel{
         id:pageModel
 
+        ListElement{name:"Playback "; source:"qrc:///assets/cover.png";page:"../settings/PlaybackView.qml"}
         ListElement{name:"User Interface"; source:"qrc:///assets/cover.png"; page:"../settings/UserInterface.qml"}
         ListElement{name:"Music Library"; source:"qrc:///assets/cover.png";page:"../settings/LibraryView.qml"}
     }
@@ -59,24 +60,30 @@ Page {
         Loader{
 
             id:rightView
-            sourceComponent: uiComp
+            sourceComponent: playbackComp
         }
 
     }
-
 
     Component{
-        id:uiComp
-        UserInterface{
-
-        }
-
-    }
-    Component{
-        id:libComp
-        LibraryView{
+        id:playbackComp
+        PlaybackView{
 
         }
     }
+
+//    Component{
+//        id:uiComp
+//        UserInterface{
+
+//        }
+
+//    }
+//    Component{
+//        id:libComp
+//        LibraryView{
+
+//        }
+//    }
 
 }

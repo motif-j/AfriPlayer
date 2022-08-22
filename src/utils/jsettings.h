@@ -19,6 +19,9 @@ public:
     int getVolume() const;
     void setVolume(int newVolume);
 
+    bool getCrossfade() const;
+    void setCrossfade(bool newCrossfade);
+
 private:
     explicit JSettings(QObject *parent = nullptr);
 
@@ -31,6 +34,7 @@ private:
 
 private:
     int volume;
+    bool crossfade;
 signals:
 
 };
