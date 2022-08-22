@@ -20,9 +20,10 @@ allprojects {
 apply plugin: 'com.android.application'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
 
     implementation "androidx.appcompat:appcompat:1.2.0"
+      implementation 'androidx.media:media:1.4.3'
 
 
 }
