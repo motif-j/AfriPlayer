@@ -10,14 +10,26 @@ JAudio::JAudio(QObject *parent)
 {
 
 
-    playerEngine=new AudioEngine(this);
+    //  playerEngine=new AudioEngine(this);
 
     int volume=appSettings.getVolume();
     setPlayerVolume(volume);
 
-    connect(playerEngine,&AudioEngine::playbackStateChanged,this,&JAudio::onPlaybackStatusChanged);
-    connect(playerEngine,&AudioEngine::lockedChanged,this,&JAudio::onEngineLockedChanged);
-    connect(playerEngine,&AudioEngine::positionChanged,this,&JAudio::onPositionChanged);
+    connect(&playerEngine,&AudioEngine::playbackStateChanged,this,&JAudio::onPlaybackStatusChanged);
+    connect(&playerEngine,&AudioEngine::lockedChanged,this,&JAudio::onEngineLockedChanged);
+    connect(&playerEngine,&AudioEngine::positionChanged,this,&JAudio::onPositionChanged);
+    connect(&playlistController,&JPlaylistController::trackPlaybackStarted,this,&JAudio::onPlaylistPlaybackStarted);
+    connect(&playlistController,&JPlaylistController::notifyTrackAddedToPlaylist,this,&JAudio::onTrackAddedToPlaylist);
+
+
+
+
+
+    await(worker.getTrack(appSettings.getPlayingTrackId()),this,[this](JTrack t){
+
+        reloadTrack(t);
+
+    });
 
     // player
 
@@ -44,76 +56,78 @@ void JAudio::setPosition(int newPosition)
     emit positionChanged();
 }
 
-void JAudio::play(QString fileUrl,int trackId)
-{
-    if(canPlay){
-        qDebug("Engine unlocked");
+//void JAudio::play(QString fileUrl,int trackId)
+//{
+//     qDebug()<<"PLAYING ID "<<playingId<< "TRACK ID "<<trackId;
+//    if(canPlay){
+//        qDebug("Engine unlocked");
 
-        if(trackId==playingId){
+//        if(trackId==playingId){
 
-            switch (playerEngine->getPlayerState()) {
+//            switch (playerEngine.getPlayerState()) {
 
-            case AudioEngine::PlayerState::Idle:
-            {
+//            case AudioEngine::PlayerState::Idle:
+//            {
 
-                 reloadTrack(fileUrl,trackId);
-            }
-                break;
-            case AudioEngine::PlayerState::Opening:
-            {
+//                 reloadTrack(fileUrl,trackId);
+//            }
+//                break;
+//            case AudioEngine::PlayerState::Opening:
+//            {
 
-            }
-                break;
-            case AudioEngine::PlayerState::Buffering:
+//            }
+//                break;
+//            case AudioEngine::PlayerState::Buffering:
 
-            {
+//            {
 
-            }
-                break;
-            case AudioEngine::PlayerState::Playing:
-            {
-                setIsPlaying(false);
-                playerEngine->pause();
+//            }
+//                break;
+//            case AudioEngine::PlayerState::Playing:
+//            {
+//                setIsPlaying(false);
+//                playerEngine.pause();
 
 
-            }
-                break;
-            case AudioEngine::PlayerState::Paused:
-            {
+//            }
+//                break;
+//            case AudioEngine::PlayerState::Paused:
+//            {
 
-                setIsPlaying(true);
-                playerEngine->resume();
-            }
-                break;
-            case AudioEngine::PlayerState::Stopped:
-            {
+//                setIsPlaying(true);
+//                playerEngine.resume();
+//            }
+//                break;
+//            case AudioEngine::PlayerState::Stopped:
+//            {
 
-                reloadTrack(fileUrl,trackId);
-            }
-                break;
-            case AudioEngine::PlayerState::Ended:
-                reloadTrack(fileUrl,trackId);
-                break;
-            case AudioEngine::PlayerState::Error:
-                break;
+//                reloadTrack(fileUrl,trackId);
+//            }
+//                break;
+//            case AudioEngine::PlayerState::Ended:
+//                reloadTrack(fileUrl,trackId);
+//                break;
+//            case AudioEngine::PlayerState::Error:
+//                break;
 
-            }
+//            }
 
-        }else{
+//        }else{
 
-            reloadTrack(fileUrl,trackId);
-        }
-    }else{
-        qDebug("engine locked ");
-    }
-}
+//            reloadTrack(fileUrl,trackId);
+//        }
+//    }else{
+//        qDebug("engine locked ");
+//    }
+//}
 
 
 void JAudio::pause()
 {
     if(canPlay){
+        setIsPlaying(false);
 
-        playerEngine->pause();
+        playerEngine.pause();
     }
 }
 
@@ -121,8 +135,8 @@ void JAudio::setVolume(double volume)
 {
 
     appSettings.setVolume(static_cast<int>(volume));
-   // setPlayerVolume()
-    playerEngine->setVolume(static_cast<int>(volume));
+    // setPlayerVolume()
+    playerEngine.setVolume(static_cast<int>(volume));
 
 
 }
@@ -131,15 +145,19 @@ void JAudio::setVolume(double volume)
 void JAudio::seek(int newPosition)
 {
     //player1->setPosition(newPosition);
-    playerEngine->seek(newPosition);
+    playerEngine.seek(newPosition);
 
 }
 
 void JAudio::resume()
 {
     if(canPlay){
+        if(playerEngine.getPlayerState()==AudioEngine::Ended){
+            playerEngine.loadAudio(ptrack.fileUrl);
+            return;
+        }
 
-        playerEngine->resume();
+        playerEngine.resume();
     }
 }
 
@@ -196,19 +214,20 @@ void JAudio::onPlaybackStatusChanged(AudioEngine::PlayerState state)
         break;
     case AudioEngine::PlayerState::Playing:
     {
+        setPlayingId(ptrack.trackId);
 
         setIsPlaying(true);
         setPlaybackStatus(0);
-        if(duration==0){
-            playerEngine->pause();
-            setDuration(playerEngine->trackLength());
-            playerEngine->resume();
+        // if(duration==0){
+        //  playerEngine.pause();
+        setDuration(playerEngine.trackLength());
+        // playerEngine.resume();
 
-            auto l=getFormattedTime(duration);
+        auto l=getFormattedTime(duration);
 
-            setTrackLength(*l);
-            delete l;
-        }
+        setTrackLength(*l);
+        delete l;
+        // }
 
     }
 
@@ -218,14 +237,16 @@ void JAudio::onPlaybackStatusChanged(AudioEngine::PlayerState state)
         setPlaybackStatus(2);
         break;
     case AudioEngine::PlayerState::Stopped:
-        setIsPlaying(false);
-        setPlaybackStatus(1);
+        // setIsPlaying(false);
+        //setPlaybackStatus(1);
 
         qDebug()<<"Stopped";
         break;
     case AudioEngine::PlayerState::Ended:
-       // setPlayNext(1);
-       // setIsPlaying(false);
+        setIsPlaying(false);
+
+        // setPlayNext(1);
+        // setIsPlaying(false);
 
         break;
     case AudioEngine::PlayerState::Error:
@@ -240,6 +261,37 @@ void JAudio::onPlaybackStatusChanged(AudioEngine::PlayerState state)
 void JAudio::onEngineLockedChanged(bool locked)
 {
     setCanPlay(!locked);
+}
+
+void JAudio::onPlaylistPlaybackStarted(JTrack track)
+{
+    qDebug()<<"COLORS IS "<<track.colors;
+
+    reloadTrack(track);
+
+}
+
+void JAudio::onTrackAddedToPlaylist(JTrack track)
+{
+    if(track.trackId==playingId){
+          reloadTrack(track);
+
+
+    }
+
+}
+
+const QVariant &JAudio::getPlayingTrackVar() const
+{
+    return playingTrackVar;
+}
+
+void JAudio::setPlayingTrackVar(const QVariant &newPlayingTrackVar)
+{
+    if (playingTrackVar == newPlayingTrackVar)
+        return;
+    playingTrackVar = newPlayingTrackVar;
+    emit playingTrackVarChanged();
 }
 
 const QString &JAudio::getTrackLength() const
@@ -270,21 +322,44 @@ void JAudio::setPlayNext(int newPlayNext)
 
 
 
-void JAudio::reloadTrack(QString trackUrl, int trackId)
+void JAudio::reloadTrack(JTrack t)
 {
-    setIsPlaying(true);
-    playerEngine->loadAudio(trackUrl);
 
-    auto t=db.getTrack(trackId);
+    ptrack=t;
+    //  setIsPlaying(true);
 
-    setDuration(t->duration);
-    playingId=t->trackId;
-    if(duration>0){
-        auto l=getFormattedTime(duration);
+    setDuration(t.duration);
+   // setPlayingId(t.trackId);
+    //playingId=t->trackId;
+        if(duration>0){
+            auto l=getFormattedTime(duration);
 
-        setTrackLength(*l);
-    }
+            setTrackLength(*l);
+        }
 
+
+    QTime *time =new QTime(0,0,0,0);
+
+    QTime nT=time->addMSecs(t.duration);
+
+    time=nullptr;
+
+    delete time;
+
+    QString formatedTime=formatTrackTime(nT);
+
+
+    QVariantMap trackMap;
+    trackMap["trackName"]=t.trackName;
+    trackMap["trackId"]=t.trackId;
+    trackMap["albumName"]=t.albumName;
+    trackMap["artistName"]=t.artistName;
+    trackMap["duration"]=formatedTime;
+    trackMap["isFavorite"]=t.isFavorite;
+    trackMap["colors"]=t.colors;
+    trackMap["fileUrl"]=t.fileUrl;
+
+    setPlayingTrackVar(trackMap);
 
 }
 

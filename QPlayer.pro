@@ -7,6 +7,8 @@ QT +=core
 QT +=gui
 QT +=sql
 QT +=multimedia
+QT +=concurrent
+QT +=quick
 
 
 
@@ -66,8 +68,13 @@ DEPLOYMENTFOLDERS += assetsFolder
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
+    src/adapters/mtracksadapter.cpp \
     src/adapters/musicfoldermodel.cpp \
+    src/adapters/ptracksadapter.cpp \
+    src/adapters/queueadapter.cpp \
+    src/adapters/tracksadpater.cpp \
     src/audio/jaudio.cpp \
+    src/controllers/maincontroller.cpp \
     src/database/db_jmalkiadbinterface.cpp \
     src/adapters/dm_tracksdataentry.cpp \
     src/engine/audioengine.cpp \
@@ -76,10 +83,17 @@ SOURCES += main.cpp \
     src/controllers/jmusiccontroller.cpp \
     src/controllers/jplaylistcontroller.cpp \
     src/adapters/jplaylistdataentry.cpp \
-    src/utils/jsettings.cpp
+    src/fileio/jfileworker.cpp \
+    src/utils/jsettings.cpp \
+    src/utils/metadatamanager.cpp \
+    src/utils/particleimageprovider.cpp \
+    src/utils/playergimageprovider.cpp \
+    src/utils/thumbnailprovider.cpp \
+    src/workers/mainworker.cpp
 
 
 android {
+QT +=androidextras
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
     OTHER_FILES += android/AndroidManifest.xml       android/build.gradle
 
@@ -99,8 +113,13 @@ macx {
 }
 
 DISTFILES += \
+    android/src/com/afriktek/qplayer/JNIConnector.java \
+    android/src/com/afriktek/qplayer/MusicList.java \
+    android/src/com/afriktek/qplayer/QPlayerService.java \
     android/src/com/afriktek/qplayer/TestClass.java \
     android/src/com/afriktek/qplayer/media/MediaService.java \
+    android/src/com/afriktek/qplayer/media/NotificationStyle.java \
+    android/src/com/afriktek/qplayer/models/MusicTrack.java \
     qml/audio/SoundManager.qml \
     qml/components/JIconButton.qml \
     qml/components/PlayerBar2.qml \
@@ -154,13 +173,19 @@ DISTFILES += \
     qml/views/PlayerView.qml
 
 HEADERS += \
+    src/adapters/mtracksadapter.h \
     src/adapters/musicfoldermodel.h \
+    src/adapters/ptracksadapter.h \
+    src/adapters/queueadapter.h \
+    src/adapters/tracksadpater.h \
     src/audio/jaudio.h \
+    src/controllers/maincontroller.h \
    src/database/db_jmalkiadbinterface.h \
     src/adapters/dm_tracksdataentry.h \
     src/engine/audioengine.h \
     src/fileio/file_fileworker.h \
    src/fileio/file_jfileio.h \
+    src/fileio/jfileworker.h \
     src/models/jmodels.h \
     src/controllers/jmusiccontroller.h \
     src/controllers/jmusiccontrollerinterface.h \
@@ -168,7 +193,12 @@ HEADERS += \
     src/controllers/jplaylistcontroller.h \
     src/adapters/jplaylistdataentry.h \
     src/models/jrole.h \
-    src/utils/jsettings.h
+    src/utils/jsettings.h \
+    src/utils/metadatamanager.h \
+    src/utils/particleimageprovider.h \
+    src/utils/playergimageprovider.h \
+    src/utils/thumbnailprovider.h \
+    src/workers/mainworker.h
 
 
 INCLUDEPATH += $$PWD/.

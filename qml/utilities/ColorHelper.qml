@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import Felgo 3.0
 
 Item {
 
@@ -13,5 +14,13 @@ Item {
 
         const brightness=((c_r*299)+(c_g*587)+(c_b*114))/1000
         return brightness>155
+    }
+
+    function getTextColor(color1,color2){
+
+        if(isLight(color1) || isLight(color2)){
+            return "#000000"
+        }
+        return "#ffffff"
     }
 }

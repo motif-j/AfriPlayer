@@ -34,7 +34,7 @@ Page {
 
         onJreturnkeyPressed: {
 
-            jmusicLogic.trackPlayed(jmusicModel.activeTrackId)
+
         }
         onIndexChanged:function(newIndex){
            // tracksListView.currentIndex=newIndex
@@ -49,7 +49,7 @@ Page {
         width: rootPage.width
         height: rootPage.height
         model: tracksModel.model
-        currentIndex: tracksModel.activeIndex
+        currentIndex: 0
         highlightMoveDuration: 500
 
         emptyText.text:{
@@ -112,7 +112,7 @@ Page {
         anchors.rightMargin: dp(5)
         flat:false
         radius: dp(5)
-        text: "Dynamic Play "
+        text: "Play all "
         iconLeft: IconType.play
         textColor: Theme.textColor
         backgroundColor: Theme.secondaryBackgroundColor
@@ -137,16 +137,27 @@ Page {
 
     }
     function handleListViewIndexUp(){
+        let cIndex=tracksListView.currentIndex
+         cIndex++
+        if(cIndex>tracksModel.count-1){
+            cIndex=tracksModel.count-1
+        }
+        tracksListView.currentIndex=cIndex
 
-        tracksModel.model.incrementIndex()
+
     }
-
     function handleListViewIndexDown(){
-        tracksModel.model.decrementIndex()
+        let cIndex=tracksListView.currentIndex
+         cIndex--
+        if(cIndex<0){
+            cIndex=0
+        }
+        tracksListView.currentIndex=cIndex
+
     }
 
     function selectIndex(index){
-        tracksModel.model.newListIndex(index)
+       tracksListView.currentIndex= index
     }
 
 

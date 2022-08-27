@@ -5,11 +5,11 @@ Item {
 
     id:root
     property alias dispatcher: conn.target
-    property var  model: dataEntry
-    property int  count: dataEntry.count
-    property bool doneFetching: dataEntry.doneFetching
-    property int activeIndex: dataEntry.activeIndex
-    property bool  loading: dataEntry.isLoading
+    property var  model: adapter
+    property int  count: adapter.count
+    property bool doneFetching: adapter.doneFetching
+
+    property bool  loading:adapter.isLoading //dataEntry.isLoading
 
     signal jdownkeyPressed()
     signal jupkeyPressed()
@@ -22,29 +22,10 @@ Item {
     //    property string artistName: dataEntry.artistName
 
 
-    TracksDataEntry{
-        id:dataEntry
-        onCountChanged: (count)=>{
-                            // console.debug("Hey "+count)
-                            //count=0
-                            // root.loading=false
-
-                        }
-
-
-        onDoneFetchingChanged: {
-            console.debug("done with loading")
-            // doneFetching=true
-        }
-        onActiveIndexChanged: {
-
-            indexChanged(dataEntry.activeIndex)
-        }
-
-        onActiveTrackIdChanged: {
-            jmusicLogic.activeTrackIdChanged(dataEntry.activeTrackId)
-        }
+    TracksAdapter{
+        id:adapter
     }
+
 
 
     function loadMoreTracks(){
@@ -53,7 +34,8 @@ Item {
 
             //this reduces the possibility of loading data twice concurrently
             //  root.loading=true
-            dataEntry.loadMoreTracks()
+            // dataEntry.loadMoreTracks()
+            adapter.loadTracks()
         }else{
             console.debug("Busy")
         }
@@ -92,7 +74,7 @@ Item {
     }
 
     function queAll(){
-         dataEntry.mLoad()
+        //   dataEntry.mLoad()
         jmusicModel.addPlaylistToQue(-1,false)
 
     }

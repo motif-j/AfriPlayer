@@ -21,7 +21,16 @@ void MusicFolderModel::setCount(int newCount)
 void MusicFolderModel::addFolder(QString path)
 {
     setLoading(true);
-    fileIo.addFolder(path);
+
+    await(worker.addFolderToLib(path),this,[this](QStringList folders){
+
+        //await(worker.loadFolders(),this,[this](QStringList folders){
+
+            onFoldersFetched(folders);
+        //});
+
+    });
+
 }
 
 void MusicFolderModel::deleteFolder(int index)
@@ -31,7 +40,16 @@ void MusicFolderModel::deleteFolder(int index)
     if(index>=0 && index<m_data.count() ){
         setLoading(true);
         auto path=m_data.value(index);
-        fileIo.deleteFolder(path);
+
+        await(worker.deleteFolderFromLib(path),this,[this](QStringList folders){
+
+           // await(worker.loadFolders(),this,[this](QStringList folders){
+
+                onFoldersFetched(folders);
+           // });
+//
+        });
+
     }
 
 

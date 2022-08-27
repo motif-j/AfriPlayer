@@ -7,6 +7,7 @@
 #include <QString>
 #include <QStringList>
 #include "src/fileio/file_jfileio.h"
+#include <src/workers/mainworker.h>
 
 class MusicFolderModel : public QAbstractListModel
 {
@@ -20,11 +21,15 @@ public:
         Q_UNUSED(parent)
 
 
-        connect(&fileIo,&JFileIO::foldersFetched,this,&MusicFolderModel::onFoldersFetched);
+      //  connect(&fileIo,&JFileIO::foldersFetched,this,&MusicFolderModel::onFoldersFetched);
         // connect(&fileIo,&JFileIO::queringCompleted,this,&MusicFolderModel::onQueryingCompleted);
 
         setLoading(true);
-        fileIo.getFolders();
+
+        await(worker.loadFolders(),this,[this](QStringList folders){
+
+            onFoldersFetched(folders);
+        });
 
        //settings.setValue("queryingFiles",false);
 
@@ -42,7 +47,7 @@ public slots:
     void deleteFolder(int index);
 
 
-public slots:
+private :
     void onFoldersFetched(QStringList folders);
 
 
@@ -56,6 +61,8 @@ signals:
 private:
 
     JFileIO &fileIo=JFileIO::getInstance();
+    MainWorker &worker=MainWorker::getInstance();
+
 
     QStringList m_data;
     int count;

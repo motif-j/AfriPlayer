@@ -9,6 +9,7 @@
 #include <QUrl>
 #include <QSettings>
 #include <QColor>
+#include <QStringList>
 
 
 QList<JTrack> *JMalkiaDbInterface::getTracks(const int lastId,const int limit)
@@ -482,44 +483,44 @@ void JMalkiaDbInterface::toggleFavoriteInTrack(int trackId)
 
 void JMalkiaDbInterface::queueTrack(int trackId)
 {
-    QString  query="INSERT INTO playing_que ('track_id') VALUES ( ?) ";
+    QString  query="INSERT INTO playing_que ('track_id','has_played') VALUES ( ?,0) ";
 
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
 
-    sqlQuery->prepare("SELECT track_id FROM playing_que WHERE track_id=? AND has_played =0 ");
-    sqlQuery->addBindValue(trackId);
+    //   sqlQuery->prepare("SELECT track_id FROM playing_que WHERE track_id=? AND has_played =0 ");
+    //  sqlQuery->addBindValue(trackId);
 
-    sqlQuery->exec();
+    //  sqlQuery->exec();
 
-    if(sqlQuery->first()){
-        toggleQueuedTrackPlayed(trackId);
-    }else{
+    //  if(sqlQuery->first()){
+    //      toggleQueuedTrackPlayed(trackId);
+    //  }else{
 
-        //  auto track=getTrack(trackId);
-        ///  if(track->trackId==trackId){
-        // sqlQuery->prepare("DELETE from recently_played where track_id = ?");
-        //   sqlQuery->addBindValue(trackId);
-        //
-        //    sqlQuery->exec();
-        // }
+    //  auto track=getTrack(trackId);
+    ///  if(track->trackId==trackId){
+    // sqlQuery->prepare("DELETE from recently_played where track_id = ?");
+    //   sqlQuery->addBindValue(trackId);
+    //
+    //    sqlQuery->exec();
+    // }
 
-        //sqlQuery->prepare("DELETE FROM playing_que WHERE track_id= ?" );
+    //sqlQuery->prepare("DELETE FROM playing_que WHERE track_id= ?" );
+    //  sqlQuery->addBindValue(trackId);
+    // sqlQuery->exec();
+
+
+    if(sqlQuery->prepare(query)){
         sqlQuery->addBindValue(trackId);
-        sqlQuery->exec();
 
 
-        if(sqlQuery->prepare(query)){
-            sqlQuery->addBindValue(trackId);
+        if(sqlQuery->exec()){
 
-
-            if(sqlQuery->exec()){
-
-                delete sqlQuery;
-                return;
-            }
+            delete sqlQuery;
+            return;
         }
-
     }
+
+    // }
     printError("Queue Track",sqlQuery);
 
     delete sqlQuery;
@@ -569,102 +570,127 @@ void JMalkiaDbInterface::queuePlaylist(QList<JTrack> tracks)
 
 }
 
-QList<JTrack> *JMalkiaDbInterface::fetchNext10QueuedTracks(bool shuffle)
+QList<JTrack> *JMalkiaDbInterface::fetchNext10QueuedTracks()
+
 {
-    QSettings settings("AfrikTek","Qplayer");
+    bool shuffle=settings.getShuffle();
+    if(!isLocked){
 
+        isLocked=true;
 
-    QString query="SELECT pT.track_id,t.track_name,a.artist_name,ab.album_name, t.duration, t.file_url , pT.has_played,pT.que_id  FROM playing_que pT INNER JOIN tracks t ON t.track_id=pT.track_id LEFT JOIN artists a on t.artist_id=a.artist_id LEFT JOIN albums ab on ab.album_id=t.album_id WHERE pT.has_played=0   LIMIT 10 ";
+        QString query="SELECT pT.track_id,t.track_name,a.artist_name,ab.album_name, t.duration, t.file_url , pT.has_played,pT.que_id,t.colors  FROM playing_que pT INNER JOIN tracks t ON t.track_id=pT.track_id LEFT JOIN artists a on t.artist_id=a.artist_id LEFT JOIN albums ab on ab.album_id=t.album_id WHERE  has_played=0 AND que_id>? LIMIT 10 ";
 
-    if(shuffle){
-        // qDebug()<<"SHUFFLE ON";
-        query="SELECT pT.track_id,t.track_name,a.artist_name,ab.album_name, t.duration, t.file_url , pT.has_played,pT.que_id  FROM playing_que pT INNER JOIN tracks t ON t.track_id=pT.track_id LEFT JOIN artists a on t.artist_id=a.artist_id LEFT JOIN albums ab on ab.album_id=t.album_id where pT.has_played=0  ";
-
-    }
-
-    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
-
-    auto tracks=new QList<JTrack>();
-
-    auto isQueryPrepared=sqlQuery->prepare(query);
-
-    if(!shuffle){
-        //  sqlQuery->addBindValue(lastDbQueID);
-    }
-
-    QList<int> *queIds=new QList<int>();
-
-    if(isQueryPrepared){
-        auto isExecuted=sqlQuery->exec();
-
-        if(isExecuted){
-
-            while(sqlQuery->next()){
-                JTrack *track=new JTrack;
-
-                track->trackId=sqlQuery->value(0).toInt();
-                track->trackName=sqlQuery->value(1).toString();
-                track->artistName=sqlQuery->value(2).toString();
-                track->albumName=sqlQuery->value(3).toString();
-                track->duration=sqlQuery->value(4).toLongLong();
-                track->fileUrl=sqlQuery->value(5).toString();
-                track->isFavorite=isTrackFavorite(track->trackId);
-                track->hasPlayed=(sqlQuery->value(6).toInt()==1);
-
-
-                queIds->append(sqlQuery->value(7).toInt());
-
-                tracks->append(*track);
-            }
-
-        }
-
-    }
-
-
-    if(!tracks->isEmpty()){
         if(shuffle){
-            auto *nonRepTracks=new QList<JTrack>();
-
-            int index=0;
-            for(int i=0;i<10;i++){
-
-                auto randomIndex= QRandomGenerator::global()->bounded(0,tracks->count());
-
-                auto t=tracks->value(randomIndex);
-
-                if(!nonRepTracks->contains(t)){
-                    nonRepTracks->append(t);
-                }
-                index++;
-            }
-
-            //clear the list
-            tracks->clear();
-
-            foreach(JTrack t,*nonRepTracks){
-                tracks->append(t);
-            }
-            //nonRepTracks->clear();
+            // qDebug()<<"SHUFFLE ON";
+            query="SELECT pT.track_id,t.track_name,a.artist_name,ab.album_name, t.duration, t.file_url , pT.has_played,pT.que_id,t.colors  FROM playing_que pT INNER JOIN tracks t ON t.track_id=pT.track_id LEFT JOIN artists a on t.artist_id=a.artist_id LEFT JOIN albums ab on ab.album_id=t.album_id where has_played=0 ";
 
         }
+
+        QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+        auto tracks=new QList<JTrack>();
+
+        auto isQueryPrepared=sqlQuery->prepare(query);
+        if(!shuffle){
+            sqlQuery->addBindValue(this->lastQueuedId);
+        }
+        //  sqlQuery->addBindValue(excIds);
+
+        // qDebug()<<"QUERY "<<sqlQuery->lastQuery();
+        //if(!shuffle){
+        //  sqlQuery->addBindValue(lastDbQueID);
+        //  }
+
+        QList<int> *queIds=new QList<int>();
+
+        if(isQueryPrepared){
+            auto isExecuted=sqlQuery->exec();
+
+            if(isExecuted){
+
+                while(sqlQuery->next()){
+                    JTrack *track=new JTrack;
+
+                    track->trackId=sqlQuery->value(0).toInt();
+                    track->trackName=sqlQuery->value(1).toString();
+                    track->artistName=sqlQuery->value(2).toString();
+                    track->albumName=sqlQuery->value(3).toString();
+                    track->duration=sqlQuery->value(4).toLongLong();
+                    track->fileUrl=sqlQuery->value(5).toString();
+                    track->isFavorite=isTrackFavorite(track->trackId);
+                    track->hasPlayed=(sqlQuery->value(6).toInt()==1);
+
+                    queIds->append(sqlQuery->value(7).toInt());
+
+                    track->colors=sqlQuery->value(8).toString();
+
+                    tracks->append(*track);
+                }
+
+            }
+
+        }
+
+
+        if(!shuffle){
+            if(!queIds->isEmpty()){
+                this->lastQueuedId=queIds->last();
+            }
+
+        }
+
+
+
+        if(!tracks->isEmpty()){
+            if(shuffle){
+                auto *nonRepTracks=new QList<JTrack>();
+
+                int index=0;
+                for(int i=0;i<10;i++){
+
+                    auto randomIndex= QRandomGenerator::global()->bounded(0,tracks->count());
+
+                    auto t=tracks->value(randomIndex);
+
+                    if(!nonRepTracks->contains(t)){
+                        nonRepTracks->append(t);
+                    }
+                    index++;
+                }
+
+                //clear the list
+                if(!nonRepTracks->isEmpty()){
+                    tracks->clear();
+
+                    foreach(JTrack t,*nonRepTracks){
+                        tracks->append(t);
+                    }
+                }
+
+                //nonRepTracks->clear();
+
+            }
+        }
+
+
+        printError("Fetch Next 10 Tracks in Queue ",sqlQuery);
+
+
+        sqlQuery=nullptr;
+        delete sqlQuery;
+
+        isLocked=false;
+
+        foreach(JTrack t, *tracks){
+            qDebug()<<t.trackName;
+        }
+
+        return tracks;
+
+    }else{
+        qDebug()<<"Fetching Ai is Busy ";
+        return new QList<JTrack>();
     }
-
-
-    printError("Fetch Next 10 Tracks in Queue ",sqlQuery);
-
-    int lastId=0;
-    if(!queIds->isEmpty()){
-        lastId=queIds->last();
-        settings.setValue("dbQueueId",lastId);
-    }
-
-
-    sqlQuery=nullptr;
-    delete sqlQuery;
-
-
-    return tracks;
 
 }
 
@@ -875,6 +901,18 @@ int JMalkiaDbInterface::albumId(QString albumName)
     return 0;
 }
 
+QFuture<JTrack> JMalkiaDbInterface::getTrackFuture()
+{
+    return QtConcurrent::run(&m_pool,[this](){
+
+        QThread::sleep(20);
+        auto track=getTrack(3337);
+
+        return *track;
+    });
+
+}
+
 
 
 void JMalkiaDbInterface::intializeDatabase()
@@ -992,6 +1030,8 @@ bool JMalkiaDbInterface::isTrackFavorite(int trackId)
     return isFav>0;
 
 }
+
+
 
 void JMalkiaDbInterface::removeTrackFromPlaylist(int trackId,int playlistId)
 {

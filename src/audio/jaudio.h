@@ -11,6 +11,8 @@
 #include "src/utils/jsettings.h"
 
 #include "src/engine/audioengine.h"
+#include <src/controllers/jplaylistcontroller.h>
+#include <QVariant>
 
 
 
@@ -30,6 +32,8 @@ class JAudio : public QObject
     Q_PROPERTY(int playingId READ getPlayingId WRITE setPlayingId NOTIFY playingIdChanged)
     Q_PROPERTY(int playbackStatus READ getPlaybackStatus WRITE setPlaybackStatus NOTIFY playbackStatusChanged)
     Q_PROPERTY(int playNext READ getPlayNext WRITE setPlayNext NOTIFY playNextChanged)
+    Q_PROPERTY(QVariant playingTrackVar READ getPlayingTrackVar WRITE setPlayingTrackVar NOTIFY playingTrackVarChanged)
+
 
     Q_PROPERTY(QString trackLength READ getTrackLength WRITE setTrackLength NOTIFY trackLengthChanged)
 public:
@@ -68,8 +72,10 @@ public:
     const QString &getTrackLength() const;
     void setTrackLength(const QString &newTrackLength);
 
+    const QVariant &getPlayingTrackVar() const;
+    void setPlayingTrackVar(const QVariant &newPlayingTrackVar);
+
 public slots:
-    void play(QString fileUrl,int trackId);
     void pause();
     void setVolume(double volume);
     void seek(int newPosition);
@@ -80,6 +86,8 @@ public slots:
     void onError(QMediaPlayer::Error error);
     void onPlaybackStatusChanged(AudioEngine::PlayerState state);
     void onEngineLockedChanged(bool locked);
+    void onPlaylistPlaybackStarted(JTrack track);
+    void onTrackAddedToPlaylist(JTrack track);
 
 
 
@@ -87,28 +95,33 @@ public slots:
 private:
 
     JMalkiaDbInterface &db=JMalkiaDbInterface::getInstace();
-    AudioEngine *playerEngine;
+    AudioEngine &playerEngine=AudioEngine::getInstance();
     JSettings &appSettings=JSettings::getInstance();
+    JPlaylistController &playlistController=JPlaylistController::getInstance();
+    MainWorker &worker=MainWorker::getInstance();
 
 
     int position=0;
     int duration=0;
 
 
-    int playingId;
-    int playerVolume;
+    int playingId=0;
+    int playerVolume=0;
     bool isPlaying=false;
     int playbackStatus; //0=playing;1=stopped;2;paused
     bool canPlay=true;
     int playNext=0;
 
-    QString timeElapsed;
-    QString trackLength;
+    QString timeElapsed="00:00";
+    QString trackLength="00:00";
+    QVariant playingTrackVar;
+    JTrack ptrack;
 
 
 private:
-    void reloadTrack(QString trackUrl,int trackId);
+    void reloadTrack(JTrack t);
     QString *getFormattedTime(int time);
+
 
 
 
@@ -126,6 +139,7 @@ signals:
 
     void playNextChanged();
     void trackLengthChanged();
+    void playingTrackVarChanged();
 };
 
 #endif // JAUDIO_H

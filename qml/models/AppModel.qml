@@ -18,7 +18,7 @@ Item {
 
 
     function getColors(input){
-          if(isUndefined(input)){
+          if(isUndefined(input) || input===""){
               let arr=["red","blue"]
               return arr
           }

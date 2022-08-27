@@ -6,7 +6,11 @@
 #include <QDebug>
 #include <QString>
 #include <QSettings>
+#include <QFuture>
+
 #include "jmusiccontrollerworker.h"
+//#include <QAndroidJniObject>
+//#include <QtAndroid>
 
 
 extern QString formatTrackTime(QTime);
@@ -23,6 +27,11 @@ private:
 
         qDebug()<<"INITIALIZING MAIN CONTROLELR";
 
+
+       //QAndroidJniObject::callStaticMethod<void>("com/afriktek/qplayer/JNIConnector","startService","(Landroid/content/Context;)V",QtAndroid::androidActivity().object());
+
+
+       // QAndroidJniObject::callStaticMethod<void>("com/afriktek/qplayer/QPlayerService","startService");
 
           QSettings settings("AfrikTek","Qplayer");
 
@@ -73,6 +82,14 @@ private:
         }
 
 
+        await(dbInterface.getTrackFuture(),this,[](JTrack track){
+
+            qDebug()<<"FROM FUTURE "<<track.trackName;
+        });
+
+
+
+
     }
 
     ~JMusicController(){
@@ -87,6 +104,18 @@ public:
 
         return instance;
 
+    }
+
+    template<typename T, typename  Handler>
+    void await(const QFuture<T> &future, QObject *context,Handler handler){
+
+        auto watcher=new QFutureWatcher<T>(context);
+        QObject::connect(watcher,&QFutureWatcherBase::finished,
+                         context,[watcher,handler{std::move(handler)}](){
+            handler(watcher->result());
+            watcher->deleteLater();
+        });
+        watcher->setFuture(future);
     }
 
 

@@ -17,24 +17,24 @@
 struct JTrack{
 
 
-    int trackId;
-    int artistId;
-    int albumId;
-    int releaseYear;
+    int trackId=0;
+    int artistId=0;
+    int albumId=0;
+    int releaseYear=0;
 
-    long long dateAdded;
-    long long duration;
+    long long dateAdded=0;
+    long long duration=0;
 
     bool isFavorite=false;
     bool hasPlayed=false;
     bool isPlaying=false;
 
 
-    QString trackName;
-    QString fileUrl;
-    QString albumName;
-    QString artistName;
-    QString colors;
+    QString trackName="";
+    QString fileUrl="";
+    QString albumName="";
+    QString artistName="";
+    QString colors="";
 
 
 

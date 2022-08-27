@@ -4,21 +4,19 @@ import com.afriktek.qplayer 1.0
 Item {
 
     property alias  dispatcher: conn.target
-    property int activeIndex : dataEntry.activeIndex
+    property int activeIndex : 0//dataEntry.activeIndex
 
     signal trackClicked(int trackId)
     property var  model: dataEntry
 
-    TracksDataEntry{
+    QueueAdapter{
         id:dataEntry
 
-        onActiveIndexChanged:function() {
-           //\\ console.debug("INDEX "+dataEntry.activeIndex)
-        }
+
     }
 
 
     function loadQueuedTracks(){
-        dataEntry.loadQuedTracks();
+        dataEntry.test()
     }
 }

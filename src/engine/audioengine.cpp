@@ -1,11 +1,11 @@
 #include "audioengine.h"
 
-#ifdef Q_OS_WINDOWS
+
 
 AudioEngine::AudioEngine(QObject *parent)
     : QObject{parent}
 {
-      qDebug()<<"Initializing Engine Windows ";
+    qDebug()<<"Initializing Engine Windows ";
 
     vlcInstance=new VlcInstance(VlcCommon::args(),this);
     player1=new VlcMediaPlayer(vlcInstance);
@@ -13,6 +13,7 @@ AudioEngine::AudioEngine(QObject *parent)
 
     audio1=player1->audio();
     audio2=player2->audio();
+
 
 
 
@@ -63,9 +64,10 @@ void AudioEngine::play()
     if( locked )
         return;
 
-    fadeVolume();
+
 
     activePlayer()->play();
+     fadeVolume();
 }
 
 void AudioEngine::resume()
@@ -74,9 +76,10 @@ void AudioEngine::resume()
         return;
     }
     antState=STATE_WILLSTART;
-    fadeVolume();
+
 
     activePlayer()->resume();
+      fadeVolume();
 }
 
 void AudioEngine::pause()
@@ -108,7 +111,7 @@ void AudioEngine::seek(int time)
 int AudioEngine::trackLength()
 {
 
-     return activePlayer()->length();
+    return activePlayer()->length();
 
 
 }
@@ -207,13 +210,14 @@ void AudioEngine::loadAudio(QString fileUrl)
 
 
     if(locked){
-        qDebug("Engine locked");
+        qDebug("Engine is locked ");
         return;
     }
 
     switch (activePlayerState) {
     case AudioEngine::PLAYER1:
     {
+        qDebug()<<"PLAYER 2 "<<player2->state();
         activePlayerState=PLAYER2;
         disconnectListeners(player1);
 
@@ -229,6 +233,7 @@ void AudioEngine::loadAudio(QString fileUrl)
     case AudioEngine::PLAYER2:
 
     {
+        qDebug()<<"PLAYER 1 "<<player1->state();
         disconnectListeners(player2);
         activePlayerState=PLAYER1;
 
@@ -246,6 +251,7 @@ void AudioEngine::loadAudio(QString fileUrl)
         //This state means there is no player currently running so we can initialize any of the available
         disconnectListeners(player2);
 
+        qDebug()<<"PLAYER 1 "<<player1->state();
         activePlayerState=PLAYER1;
 
         initialiazeListeners(player1);
@@ -299,42 +305,42 @@ void AudioEngine::onStateChanged()
     switch (activePlayer()->state()) {
     case Vlc::Idle:
     {
-     playerState=AudioEngine::Idle;
+        playerState=AudioEngine::Idle;
     }
         break;
     case Vlc::Opening:
     {
-     playerState=AudioEngine::Opening;
+        playerState=AudioEngine::Opening;
     }
         break;
     case Vlc::Buffering:
     {
-     playerState=AudioEngine::Buffering;
+        playerState=AudioEngine::Buffering;
     }
         break;
     case Vlc::Playing:
     {
-     playerState=AudioEngine::Playing;
+        playerState=AudioEngine::Playing;
     }
         break;
     case Vlc::Paused:
     {
-     playerState=AudioEngine::Paused;
+        playerState=AudioEngine::Paused;
     }
         break;
     case Vlc::Stopped:
     {
-     playerState=AudioEngine::Stopped;
+        playerState=AudioEngine::Stopped;
     }
         break;
     case Vlc::Ended:
     {
-     playerState=AudioEngine::Ended;
+        playerState=AudioEngine::Ended;
     }
         break;
     case Vlc::Error:
     {
-     playerState=AudioEngine::Error;
+        playerState=AudioEngine::Error;
     }
         break;
 
@@ -387,8 +393,6 @@ void AudioEngine::onFaderValueChanged(const QVariant &value)
     {
         //to realize  the fade effect increment the volume by a slighter margin
 
-
-
         if(activePlayerState==PLAYER1){
 
 
@@ -440,11 +444,11 @@ void AudioEngine::onFaderFinished()
     {
         if(activePlayerState==PLAYER1){
 
-      player2->stop();
+            player2->stop();
 
 
         }else{
-      player1->stop();
+            player1->stop();
 
 
         }
@@ -465,7 +469,7 @@ void AudioEngine::onFaderFinished()
     }
 
     locked=false;
-    lockedChanged(false);
+    emit lockedChanged(false);
 }
 
-#endif
+

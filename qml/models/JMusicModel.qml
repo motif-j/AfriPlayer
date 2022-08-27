@@ -6,141 +6,160 @@ import com.afriktek.qplayer 1.0
 
 Item {
     property alias dispatcher:musicModelConn.target
-    property var activeTrack:({})
-    property int activeTrackId: jmusicController.activeTrackId
+    // property var activeTrack:({})
+    // property int activeTrackId: jmusicController.activeTrackId
 
-    property var  playingTrack: ({})
-    property var  playingTrackId: jmusicController.playingTrack
+    property var  playingTrack: soundManager.playingTrack
+    //   property var  playingTrackId:0
 
-    property bool shuffle: jmusicController.shuffle
-    property int activeIndex : dataEntry.activeIndex
+    property bool shuffle: mainController.shuffle
+    //property int activeIndex : dataEntry.playingIndex
 
     signal trackClicked(int trackId)
     property var  model: dataEntry
-    property bool isQueryingFiles: jmusicController.isQueringFiles
-    property bool crossFade: jmusicController.crossFade
+    property bool isQueryingFiles: mainController.isQuering
+    property bool crossFade: false
+    property bool isLoading: dataEntry.isLoading
+    property string thumbnailUrl: {
+        if(playingTrack===undefined){
 
+            return "image://thumbnail/00"
+        }else{
+            let tId=playingTrack["colors"]
 
-    TracksDataEntry{
-        id:dataEntry
+            return "image://thumbnail/"+tId
 
-        onActiveIndexChanged:function() {
-            //\\ console.debug("INDEX "+dataEntry.activeIndex)
         }
     }
 
 
-    function loadQueuedTracks(){
-        dataEntry.loadQuedTracks();
-    }
+            QueueAdapter{
+                id:dataEntry
 
-    JMusicController{
-        id:jmusicController
+                //   onActiveIndexChanged:function() {
+                //\\ console.debug("INDEX "+dataEntry.activeIndex)
+                //  }
+            }
 
 
-        onPlayingTrackFetched: function(trackMap){
-            playingTrack=trackMap
-
-            soundManager.play()
+        function loadQueuedTracks(){
+            // dataEntry.loadQuedTracks();
+            dataEntry.test()
         }
 
-    }
-
-
-
-
-    Connections{
-        id:musicModelConn
-
-
-        onTrackFetched:function(trackmap){
-            //consume the event here
-            activeTrack=trackmap
-            setActiveTrackId(trackmap["trackId"])
+        MainController{
+            id:mainController
         }
 
-        onTrackPlayed:function(trackId){
-            // getTrack(trackId)
-            if(trackId!==0){
 
-                addTrackToRecentlyClicked(trackId)
+        Connections{
+            id:musicModelConn
 
-                //  jmusicController.getPlayingTrack(trackId)
-                playQueuedTrack(trackId)
-            }else{
+
+            onTrackFetched:function(trackmap){
+                //consume the event here
+                activeTrack=trackmap
+                setActiveTrackId(trackmap["trackId"])
+            }
+
+            onTrackPlayed:function(trackId){
+                // getTrack(trackId)
+                //            if(trackId!==0){
+
+                //              //  addTrackToRecentlyClicked(trackId)
+
+                //                //  jmusicController.getPlayingTrack(trackId)
+                //                playQueuedTrack(trackId)
+                //            }else{
+
+                //            }
+
+
 
             }
-        }
-        onActiveTrackIdChanged: function(newId){
 
-            setActiveTrackId(newId);
-            // activeTrackId=newId
+            onPlayTrack:function(trackId){
 
-        }
+                if(trackId!==0){
+                    mainController.loadTrackToEngine(trackId)
+                }
+            }
 
-    }
+            onActiveTrackIdChanged: function(newId){
 
+                setActiveTrackId(newId);
+                // activeTrackId=newId
 
-    function getTrack(trackId){
-        jmusicController.getTrack(trackId)
+            }
 
-
-    }
-
-    function setActiveTrackId(trackId){
-        jmusicController.trackClicked(trackId)
-    }
-
-    function addTrackToRecentlyClicked(trackId){
-
-        jmusicController.addTrackToRecentlyPlayed(trackId)
-    }
-
-    function addTrackToPlaylist(trackId,plId){
-        jmusicController.addTrackToPlaylist(trackId,plId);
-    }
-
-    function addTrackToQueue(trackId){
-        jmusicController.addTrackToQue(trackId);
-
-    }
-
-    function playNext(){
-        if(!soundManager.isBusy){
-            dataEntry.playNext()
         }
 
 
-    }
-    function playPrevious(){
-        if(!soundManager.isBusy){
-            dataEntry.playPrevious()
+
+        function addTrackToRecentlyClicked(trackId){
+
+            // jmusicController.addTrackToRecentlyPlayed(trackId)
+        }
+
+        function addTrackToPlaylist(trackId,plId){
+            // jmusicController.addTrackToPlaylist(trackId,plId);
+        }
+
+        function addTrackToQueue(trackId){
+
+            mainController.addTrackToPlayingQue(trackId)
+
+        }
+
+        function playNext(){
+            if(soundManager.isBusy){
+                return
+            }
+
+
+            mainController.playNext()
+
+        }
+        function playPrevious(){
+
+            if(soundManager.isBusy){
+                return
+            }
+
+            mainController.playPrevious()
+
         }
 
 
-    }
-    function playQueuedTrack(trackId){
-        if(!soundManager.isBusy){
-            dataEntry.playQueuedTrack(trackId)
+        function addPlayingTrackToFavorite(){
+
+            if(playingTrack===undefined){
+                return
+            }
+            let trackId=playingTrack["trackId"]
+
+            mainController.addTrackToPlaylist(trackId,1)
+
+            //mainController.a
         }
 
 
-    }
+        function addPlaylistToQue(playlistId,shuffle){
+            dataEntry.clearTracks()
+            mainController.addPlaylistToQueue(playlistId)
 
-    function addPlaylistToQue(playlistId,shuffle){
+        }
+        function toggleShuffle(){
+            mainController.toggleShuffle()
+            // jmusicController.toggleShuffle()
+        }
 
-        dataEntry.clearPlaylist()
-        jmusicController.addPlaylistToQueue(playlistId,shuffle)
-    }
-    function toggleShuffle(){
-        jmusicController.toggleShuffle()
-    }
+        function syncAudioFiles(){
+            mainController.queryAudioFiles()
+            // jmusicController.syncTracks()
+        }
+        function toggleCrossFade(nVal){
+            // jmusicController.toggleCrossfade(nVal);
+        }
 
-    function syncAudioFiles(){
-        jmusicController.syncTracks()
     }
-    function toggleCrossFade(nVal){
-        jmusicController.toggleCrossfade(nVal);
-    }
-
-}

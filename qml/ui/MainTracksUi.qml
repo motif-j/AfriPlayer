@@ -23,7 +23,7 @@ Rectangle{
 
     property color thumbnailColor: jappmodel.getColors(themeColor)[0]
     property color thumbnailColor2: jappmodel.getColors(themeColor)[1]
-  //  property color thumbnailColor3: Qt.rgba(Math.random(155),Math.random(200),Math.random(55),1)
+    //  property color thumbnailColor3: Qt.rgba(Math.random(155),Math.random(200),Math.random(55),1)
     id:rootRect
 
     signal clicked()
@@ -36,7 +36,7 @@ Rectangle{
         Rectangle{
             Layout.topMargin:  dp(5)
             Layout.fillWidth: true
-             Layout.alignment: Qt.AlignTop
+            Layout.alignment: Qt.AlignTop
             id:baseRect
 
             GridLayout{
@@ -48,204 +48,189 @@ Rectangle{
                     Layout.alignment: Qt.AlignHCenter
                     Layout.leftMargin: dp(2)
                     Rectangle{
-
                         height: dp(60)
                         width: dp(60)
                         radius: dp(5)
                         gradient:Gradient{
-
-
                             GradientStop{
                                 position: 0.0
                                 color: thumbnailColor
                             }
-
                             GradientStop{
                                 position: 1.0
                                 color: thumbnailColor2
                             }
-
-                        }
-
-                        //                RoundedImage{
-                        //                    property int thumbnailSize:dp(60)
-                        //                    height: thumbnailSize
-                        //                    width: thumbnailSize
-                        //                    source: "qrc:/assets/qt.png"
-                        //                    fillMode: Image.Stretch
-                        //                    Layout.alignment: Qt.AlignHCenter
-
-
-                        //                }
-                    }
-
-
-                    Rectangle{
-                        width: dp(5)
-                    }
-
-                    Column{
-                        width: dp(100)
-                       // height: dp(65)
-                        spacing: dp(5)
-                        leftPadding: dp(5)
-
-
-                        AppText{
-                            text:trackName
-                            font.bold: true
-                            fontSize: 14
-                            topPadding: dp(5)
-                            maximumLineCount: 1
-                            width: dp(200)
-                           // wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                            elide: Text.ElideRight
-
-
-                        }
-                        AppText{
-                            text:artistName
-                            bottomPadding: dp(5)
-                            fontSize: 12
-                            color: Theme.secondaryTextColor
-                            maximumLineCount: 1
-                             elide: Text.ElideRight
-                             width: dp(200)
-
                         }
                     }
+
+
+                        Rectangle{
+                            width: dp(5)
+                        }
+
+                        Column{
+                            width: dp(100)
+                            // height: dp(65)
+                            spacing: dp(5)
+                            leftPadding: dp(5)
+
+
+                            AppText{
+                                text:trackName
+                                font.bold: true
+                                fontSize: 14
+                                topPadding: dp(5)
+                                maximumLineCount: 1
+                                width: dp(200)
+                                // wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                                elide: Text.ElideRight
+
+
+                            }
+                            AppText{
+                                text:artistName
+                                bottomPadding: dp(5)
+                                fontSize: 12
+                                color: Theme.secondaryTextColor
+                                maximumLineCount: 1
+                                elide: Text.ElideRight
+                                width: dp(200)
+
+                            }
+                        }
+                    }
+
+                    AppText{
+                        text:albumName
+                        visible: root.width>dp(480)
+                        fontSize: 14
+                        Layout.fillWidth: true
+                        width: dp(80)
+
+                        Layout.alignment: Qt.AlignRight
+                        // Layout.maximumWidth: dp(80)
+                        Layout.preferredWidth: dp(80)
+                        maximumLineCount: 1
+                        elide: Text.ElideRight
+
+                    }
+
+                    AppText{
+                        text:duration
+
+                        fontSize: 16
+                        font.family: Constants.lcdFont.name
+                        font.letterSpacing: dp(2)
+                        font.bold: true
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignRight
+                        // Layout.maximumWidth: dp(100)
+                        Layout.preferredWidth: dp(50)
+                        maximumLineCount: 1
+                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+
+                    }
+
                 }
 
-                AppText{
-                    text:albumName
-                    visible: root.width>dp(480)
-                    fontSize: 14
-                    Layout.fillWidth: true
-                     width: dp(80)
 
-                    Layout.alignment: Qt.AlignRight
-                    // Layout.maximumWidth: dp(80)
-                    Layout.preferredWidth: dp(80)
-                    maximumLineCount: 1
-                     elide: Text.ElideRight
-
-                }
-
-                AppText{
-                    text:duration
-
-                    fontSize: 16
-                    font.family: Constants.lcdFont.name
-                    font.letterSpacing: dp(2)
-                    font.bold: true
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignRight
-                    // Layout.maximumWidth: dp(100)
-                    Layout.preferredWidth: dp(50)
-                    maximumLineCount: 1
-                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-
-                }
 
             }
 
+            IconButton{
+                Layout.alignment: Qt.AlignHCenter
+                Layout.preferredWidth: dp(40)
+                Layout.preferredHeight: dp(40)
+                icon: isFavorite? IconType.heart:IconType.hearto
 
 
+            }
         }
 
-        IconButton{
-            Layout.alignment: Qt.AlignHCenter
-            Layout.preferredWidth: dp(40)
-            Layout.preferredHeight: dp(40)
-            icon: isFavorite? IconType.heart:IconType.hearto
+
+        RippleMouseArea{
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton | Qt.LeftButton
+            onClicked: {
 
 
-        }
-    }
+                if(mouse.button===Qt.RightButton){
+                    menu.popup()
+                }
 
+                rootRect.clicked()
+                if(Theme.isAndroid){
+                    jmusicLogic.trackPlayed(trackId)
+                }
 
-    RippleMouseArea{
-        anchors.fill: parent
-        acceptedButtons: Qt.RightButton | Qt.LeftButton
-        onClicked: {
+            }
+            onDoubleClicked: {
+                //playing track
+                jmusicLogic.trackPlayed(trackId)
 
-
-            if(mouse.button===Qt.RightButton){
+            }
+            onPressAndHold: {
+                rootRect.clicked()
                 menu.popup()
             }
 
-            rootRect.clicked()
-            if(Theme.isAndroid){
-                 jmusicLogic.trackPlayed(trackId)
-            }
+            Menu{
+                modal: false
+                id:menu
+                onClosed: {
 
-        }
-        onDoubleClicked: {
-            //playing track
-            jmusicLogic.trackPlayed(trackId)
-
-        }
-        onPressAndHold: {
-            rootRect.clicked()
-            menu.popup()
-        }
-
-        Menu{
-            modal: false
-            id:menu
-            onClosed: {
-
-                menu.close()
-            }
-
-            Action{
-                text: "Play"
-                onTriggered: {
-                    jmusicLogic.trackPlayed(trackId)
-                      menu.close()
+                    menu.close()
                 }
-            }
-            Action{
-                text: "Add to Queue"
-                onTriggered: {
-                    jmusicModel.addTrackToQueue(trackId)
+
+                Action{
+                    text: "Play"
+                    onTriggered: {
+                        //jmusicLogic.trackPlayed(trackId)
+                        jmusicLogic.playTrack(trackId)
+                        menu.close()
+                    }
                 }
-            }
-            Action{text: "Add to Playlist"}
-
-
-            background: Rectangle{
-                implicitWidth: dp(200)
-                implicitHeight: dp(220)
-                radius: dp(5)
-                clip: true
-                border.color: Theme.secondaryBackgroundColor
-                color: Theme.backgroundColor
-
-            }
-            delegate:MenuItem{
-                width:menu.width
-                id:m_item
-
-                contentItem: AppText{
-                    fontSize: 14
-                    color: Theme.textColor
-                    text: m_item.text
-                    font.bold: true
-                    padding: dp(5)
-
+                Action{
+                    text: "Add to Queue"
+                    onTriggered: {
+                        jmusicModel.addTrackToQueue(trackId)
+                    }
                 }
-                background:Rectangle{
-                    width:menu.width
+                Action{text: "Add to Playlist"}
+
+
+                background: Rectangle{
+                    implicitWidth: dp(200)
+                    implicitHeight: dp(220)
                     radius: dp(5)
-                    color: m_item.highlighted? Theme.tintColor:Theme.backgroundColor
+                    clip: true
+                    border.color: Theme.secondaryBackgroundColor
+                    color: Theme.backgroundColor
+
                 }
+                delegate:MenuItem{
+                    width:menu.width
+                    id:m_item
+
+                    contentItem: AppText{
+                        fontSize: 14
+                        color: Theme.textColor
+                        text: m_item.text
+                        font.bold: true
+                        padding: dp(5)
+
+                    }
+                    background:Rectangle{
+                        width:menu.width
+                        radius: dp(5)
+                        color: m_item.highlighted? Theme.tintColor:Theme.backgroundColor
+                    }
 
 
 
+                }
             }
         }
     }
-}
 
 

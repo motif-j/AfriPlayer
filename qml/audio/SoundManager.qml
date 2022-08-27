@@ -12,6 +12,7 @@ Item {
     property string fduration: "00:00"
 
     property int maxVolume:jmediaPlayer.playerVolume
+    property var  playingTrack: jmediaPlayer.playingTrackVar
 
 
     //0=playing;1=stopped;2;paused
@@ -39,10 +40,10 @@ Item {
                 trackPosition=position
             }
 
-                if(initiatePlayNext(duration,position)){
-                    jmusicModel.playNext()
+            if(initiatePlayNext(duration,position)){
+                jmusicModel.playNext()
 
-                }
+            }
 
         }
         onDurationChanged: {
@@ -58,13 +59,33 @@ Item {
 
 
     function play(){
-        if(isBusy){
-            return;
-        }
+        if(jmediaPlayer.playingId===0){
 
-        let trackId=jmusicModel.playingTrack["trackId"]
-        let url=jmusicModel.playingTrack["fileUrl"]
-        jmediaPlayer.play(url,trackId)
+            let t=jmusicModel.playingTrack
+            if(t===undefined){
+                return
+            }
+
+            let id=t["trackId"]
+
+          jmusicLogic.playTrack(id)
+        }else{
+
+            if(isBusy){
+                console.debug("Engine is busy")
+                return;
+            }
+            if(isPlaying){
+                jmediaPlayer.pause()
+            }else{
+                jmediaPlayer.resume()
+            }
+
+            console.debug("ID id "+jmediaPlayer.playingId)
+        }
+        //        let trackId=jmusicModel.playingTrack["trackId"]
+        //        let url=jmusicModel.playingTrack["fileUrl"]
+        //        jmediaPlayer.play(url,trackId)
 
 
     }
@@ -76,7 +97,7 @@ Item {
     }
     function seek(position){
 
-             jmediaPlayer.seek(position)
+        jmediaPlayer.seek(position)
 
 
 
@@ -87,7 +108,7 @@ Item {
         let diff=duration-position
 
         if(duration>20000){
-             return diff<2000;
+            return diff<2000;
         }
 
         let perc=(position/duration) *100

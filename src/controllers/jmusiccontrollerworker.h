@@ -12,6 +12,8 @@ public:
     explicit  JMusicControllerWorker (QObject *parent=nullptr){
         Q_UNUSED(parent)
 
+        qDebug()<<"Intializing controller worker";
+
     }
 
     int activeTrackId=0;
@@ -137,11 +139,9 @@ public slots:
     }
 
     void fetchPlayingQueue(){
-        QSettings settings("AfrikTek","Qplayer");
-        bool shuffle=settings.value("shuffle").toBool();
 
 
-        auto queue=db.fetchNext10QueuedTracks(shuffle);
+        auto queue=db.fetchNext10QueuedTracks();
 
         delay();
         emit queuedTracksFetched(queue);
@@ -187,6 +187,8 @@ private:
     void delay(int duration=500){
         QThread::msleep(duration);
     }
+
+
 
 };
 #endif // JMUSICCONTROLLERWORKER_H

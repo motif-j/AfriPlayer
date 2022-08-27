@@ -77,7 +77,7 @@ public slots:
 
     void queryAllDirectories(){
 
-#ifdef Q_OS_WIN32
+
 
         // QThread::msleep(10000);
         auto dirs=db.getFolders();
@@ -97,7 +97,7 @@ public slots:
                 qDebug()<<"Query "<<directory->path();
                 QStringList filters;
 
-                filters<<"*.m4a"<<"*.mp3"<<"*.wav"<<"*.aac"<<"*.flac"<<"*.ogg"<<"*.mp4"<<"*.mkv";
+                filters<<"*.m4a"<<"*.mp3"<<"*.wav"<<"*.aac"<<"*.flac"<<"*.ogg";//<<"*.mp4"<<"*.mkv";
 
                 directory->setNameFilters(filters);
 
@@ -211,10 +211,8 @@ public slots:
 
 
 
-#endif
 
 
-        emit queryAllDirCompleted();
 
     }
 

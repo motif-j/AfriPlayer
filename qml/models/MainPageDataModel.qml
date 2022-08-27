@@ -17,12 +17,10 @@ Item {
     }
 
 
-    TracksDataEntry{
+    PlaylistTracksAdapter{
         id:dataEntry
 
-        onActiveTrackIdChanged: {
-            jmusicLogic.activeTrackIdChanged(dataEntry.activeTrackId)
-        }
+
     }
 
 
@@ -31,10 +29,13 @@ Item {
         onJkeyPressed:function(key){
             if(key===Qt.Key_Return){
 
-                jmusicLogic.trackPlayed(jmusicModel.activeTrackId)
+
             }
         }
     }
 
+    function loadRecent(){
+        dataEntry.loadTracks(-1,0)
+    }
 
 }

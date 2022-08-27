@@ -47,7 +47,8 @@ Page {
             handleListViewIndexDown()
         }
         onJreturnkeyPressed: {
-            jmusicLogic.trackPlayed(jmusicModel.activeTrackId)
+
+
         }
 
     }
@@ -59,12 +60,13 @@ Page {
             Layout.preferredWidth:   tracksListView.width
 
 
+
             AppButton{
                 Layout.margins: dp(2)
                 Layout.alignment: Qt.AlignHCenter
                 flat:false
                 radius: dp(5)
-                visible: dataModel.count>0
+                enabled: dataModel.count>0
                 text: "Play all"
                 iconLeft: IconType.play
                 textColor: Theme.textColor
@@ -79,7 +81,7 @@ Page {
                 Layout.alignment: Qt.AlignHCenter
                 flat:false
                 radius: dp(5)
-                visible: dataModel.count>0
+                enabled:  dataModel.count>0
                 text: "Shuffle all"
                 iconLeft: IconType.random
                 textColor: Theme.textColor
@@ -99,7 +101,7 @@ Page {
             width: parent.width
 
             // anchors.fill: parent
-            anchors.margins: dp(5)
+
             model: dataModel.model
 
 
@@ -118,7 +120,7 @@ Page {
             }
 
             spacing: dp(5)
-            currentIndex: dataModel.activeIndex
+            currentIndex:-1
             desktopScrollEnabled: true
             highlightMoveDuration: 1500
             delegate: Rectangle{
@@ -138,7 +140,7 @@ Page {
                     isFavorite: model.isFavorite
                     themeColor:   model.colors
                     onClicked: {
-
+                        tracksListView.currentIndex=index
                         selectIndex(index)
                     }
 
@@ -200,14 +202,27 @@ Page {
     }
 
     function handleListViewIndexUp(){
-        dataModel.model.incrementIndex()
+        let cIndex=tracksListView.currentIndex
+         cIndex++
+        if(cIndex>dataModel.count-1){
+            cIndex=dataModel.count-1
+        }
+        tracksListView.currentIndex=cIndex
+
+       // dataModel.model.incrementIndex()
     }
     function handleListViewIndexDown(){
-        dataModel.model.decrementIndex()
+        let cIndex=tracksListView.currentIndex
+         cIndex--
+        if(cIndex<0){
+            cIndex=0
+        }
+        tracksListView.currentIndex=cIndex
+      //  dataModel.model.decrementIndex()
     }
 
     function selectIndex(index){
-        dataModel.model.newListIndex(index)
+        //dataModel.model.newListIndex(index)
     }
 
 }

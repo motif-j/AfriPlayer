@@ -11,8 +11,12 @@
 #include <QVariant>
 #include <QThread>
 #include <QRandomGenerator>
-
+#include <QtConcurrent>
+#include <QFuture>
+#include <QThreadPool>
 #include <QMediaMetaData>
+#include <src/utils/jsettings.h>
+
 
 //  Q_DECLARE_METATYPE(JTrack);
 
@@ -62,7 +66,7 @@ public:
     void queuePlaylist(QList<JTrack> tracks);
 
     //will be updated dynamically
-    QList<JTrack> *fetchNext10QueuedTracks(bool shuffle);
+    QList<JTrack> *fetchNext10QueuedTracks();
 
     void removeTrackFromPlaylist(int trackId,int playlistId);
 
@@ -79,12 +83,18 @@ public:
     int addNewArtist(QString artistName);
     int albumId(QString albumName);
 
+    QFuture<JTrack> getTrackFuture();
     //constructor
+
+
 
 
 private:
     JMalkiaDbInterface(QObject *parent = nullptr){
         Q_UNUSED(parent);
+
+        m_pool.setMaxThreadCount(1);
+        m_pool.setExpiryTimeout(-1);
 
         this->intializeDatabase();
     }
@@ -104,12 +114,16 @@ private:
     const QString DRIVER_NAME=QString("QSQLITE");
 
     QSqlDatabase mDb;
+    QThreadPool m_pool;
+    int lastQueuedId=0;
+    JSettings &settings=JSettings::getInstance();
 
 
     //functions
 private:
     void intializeDatabase();
     bool isTrackFavorite(int trackId);
+    bool isLocked=false;
 
 
 

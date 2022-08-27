@@ -5,13 +5,11 @@ Item {
 
     id:root
     property alias dispatcher: conn.target
-    property var  model: dataEntry
-    property int  count: dataEntry.count
+    property var  model: tracksAdapter
+    property int  count:tracksAdapter.count
     property int playlistId: -1
-    property int activeIndex:dataEntry.activeIndex
-    property bool doneFetching: dataEntry.doneFetching
-
-
+    property int activeIndex: 0//dataEntry.activeIndex
+    property bool doneFetching: false//dataEntry.doneFetching
 
 
     signal jdownkeyPressed()
@@ -23,35 +21,11 @@ Item {
     //    property string albumName: dataEntry.albumName
     //    property string duration: dataEntry.duration
     //    property string artistName: dataEntry.artistName
+    PlaylistTracksAdapter{
+        id:tracksAdapter
 
-
-    TracksDataEntry{
-        id:dataEntry
-        onCountChanged: (count)=>{
-                            // console.debug("Hey "+count)
-                            //count=0
-
-                            if(count>0){
-
-                            }
-
-
-
-                        }
-        onIsLoadingChanged:  {
-            loadingChanged(dataEntry.isLoading)
-
-
-        }
-
-
-        onDoneFetchingChanged: {
-            console.debug("done with loading")
-            // doneFetching=true
-        }
-
-        onActiveTrackIdChanged: {
-            jmusicLogic.activeTrackIdChanged(dataEntry.activeTrackId)
+        onIsLoadingChanged: {
+            loadingChanged(tracksAdapter.isLoading)
         }
     }
 
@@ -90,20 +64,23 @@ Item {
 
     function reloadTracks(){
 
-        //  dataEntry.clearPlaylist()
+
+        tracksAdapter.clearTracks()
         loadMoreTracks(1)
     }
 
     function clearPlaylist(){
-        dataEntry.clearPlaylist()
+        tracksAdapter.clearTracks()
     }
 
     function loadMoreTracks(refresh=0){
 
-        if(!dataEntry.isLoading){
+        if(!tracksAdapter.isLoading){
             //this reduces the possibility of loading data twice concurrently
 
-            dataEntry.loadPlaylistTracks(playlistId,refresh)
+
+            tracksAdapter.loadTracks(playlistId,refresh)
+            // dataEntry.loadPlaylistTracks(playlistId,refresh)
 
         }else{
             console.debug("Busy")
@@ -115,7 +92,7 @@ Item {
 
     function addPlaylistToQueue(shuffle){
         if(playlistId>-1){
-              jmusicModel.addPlaylistToQue(playlistId,shuffle)
+            jmusicModel.addPlaylistToQue(playlistId,shuffle)
         }
 
 

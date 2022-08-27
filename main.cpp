@@ -7,12 +7,20 @@
 
 #include "src/adapters/jplaylistdataentry.h"
 #include "src/adapters/dm_tracksdataentry.h"
-#include "src/database/db_jmalkiadbinterface.h"
+#include "src/adapters/tracksadpater.h"
+#include "src/adapters/ptracksadapter.h"
 #include "src/adapters/musicfoldermodel.h"
+#include <src/adapters/mtracksadapter.h>
 
-#include "src/controllers/jmusiccontrollerinterface.h"
+#include "src/controllers/maincontroller.h"
+#include <src/adapters/queueadapter.h>
+
 #include "src/audio/jaudio.h"
 #include <QString>
+
+#include <src/utils/thumbnailprovider.h>
+#include <src/utils/playergimageprovider.h>
+#include <src/utils/particleimageprovider.h>
 
 //#include <VLCQtQml/QmlPlayer.h>
 //#include <VLCQtCore/Common.h>
@@ -47,6 +55,7 @@ int main(int argc, char *argv[])
 
    // VlcCommon::setPluginPath(app.applicationDirPath()+"plugins");
 
+    qputenv("QML_DISABLE_DISK_CACHE","1");
 
     FelgoApplication felgo;
 
@@ -54,7 +63,13 @@ int main(int argc, char *argv[])
     felgo.setPreservePlatformFonts(true);
 
     QQmlApplicationEngine engine;
+
+    engine.addImageProvider(QLatin1String("thumbnail"),new ThumbnailProvider);
+    engine.addImageProvider(QLatin1String("playerthumbnail"),new PlayerGImageProvider);
+    engine.addImageProvider(QLatin1String("particle"),new ParticleImageProvider);
+
     felgo.initialize(&engine);
+
 
     // Set an optional license key from project file
     // This does not work if using Felgo Live, only for Felgo Cloud Builds and local builds
@@ -66,11 +81,16 @@ int main(int argc, char *argv[])
     //  qmlRegisterSingletonType(QUrl("qrc:///qml/libraries/JQMusicController.qml"),"com.afriktek.qplayer",1,0,"JMuzik");
     // qmlRegisterType<BaseDataEntryModel>("com.afriktek.qplayer",1,0,"BaseDataEntryModel");
 
-    qmlRegisterType<TracksDataEntry>("com.afriktek.qplayer",1,0,"TracksDataEntry");
-    qmlRegisterType<JMusicControllerInterface>("com.afriktek.qplayer",1,0,"JMusicController");
+
+    qmlRegisterType<MTracksAdapter>("com.afriktek.qplayer",1,0,"TracksAdapter");
+
     qmlRegisterType<JPlaylistDataEntry>("com.afriktek.qplayer",1,0,"JPlaylistModel");
     qmlRegisterType<MusicFolderModel>("com.afriktek.qplayer",1,0,"FolderDataEntry");
     qmlRegisterType<JAudio>("com.afriktek.qplayer",1,0,"JAudio");
+     qmlRegisterType<MainController>("com.afriktek.qplayer",1,0,"MainController");
+     qmlRegisterType<QueueAdapter>("com.afriktek.qplayer",1,0,"QueueAdapter");
+     qmlRegisterType<PTracksAdapter>("com.afriktek.qplayer",1,0,"PlaylistTracksAdapter");
+
 
 
   //  qmlRegisterType<VlcQmlPlayer>("com.afriktek.qplayer",1,0,"JAudioPlayer");

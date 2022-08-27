@@ -70,6 +70,8 @@ Rectangle{
         height: root.height
 
         onClicked: {
+            jmusicLogic.playTrack(trackId)
+
             root.clicked()
         }
     }

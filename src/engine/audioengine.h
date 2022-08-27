@@ -7,7 +7,7 @@
 #include <QVariant>
 #include <QVariantAnimation>
 
-#ifdef Q_OS_WINDOWS
+
 #include <VLCQtCore/Audio.h>
 #include <VLCQtCore/Video.h>
 #include <VLCQtCore/MediaPlayer.h>
@@ -15,8 +15,9 @@
 #include <VLCQtCore/Common.h>
 #include <VLCQtCore/Enums.h>
 #include <VLCQtCore/Media.h>
+#include <VLCQtCore/Stats.h>
 
-#endif
+
 
 #include "src/utils/jsettings.h"
 #include <math.h>
@@ -25,10 +26,19 @@ class AudioEngine : public QObject
 {
     Q_OBJECT
 public:
+
+    static AudioEngine &getInstance(){
+        static AudioEngine instance;
+
+        return instance;
+    }
+private:
+
     explicit AudioEngine(QObject *parent = nullptr);
 
     ~AudioEngine();
 
+public:
     enum PlayerState{
         Idle=0,
         Opening=1,
@@ -57,7 +67,7 @@ public:
 
 private:
 
-#ifdef Q_OS_WINDOWS
+
 
     VlcInstance *vlcInstance;
 
@@ -70,7 +80,7 @@ private:
 
     VlcMedia *activeMedia1;
     VlcMedia *activeMedia2;
-#endif
+
     PlayerState playerState;
     QVariantAnimation *faderAnim;
 
@@ -102,7 +112,6 @@ private:
     void fadeVolume(int duration=1000);
 
 
-#if defined Q_OS_WINDOWS
     VlcMediaPlayer *activePlayer();
     VlcAudio *activeAudio();
 
@@ -112,12 +121,7 @@ private:
     void initialiazeListeners(VlcMediaPlayer *player);
     void disconnectListeners(VlcMediaPlayer *player);
 
-#elif defined Q_OS_ANDROID
-    int *activePlayer();
 
-   // void initialiazeListeners(VlcMediaPlayer *player);
-  //  void disconnectListeners(VlcMediaPlayer *player);
-#endif
 
     //Receivers
 private  slots:

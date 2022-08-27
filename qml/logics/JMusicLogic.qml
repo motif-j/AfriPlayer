@@ -7,5 +7,7 @@ Item {
     signal trackFetched(var trackMap)
     signal trackPlayed(int trackId)
 
+    signal playTrack(int trackId);
+
 
 }

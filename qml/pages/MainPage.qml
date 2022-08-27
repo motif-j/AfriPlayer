@@ -189,13 +189,13 @@ Page{
                                 selectIndex(index)
 
                                 if(Theme.isAndroid){
-                                    jmusicLogic.trackPlayed(tView.trackId)
+                                    jmusicLogic.playTrack(tView.trackId)
                                 }
                             }
 
                             onDoubleClicked: {
                                  selectIndex(index)
-                                 jmusicLogic.trackPlayed(tView.trackId)
+                                 jmusicLogic.playTrack(tView.trackId)
                             }
                         }
                     }
@@ -323,12 +323,15 @@ Page{
         }
     }
 
+
     function selectIndex(index){
-        mainPageDm.tracksModel.newListIndex(index)
+        recentList.currentIndex=index
+
     }
+
     Component.onCompleted: {
         mainPageDm.playlistModel.loadHomePlaylists();
-        mainPageDm.tracksModel.loadRecentlyPlayedTracks();
+        mainPageDm.loadRecent()
 
     }
 }

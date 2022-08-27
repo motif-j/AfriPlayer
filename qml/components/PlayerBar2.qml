@@ -12,8 +12,9 @@ Column{
     GridLayout{
         width: parent.width
 
-        columns: 2
+        columns: 3
         columnSpacing: dp(5)
+
 
         AppButton{
             text:jmusicModel.shuffle? "Shuffle On":"Shuffle Off"
@@ -58,7 +59,7 @@ Column{
             Layout.fillWidth: true
             from: 0
             Layout.maximumWidth: dp(180)
-              Layout.alignment: Qt.AlignVCenter
+            Layout.alignment: Qt.AlignVCenter
             Layout.margins: dp(2)
             to:200
             value: soundManager.maxVolume
@@ -71,7 +72,7 @@ Column{
 
             icon:IconType.volumeup
             Layout.maximumWidth: dp(20)
-              Layout.alignment: Qt.AlignVCenter
+            Layout.alignment: Qt.AlignVCenter
         }
 
     }
