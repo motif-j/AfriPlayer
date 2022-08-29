@@ -13,6 +13,7 @@ Item {
 
     property int maxVolume:jmediaPlayer.playerVolume
     property var  playingTrack: jmediaPlayer.playingTrackVar
+    property int repeatMode: jmusicModel.repeateMode
 
 
     //0=playing;1=stopped;2;paused
@@ -34,6 +35,7 @@ Item {
         onPositionChanged: {
 
 
+
             if(position>duration){
                 trackPosition=duration
             }else{
@@ -41,7 +43,22 @@ Item {
             }
 
             if(initiatePlayNext(duration,position)){
-                jmusicModel.playNext()
+                if(repeatMode===1){
+
+                    let t=jmusicModel.playingTrack
+                    if(t===undefined){
+                        return
+                    }
+
+                    let id=t["trackId"]
+                    jmusicLogic.playTrack(id)
+
+
+
+                }else{
+
+                    jmusicModel.playNext()
+                }
 
             }
 
@@ -68,7 +85,7 @@ Item {
 
             let id=t["trackId"]
 
-          jmusicLogic.playTrack(id)
+            jmusicLogic.playTrack(id)
         }else{
 
             if(isBusy){
@@ -113,7 +130,7 @@ Item {
 
         let perc=(position/duration) *100
 
-        return perc>95
+        return perc>98
 
     }
 

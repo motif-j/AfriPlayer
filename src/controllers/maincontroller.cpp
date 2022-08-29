@@ -3,6 +3,9 @@
 MainController::MainController(QObject *parent)
     : QObject{parent}
 {
+
+
+    setRepeateMode(settings.getRepeatStatus());
     setShuffle(settings.getShuffle());
     setIsQuering(settings.getIsQuering());
 
@@ -52,6 +55,7 @@ void MainController::addPlaylistToQueue(int playlistId)
 
 void MainController::addTrackToPlaylist(int trackId, int playlistId)
 {
+
     playlistController.addTrackToPlaylist(trackId,playlistId);
 
 
@@ -79,6 +83,31 @@ void MainController::queryAudioFiles()
             qDebug()<<"Done quering audio files "<<res;
         });
     }
+
+}
+
+void MainController::toggleRepeateMode()
+{
+    switch (repeateMode) {
+    case RepeatMode::Off:
+
+        setRepeateMode(RepeatMode::Single);
+        settings.setRepeatMode(1);
+
+        break;
+    case RepeatMode::Single:
+        setRepeateMode(RepeatMode::All);
+        settings.setRepeatMode(2);
+        break;
+    case RepeatMode::All:
+        setRepeateMode(RepeatMode::Off);
+        settings.setRepeatMode(0);
+        break;
+
+    }
+
+
+
 
 }
 
@@ -112,6 +141,23 @@ void MainController::playPrevious()
     playlistController.loadPlayingTrackToQueuePlaylist(previousTrack);
 
 }
+
+int MainController::getRepeateMode() const
+{
+    return repeateMode;
+}
+
+void MainController::setRepeateMode(int newRepeateMode)
+{
+    if (repeateMode == newRepeateMode)
+        return;
+    repeateMode = newRepeateMode;
+    emit repeateModeChanged();
+}
+
+
+
+
 
 bool MainController::getIsQuering() const
 {

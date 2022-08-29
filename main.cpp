@@ -15,6 +15,7 @@
 #include "src/controllers/maincontroller.h"
 #include <src/adapters/queueadapter.h>
 #include "src/adapters/searchadapter.h"
+#include "src/adapters/playlistadapter.h"
 
 #include "src/audio/jaudio.h"
 #include <QString>
@@ -93,6 +94,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<QueueAdapter>("com.afriktek.qplayer",1,0,"QueueAdapter");
     qmlRegisterType<PTracksAdapter>("com.afriktek.qplayer",1,0,"PlaylistTracksAdapter");
     qmlRegisterType<SearchAdapter>("com.afriktek.qplayer",1,0,"SearchAdapter");
+     qmlRegisterType<PlaylistAdapter>("com.afriktek.qplayer",1,0,"PlaylistAdapter");
 
 
 

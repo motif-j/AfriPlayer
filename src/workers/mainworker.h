@@ -62,6 +62,12 @@ public:
     //Search
    QFuture<QList<JTrack>> searchForTracksByQuery(QString query);
 
+
+   //playlist
+
+   QFuture<QList<JPlaylist>> getPlaylists(bool isHome);
+   QFuture<JPlaylist> addPlaylist(JPlaylist playlist);
+
 private:
     QThreadPool *threadPool;
     JMalkiaDbInterface &db=JMalkiaDbInterface::getInstace();

@@ -46,7 +46,7 @@ public:
 public:
     QList<JTrack> *getTracks(const int lastId,const int limit);
     JTrack *getTrack(int trackId);
-    QList<JPlaylist> *fetchPlaylistsFromRepository(int limit);
+    QList<JPlaylist> *fetchPlaylistsFromRepository(int limit,bool isHome=false);
 
     QList<JTrack> *randomizedPlaylist();
     QList<JTrack> *fetchPlaylistTracksFromRepo(int playlistId);
@@ -89,6 +89,7 @@ public:
     QList<JTrack> searchTrackByQuery(QString query);
 
 
+    void addNewPlaylist(JPlaylist playlist);
     //constructor
 
 private:

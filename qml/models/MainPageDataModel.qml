@@ -12,7 +12,9 @@ Item {
 
     property var tracksModel: dataEntry
 
-    JPlaylistModel{
+    PlaylistAdapter{
+
+
         id:jplaylistModel
     }
 
@@ -36,6 +38,9 @@ Item {
 
     function loadRecent(){
         dataEntry.loadTracks(-1,0)
+    }
+    function loadPlaylists(){
+        jplaylistModel.loadPlaylists(true)
     }
 
 }

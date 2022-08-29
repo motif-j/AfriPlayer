@@ -143,16 +143,23 @@ JTrack *JMalkiaDbInterface::getTrack(int trackId)
 
 }
 
-QList<JPlaylist> *JMalkiaDbInterface::fetchPlaylistsFromRepository(int limit)
+QList<JPlaylist> *JMalkiaDbInterface::fetchPlaylistsFromRepository(int limit,bool isHome)
 {
 
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
     QList<JPlaylist> *tempList=new QList<JPlaylist>();
 
-    auto prepare =sqlQuery->prepare("select * from playlists where pl_id NOT IN (2,3,4,7 ) limit ?");
+    QString query="select * from playlists where pl_id NOT IN (2,3,4,7 )";
+
+    if(!isHome){
+        query="select * from playlists where pl_id>7 ORDER BY pl_id DESC ";
+    }
+
+    auto prepare =sqlQuery->prepare(query);
     if(prepare){
 
-        sqlQuery->addBindValue(limit);
+
+
         auto executed=sqlQuery->exec();
 
         if(executed){
@@ -954,7 +961,7 @@ QList<JTrack> JMalkiaDbInterface::searchTrackByQuery(QString query)
 
 
 
-           searchResult.append(track);
+            searchResult.append(track);
 
 
             //reclaim the memory held by the variants
@@ -982,6 +989,23 @@ QList<JTrack> JMalkiaDbInterface::searchTrackByQuery(QString query)
     delete sqlquery;
 
     return searchResult;
+}
+
+void JMalkiaDbInterface::addNewPlaylist(JPlaylist playlist)
+{
+
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+    sqlQuery->prepare("INSERT INTO playlists (pl_title) VALUES (?) ");
+
+    sqlQuery->addBindValue(playlist.playlistTitle);
+
+    sqlQuery->exec();
+
+    printError("Add Playlist ",sqlQuery);
+
+    delete sqlQuery;
+
 }
 
 

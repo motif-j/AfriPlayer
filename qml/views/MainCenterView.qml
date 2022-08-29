@@ -127,9 +127,30 @@ Item {
                 icon: IconType.list
 
                 NavigationStack{
-
+                    id:navStack
                     FavoriteTracksPage{
                         anchors.fill: parent
+                        onNavigateUp:(pageTitle,playId)=> {
+
+                                         globalPlTitle=pageTitle
+                                         globalPlId=playId
+
+
+
+                                         navStack.push(playlistPage)
+
+
+                                     }
+                    }
+                    Component{
+                        id:playlistPage
+                        PlaylistPage{
+                            playlistId:globalPlId
+                            playlistTitle:globalPlTitle
+
+
+                        }
+
 
                     }
                 }

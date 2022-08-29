@@ -20,6 +20,7 @@ Item {
     property bool isQueryingFiles: mainController.isQuering
     property bool crossFade: false
     property bool isLoading: dataEntry.isLoading
+    property var repeateMode: mainController.repeateMode
     property string thumbnailUrl: {
         if(playingTrack===undefined){
 
@@ -60,6 +61,7 @@ Item {
                 //consume the event here
                 activeTrack=trackmap
                 setActiveTrackId(trackmap["trackId"])
+
             }
 
             onTrackPlayed:function(trackId){
@@ -102,6 +104,7 @@ Item {
         }
 
         function addTrackToPlaylist(trackId,plId){
+            mainController.addTrackToPlaylist(trackId,plId)
             // jmusicController.addTrackToPlaylist(trackId,plId);
         }
 
@@ -152,6 +155,10 @@ Item {
         function toggleShuffle(){
             mainController.toggleShuffle()
             // jmusicController.toggleShuffle()
+        }
+
+        function toggleRepeateMode(){
+            mainController.toggleRepeateMode();
         }
 
         function syncAudioFiles(){

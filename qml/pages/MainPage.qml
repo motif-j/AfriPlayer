@@ -88,7 +88,7 @@ Page{
 
                 model:mainPageDm.playlistModel
 
-                emptyText.text: "Leave this to us"
+                emptyText.text: "Please wait"
                 delegate:Views.ItemPlaylist2{
 
                     title: model.playlistName
@@ -330,7 +330,7 @@ Page{
     }
 
     Component.onCompleted: {
-        mainPageDm.playlistModel.loadHomePlaylists();
+        mainPageDm.loadPlaylists()
         mainPageDm.loadRecent()
 
     }

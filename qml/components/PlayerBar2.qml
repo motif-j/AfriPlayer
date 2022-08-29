@@ -28,10 +28,24 @@ Column{
 
         }
         AppButton{
-            text: "Repeat one"
+            text: {
+
+                switch(jmusicModel.repeateMode){
+
+                case 0:
+                    return "Repeate Off";
+                case 1:
+                    return "Repeat One";
+                case 2:
+                    return "Repeate All";
+                }
+            }
 
             radius: dp(5)
             borderColor: JColors.purple100
+            onClicked: {
+                jmusicModel.toggleRepeateMode()
+            }
 
         }
 

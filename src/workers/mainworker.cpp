@@ -37,6 +37,7 @@ QFuture<QList<JTrack> > MainWorker::getPlaylistTracks(int playlistId, int refres
             break;
         }
 
+
         }
         QThread::msleep(500);
 
@@ -97,12 +98,12 @@ QFuture<QList<JTrack> > MainWorker::getQueuedPlaylist()
 QFuture<QList<JTrack> > MainWorker::getTracks(int lastId)
 {
     return  QtConcurrent::run(threadPool,[this,lastId](){
-       // int lim=db.generateLimit(lastId);
-//        int limit=20;
+        // int lim=db.generateLimit(lastId);
+        //        int limit=20;
 
-//        if(lim<20){
-//            lim=limit;
-//        }
+        //        if(lim<20){
+        //            lim=limit;
+        //        }
 
 
         return *db.getTracks(lastId,20);
@@ -123,8 +124,10 @@ QFuture<int> MainWorker::toggleQueuedTrackAsPlayed(int trackId)
 
 QFuture<JTrack> MainWorker::addTrackToPlaylist(int trackId, int playlistId)
 {
+
     return QtConcurrent::run(threadPool,[this,playlistId,trackId](){
         JTrack *t= db.getTrack(trackId);
+
         db.addTrackToPlaylist(*t,playlistId);
 
 
@@ -182,4 +185,28 @@ QFuture<QList<JTrack> > MainWorker::searchForTracksByQuery(QString query)
 
         return searchResult;
     });
+}
+
+QFuture<QList<JPlaylist> > MainWorker::getPlaylists(bool isHome)
+{
+    return QtConcurrent::run(threadPool,[this,isHome](){
+
+        return *db.fetchPlaylistsFromRepository(10,isHome);
+    });
+
+
+}
+
+QFuture<JPlaylist> MainWorker::addPlaylist(JPlaylist playlist)
+{
+    return QtConcurrent::run(threadPool,[this,playlist](){
+
+         db.addNewPlaylist(playlist);
+
+         auto pls=db.fetchPlaylistsFromRepository(10);
+
+         JPlaylist first =pls->first();
+        return first;
+    });
+
 }

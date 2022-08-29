@@ -3,6 +3,7 @@
 
 #include <QSettings>
 #include <QObject>
+#include "src/enums/jenums.h"
 
 class JSettings : public QObject
 {
@@ -15,6 +16,7 @@ public:
         return instance;
     }
 
+    RepeatMode getRepeatStatus();
 
     int getVolume() const;
     void setVolume(int newVolume);
@@ -30,6 +32,9 @@ public:
 
     bool getIsQuering() const;
     void setIsQuering(bool newIsQuering);
+
+    int getRepeatMode() const;
+    void setRepeatMode(int newRepeatMode);
 
 private:
     explicit JSettings(QObject *parent = nullptr);
@@ -47,6 +52,7 @@ private:
     int playingTrackId;
     bool shuffle;
     bool isQuering=false;
+    int repeatMode=0;
 signals:
 
 };

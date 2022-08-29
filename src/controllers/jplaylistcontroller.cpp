@@ -137,6 +137,10 @@ JTrack JPlaylistController::getNextTrack()
 
     if( position>playlist->count()-1){
 
+        if(settings.getRepeatStatus()==RepeatMode::All){
+
+            return playlist->at(0);
+        }
 
         JTrack track;
         track.trackId=-1;
@@ -162,6 +166,7 @@ JTrack JPlaylistController::getPreviousTrack()
 
 
     if(position<0 ){
+
 
 
         JTrack track;

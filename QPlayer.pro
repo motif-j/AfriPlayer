@@ -70,6 +70,7 @@ DEPLOYMENTFOLDERS += assetsFolder
 SOURCES += main.cpp \
     src/adapters/mtracksadapter.cpp \
     src/adapters/musicfoldermodel.cpp \
+    src/adapters/playlistadapter.cpp \
     src/adapters/ptracksadapter.cpp \
     src/adapters/queueadapter.cpp \
     src/adapters/searchadapter.cpp \
@@ -165,6 +166,7 @@ DISTFILES += \
     qml/ui/MainTracksUi.qml \
     qml/ui/PlayingOverlay.qml \
     qml/ui/PlayingQueue.qml \
+    qml/ui/PlaylistMenuItem.qml \
     qml/ui/QueTrack.qml \
     qml/utilities/ColorHelper.qml \
     qml/views/MainLeftView.qml \
@@ -178,6 +180,7 @@ DISTFILES += \
 HEADERS += \
     src/adapters/mtracksadapter.h \
     src/adapters/musicfoldermodel.h \
+    src/adapters/playlistadapter.h \
     src/adapters/ptracksadapter.h \
     src/adapters/queueadapter.h \
     src/adapters/searchadapter.h \
@@ -187,6 +190,7 @@ HEADERS += \
    src/database/db_jmalkiadbinterface.h \
     src/adapters/dm_tracksdataentry.h \
     src/engine/audioengine.h \
+    src/enums/jenums.h \
     src/fileio/file_fileworker.h \
    src/fileio/file_jfileio.h \
     src/fileio/jfileworker.h \

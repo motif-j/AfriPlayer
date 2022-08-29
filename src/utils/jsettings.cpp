@@ -7,6 +7,18 @@ JSettings::JSettings(QObject *parent)
     settings=new QSettings("AfrikTek","AfriMuzik");
 }
 
+int JSettings::getRepeatMode() const
+{
+    int nRepeat=settings->value("RepeatMode",0).toInt();
+    return nRepeat;
+}
+
+void JSettings::setRepeatMode(int newRepeatMode)
+{
+    repeatMode = newRepeatMode;
+    settings->setValue("RepeatMode",repeatMode);
+}
+
 bool JSettings::getIsQuering() const
 {
     bool nQuering=settings->value("isQuering",false).toBool();
@@ -58,6 +70,30 @@ void JSettings::setCrossfade(bool newCrossfade)
     crossfade = newCrossfade;
 
     settings->setValue("crossfade",crossfade);
+}
+
+RepeatMode JSettings::getRepeatStatus()
+{
+    int val =getRepeatMode();
+    switch(val){
+    case 0:
+        return RepeatMode::Off;
+        break;
+
+    case 1:
+        return RepeatMode::Single;
+        break;
+    case 2:
+
+        return RepeatMode::All;
+        break;
+    default:
+        return RepeatMode::Off;
+    }
+
+
+
+
 }
 
 int JSettings::getVolume() const
