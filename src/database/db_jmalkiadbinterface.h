@@ -84,10 +84,12 @@ public:
     int albumId(QString albumName);
 
     QFuture<JTrack> getTrackFuture();
+
+    //Search
+    QList<JTrack> searchTrackByQuery(QString query);
+
+
     //constructor
-
-
-
 
 private:
     JMalkiaDbInterface(QObject *parent = nullptr){

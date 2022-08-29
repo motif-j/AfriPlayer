@@ -72,6 +72,7 @@ SOURCES += main.cpp \
     src/adapters/musicfoldermodel.cpp \
     src/adapters/ptracksadapter.cpp \
     src/adapters/queueadapter.cpp \
+    src/adapters/searchadapter.cpp \
     src/adapters/tracksadpater.cpp \
     src/audio/jaudio.cpp \
     src/controllers/maincontroller.cpp \
@@ -124,6 +125,7 @@ DISTFILES += \
     qml/components/JIconButton.qml \
     qml/components/PlayerBar2.qml \
     qml/components/PlayerBarController.qml \
+    qml/components/SearchPageRow.qml \
     qml/components/TracksEmptyLIstView.qml \
     qml/data/JQTrack.qml \
     qml/libraries/Constants.qml \
@@ -138,6 +140,7 @@ DISTFILES += \
     qml/models/PlayingQueModel.qml \
     qml/models/PlaylistPageDataModel.qml \
     qml/models/RightMusicInfoModel.qml \
+    qml/models/SearchPageModel.qml \
     qml/models/SettingsModel.qml \
     qml/pages/FavoriteTracksPage.qml \
     qml/pages/MainPage.qml \
@@ -177,6 +180,7 @@ HEADERS += \
     src/adapters/musicfoldermodel.h \
     src/adapters/ptracksadapter.h \
     src/adapters/queueadapter.h \
+    src/adapters/searchadapter.h \
     src/adapters/tracksadpater.h \
     src/audio/jaudio.h \
     src/controllers/maincontroller.h \

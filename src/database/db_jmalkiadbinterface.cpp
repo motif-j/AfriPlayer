@@ -149,7 +149,7 @@ QList<JPlaylist> *JMalkiaDbInterface::fetchPlaylistsFromRepository(int limit)
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
     QList<JPlaylist> *tempList=new QList<JPlaylist>();
 
-    auto prepare =sqlQuery->prepare("select * from playlists where pl_id NOT IN (1,2,3,4 ) limit ?");
+    auto prepare =sqlQuery->prepare("select * from playlists where pl_id NOT IN (2,3,4,7 ) limit ?");
     if(prepare){
 
         sqlQuery->addBindValue(limit);
@@ -911,6 +911,77 @@ QFuture<JTrack> JMalkiaDbInterface::getTrackFuture()
         return *track;
     });
 
+}
+
+QList<JTrack> JMalkiaDbInterface::searchTrackByQuery(QString query)
+{
+    QSqlQuery *sqlquery =new QSqlQuery(mDb);
+
+    auto prepare= sqlquery->prepare("SELECT track_id,track_name,artist_name,album_name,duration,file_url,colors FROM tracks t LEFT Join albums a on a.album_id=t.album_id LEFT JOIN artists art on art.artist_id=t.artist_id where track_name like ? ");
+
+    QString q="%";
+    sqlquery->addBindValue(q.append(query).append("%"));
+
+    QList<JTrack> searchResult;
+
+    if(prepare){
+
+        sqlquery->exec();
+
+
+        while(sqlquery->next()){
+            JTrack track;
+
+            QVariant *idVariant=new QVariant(sqlquery->value(0));
+            QVariant *trackNameVariant=new QVariant(sqlquery->value(1));
+            QVariant *artistNameVariant=new QVariant(sqlquery->value(2));
+            QVariant *albumNameVariant=new QVariant(sqlquery->value(3));
+            QVariant *durationVariant=new QVariant(sqlquery->value(4));
+
+
+            QVariant *fileUrlVariant=new QVariant(sqlquery->value(5));
+            QVariant *colorsVariant=new QVariant(sqlquery->value(6));
+
+
+            track.trackId=idVariant->toInt();
+            track.trackName=trackNameVariant->toString();
+            track.duration=durationVariant->toLongLong();
+            track.artistName=artistNameVariant->toString();
+            track.albumName=albumNameVariant->toString();
+            track.fileUrl=fileUrlVariant->toString();
+            track.isFavorite=isTrackFavorite(track.trackId);
+            track.colors=colorsVariant->toString();
+
+
+
+           searchResult.append(track);
+
+
+            //reclaim the memory held by the variants
+            idVariant=nullptr;
+            trackNameVariant=nullptr;
+            durationVariant=nullptr;
+            artistNameVariant=nullptr;
+            albumNameVariant=nullptr;
+            fileUrlVariant=nullptr;
+
+            delete idVariant;
+            delete trackNameVariant;
+            delete durationVariant;
+            delete artistNameVariant;
+            delete albumNameVariant;
+            delete fileUrlVariant;
+            delete colorsVariant;
+
+
+        }
+    }
+
+    printError("Search Track By Query",sqlquery);
+
+    delete sqlquery;
+
+    return searchResult;
 }
 
 

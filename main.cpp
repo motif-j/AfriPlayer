@@ -14,6 +14,7 @@
 
 #include "src/controllers/maincontroller.h"
 #include <src/adapters/queueadapter.h>
+#include "src/adapters/searchadapter.h"
 
 #include "src/audio/jaudio.h"
 #include <QString>
@@ -21,6 +22,7 @@
 #include <src/utils/thumbnailprovider.h>
 #include <src/utils/playergimageprovider.h>
 #include <src/utils/particleimageprovider.h>
+
 
 //#include <VLCQtQml/QmlPlayer.h>
 //#include <VLCQtCore/Common.h>
@@ -49,11 +51,11 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-   // QCoreApplication::setOrganizationName("AfrikTek");
-   // QCoreApplication::setOrganizationDomain("afriktek.com");
-   // QCoreApplication::setApplicationName("QPlayer");
+    // QCoreApplication::setOrganizationName("AfrikTek");
+    // QCoreApplication::setOrganizationDomain("afriktek.com");
+    // QCoreApplication::setApplicationName("QPlayer");
 
-   // VlcCommon::setPluginPath(app.applicationDirPath()+"plugins");
+    // VlcCommon::setPluginPath(app.applicationDirPath()+"plugins");
 
     qputenv("QML_DISABLE_DISK_CACHE","1");
 
@@ -87,13 +89,14 @@ int main(int argc, char *argv[])
     qmlRegisterType<JPlaylistDataEntry>("com.afriktek.qplayer",1,0,"JPlaylistModel");
     qmlRegisterType<MusicFolderModel>("com.afriktek.qplayer",1,0,"FolderDataEntry");
     qmlRegisterType<JAudio>("com.afriktek.qplayer",1,0,"JAudio");
-     qmlRegisterType<MainController>("com.afriktek.qplayer",1,0,"MainController");
-     qmlRegisterType<QueueAdapter>("com.afriktek.qplayer",1,0,"QueueAdapter");
-     qmlRegisterType<PTracksAdapter>("com.afriktek.qplayer",1,0,"PlaylistTracksAdapter");
+    qmlRegisterType<MainController>("com.afriktek.qplayer",1,0,"MainController");
+    qmlRegisterType<QueueAdapter>("com.afriktek.qplayer",1,0,"QueueAdapter");
+    qmlRegisterType<PTracksAdapter>("com.afriktek.qplayer",1,0,"PlaylistTracksAdapter");
+    qmlRegisterType<SearchAdapter>("com.afriktek.qplayer",1,0,"SearchAdapter");
 
 
 
-  //  qmlRegisterType<VlcQmlPlayer>("com.afriktek.qplayer",1,0,"JAudioPlayer");
+    //  qmlRegisterType<VlcQmlPlayer>("com.afriktek.qplayer",1,0,"JAudioPlayer");
     // qmlRegisterType<QmlPlayer>("com.afriktek.qplayer",1,0,"JAudio");
 
     qRegisterMetaType<JTrack>("JTrack");

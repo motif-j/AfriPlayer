@@ -59,6 +59,8 @@ public:
     QFuture<QStringList> deleteFolderFromLib(QString folder);
 
 
+    //Search
+   QFuture<QList<JTrack>> searchForTracksByQuery(QString query);
 
 private:
     QThreadPool *threadPool;

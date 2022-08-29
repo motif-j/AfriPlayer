@@ -172,3 +172,14 @@ QFuture<QStringList> MainWorker::deleteFolderFromLib(QString folder)
     });
 
 }
+
+QFuture<QList<JTrack> > MainWorker::searchForTracksByQuery(QString query)
+{
+
+    return QtConcurrent::run(threadPool,[this,query](){
+
+        QList<JTrack> searchResult=db.searchTrackByQuery(query);
+
+        return searchResult;
+    });
+}

@@ -81,7 +81,7 @@ Rectangle{
                                 fontSize: 14
                                 topPadding: dp(5)
                                 maximumLineCount: 1
-                                width: dp(200)
+                                width: dp(230)
                                 // wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                                 elide: Text.ElideRight
 
@@ -94,7 +94,7 @@ Rectangle{
                                 color: Theme.secondaryTextColor
                                 maximumLineCount: 1
                                 elide: Text.ElideRight
-                                width: dp(200)
+                                width: dp(230)
 
                             }
                         }

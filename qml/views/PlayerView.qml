@@ -26,7 +26,7 @@ Rectangle {
 
     ParticleSystem{
         id:particleSystem
-        running: soundManager.isPlaying
+        paused: !soundManager.isPlaying
     }
 
 
@@ -89,69 +89,78 @@ Rectangle {
     //        radius:25
     //    }
 
-    Column{
-        anchors.centerIn: parent
-        AppText{
-            text: {
-                let t= jmusicModel.playingTrack["trackName"]
-
-                if(isUndefined(t)){
-                    return ""
-                }
-
-                return t
-
-            }
-            fontSize: 20
-            font.bold: true
-            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-            padding: dp(10)
-            horizontalAlignment: Text.Center
-            color: colorHelper.getTextColor(color1,color2)
-
-        }
-        AppText{
-            text:{
-                let t= jmusicModel.playingTrack["artistName"]
-
-                if(isUndefined(t)){
-                    return ""
-                }
-
-                return t
-
-            }
-            fontSize: 14
-            horizontalAlignment: Text.Center
-            padding: dp(10)
-            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-             color: colorHelper.getTextColor(color1,color2)
-
-
-        }
-
-    }
 
     Rectangle{
         width: parent.width
+
         anchors.bottom:root.bottom
-        anchors.bottomMargin: dp(20)
+        anchors.bottomMargin: dp(10)
         color: "transparent"
-         height: dp(100)
+         height:col.height
+
 
 
         Rectangle{
+
             width: col.width+dp(10)
+
 
             color: Theme.backgroundColor
             radius:dp(5)
-            height: dp(100)
+            height:col.height
             anchors.centerIn: parent
+            clip:true
 
 
 
             ColumnLayout{
                 id:col
+                AppText{
+                    text: {
+                        let t= jmusicModel.playingTrack["trackName"]
+
+                        if(isUndefined(t)){
+                            return ""
+                        }
+
+                        return t
+
+                    }
+                    fontSize: 16
+                    font.bold: true
+                   // wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+
+                    horizontalAlignment: Text.Center
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.topMargin: dp(4)
+                    Layout.maximumWidth: dp(400)
+                    maximumLineCount: 1
+                   // color: colorHelper.getTextColor(color1,color2)
+                    elide: Text.ElideRight
+
+                }
+                AppText{
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.topMargin: dp(4)
+                     maximumLineCount: 1
+                    text:{
+                        let t= jmusicModel.playingTrack["artistName"]
+
+                        if(isUndefined(t)){
+                            return ""
+                        }
+
+                        return t
+
+                    }
+                    fontSize: 14
+                    horizontalAlignment: Text.Center
+                     elide: Text.ElideRight
+                    Layout.maximumWidth: dp(400)
+                    // color: colorHelper.getTextColor(color1,color2)
+
+
+                }
                 RowLayout{
                     id:controllerRow
                     Layout.alignment: Qt.AlignHCenter
@@ -212,6 +221,7 @@ Rectangle {
                     to:soundManager.trackTime
                     value: soundManager.trackPosition
                     Layout.alignment: Qt.AlignHCenter|Qt.AlignBottom
+                    Layout.bottomMargin: dp(10)
 
                     onMoved: {
                         soundManager.seek(slider.value);
