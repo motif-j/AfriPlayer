@@ -88,6 +88,7 @@ public slots:
     void onEngineLockedChanged(bool locked);
     void onPlaylistPlaybackStarted(JTrack track);
     void onTrackAddedToPlaylist(JTrack track);
+    void onTrackRemovedFromPlaylist(JTrack track);
 
 
 

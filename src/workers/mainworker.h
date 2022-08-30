@@ -50,6 +50,8 @@ public:
 
     QFuture<int> toggleQueuedTrackAsPlayed(int trackId);
     QFuture<JTrack> addTrackToPlaylist(int trackId,int playlistId);
+    QFuture<JTrack> removeTrackFromPlaylist(int trackId,int playlistId);
+
     QFuture<JTrack> addTrackToQueue(int trackId);
 
     //folders

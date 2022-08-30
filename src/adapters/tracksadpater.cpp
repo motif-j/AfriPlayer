@@ -42,6 +42,20 @@ void AbstractTracksAdapter::add(JTrack track, int index)
     }
 }
 
+void AbstractTracksAdapter::remove(JTrack track, int index)
+{
+    if(tracks.contains(track)){
+
+        emit beginRemoveRows(QModelIndex(),index,index);
+
+        tracks.removeAt(index);
+
+        emit endRemoveRows();
+
+        setCount(tracks.count());
+    }
+}
+
 void AbstractTracksAdapter::update(JTrack track, int index)
 {
     if(index<0 || index>tracks.count()-1){
@@ -61,16 +75,25 @@ void AbstractTracksAdapter::update(JTrack track, int index)
 
 int AbstractTracksAdapter::getIndexFromId(int trackId)
 {
-    int index=-1;
+    bool hasFound=false;
+    int index=0;
 
     foreach(JTrack t,tracks){
         if(t.trackId==trackId)
+        {
+            hasFound=true;
             break;
+        }
+
+
 
         index++;
     }
+    if(hasFound){
+        return index;
+    }
 
-    return index;
+    return -1;
 }
 
 
@@ -112,6 +135,7 @@ void AbstractTracksAdapter::onBusyChanged(bool loading)
 
 void AbstractTracksAdapter::onTrackAddedToPlaylist(JTrack track)
 {
+    qDebug()<<"On added to Playlist Adapter";
   int ind=getIndexFromId(track.trackId);
   if(ind==-1){
       return;
@@ -120,7 +144,26 @@ void AbstractTracksAdapter::onTrackAddedToPlaylist(JTrack track)
   if(tracks.isEmpty()){
       return;
   }
-  ind+=1;
+
+  auto t=tracks.value(ind);
+
+  track.isPlaying=t.isPlaying;
+  update(track,ind);
+
+
+}
+
+void AbstractTracksAdapter::onTrackRemovedFromPlaylist(JTrack track,bool isFavorite)
+{
+  int ind=getIndexFromId(track.trackId);
+  if(ind==-1){
+      return;
+  }
+
+  if(tracks.isEmpty()){
+      return;
+  }
+
   auto t=tracks.value(ind);
 
   track.isPlaying=t.isPlaying;

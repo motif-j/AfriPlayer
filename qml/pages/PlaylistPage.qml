@@ -100,6 +100,7 @@ Page {
             id:tracksListView
             width: parent.width
 
+
             // anchors.fill: parent
 
             model: dataModel.model
@@ -122,7 +123,7 @@ Page {
             spacing: dp(5)
             currentIndex:-1
             desktopScrollEnabled: true
-            highlightMoveDuration: 1500
+            highlightMoveDuration: 500
             delegate: Rectangle{
                 property int  currentIndex : index
 

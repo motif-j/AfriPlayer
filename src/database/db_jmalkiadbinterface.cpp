@@ -149,7 +149,7 @@ QList<JPlaylist> *JMalkiaDbInterface::fetchPlaylistsFromRepository(int limit,boo
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
     QList<JPlaylist> *tempList=new QList<JPlaylist>();
 
-    QString query="select * from playlists where pl_id NOT IN (2,3,4,7 )";
+    QString query="select * from playlists where pl_id NOT IN (2,3,4,7 ) AND pl_id<8";
 
     if(!isHome){
         query="select * from playlists where pl_id>7 ORDER BY pl_id DESC ";
@@ -403,6 +403,7 @@ int JMalkiaDbInterface::generateLimit(int maxTrackId)
 
 void JMalkiaDbInterface::addTrackToPlaylist(JTrack track,int playlistId)
 {
+    qDebug()<<"Adding track to playlist "<<playlistId;
     QString  query="INSERT INTO playlist_tracks ( 'pl_id', 'track_id') VALUES ( ?, ?) ";
 
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
@@ -413,21 +414,25 @@ void JMalkiaDbInterface::addTrackToPlaylist(JTrack track,int playlistId)
         sqlQuery->addBindValue(playlistId);
         sqlQuery->addBindValue(track.trackId);
 
-        if(sqlQuery->exec()){
+        sqlQuery->exec();
 
-            delete sqlQuery;
-            return;
-        }else{
-
-            removeTrackFromPlaylist(track.trackId,playlistId);
-        }
 
 
     }
+
+
+
     printError("Add track to playlist",sqlQuery);
 
     delete sqlQuery;
 }
+
+void JMalkiaDbInterface::deleteTrackFromPlaylist(JTrack track, int playlistId)
+{
+    removeTrackFromPlaylist(track.trackId,playlistId);
+}
+
+
 
 void JMalkiaDbInterface::clearPlaylist(int playlistId)
 {

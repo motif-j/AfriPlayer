@@ -54,6 +54,7 @@ public:
 
     int generateLimit(int maxTrackId);
     void addTrackToPlaylist(JTrack track,int playlistId);
+    void deleteTrackFromPlaylist(JTrack track,int playlistId);
     void clearPlaylist(int playlistId);
     void addTrackToRecentlyPlayed(int trackId);
 

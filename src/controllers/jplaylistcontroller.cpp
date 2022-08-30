@@ -227,6 +227,24 @@ void JPlaylistController::addTrackToPlaylist(int trackId, int playlistId)
 
 }
 
+void JPlaylistController::removeTrackFromPlaylist(int trackId, int playlistId)
+{
+    await(worker.removeTrackFromPlaylist(trackId,playlistId),this,[this,playlistId](JTrack res){
+
+
+        await(worker.getTrack(res.trackId),this,[this,playlistId](JTrack t){
+
+            bool isFavorite=false;
+            if(playlistId==1){
+                isFavorite=true;
+            }
+            emit notifyTrackRemovedFromPlaylist(t,isFavorite);
+
+        });
+
+    });
+}
+
 void JPlaylistController::playFromUrl(JTrack track)
 {
     engine.loadAudio(track.fileUrl);

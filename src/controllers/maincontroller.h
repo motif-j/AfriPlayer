@@ -44,6 +44,7 @@ public slots:
     void addTrackToPlayingQue(int trackId);
     void addPlaylistToQueue(int playlistId);
     void addTrackToPlaylist(int trackId,int playlistId);
+    void removeTrackFromPlaylist(int trackId,int playlistId);
 
     //utils
 public slots:

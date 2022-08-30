@@ -70,7 +70,7 @@ Page {
         id: searchResultsList
         anchors.fill: parent
         anchors.topMargin: dp(40)
-
+   highlightMoveDuration: 500
         model: pageModel.model
 
         delegate:  MainTracksUi{

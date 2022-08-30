@@ -24,6 +24,8 @@ public:
     AbstractTracksAdapter(QObject *parent = nullptr){
         Q_UNUSED(parent)
 
+        connect(&playlistController,&JPlaylistController::notifyTrackRemovedFromPlaylist,this,&AbstractTracksAdapter::onTrackRemovedFromPlaylist);
+
         connect(&playlistController,&JPlaylistController::notifyAmBusy,this,&AbstractTracksAdapter::onBusyChanged);
 
         connect(&playlistController,&JPlaylistController::notifyTrackAddedToPlaylist,this,&AbstractTracksAdapter::onTrackAddedToPlaylist);
@@ -44,6 +46,7 @@ protected:
     //functions
 protected:
     void add(JTrack track,int index);
+    void remove(JTrack track,int index);
     void update(JTrack track,int index);
     int getIndexFromId(int trackId);
 
@@ -72,9 +75,10 @@ public slots:
     void clearTracks();
 
     //listeners
-private slots:
+protected slots:
     void onBusyChanged(bool loading);
     void onTrackAddedToPlaylist(JTrack track);
+    virtual   void onTrackRemovedFromPlaylist(JTrack track,bool isFavorite=false);
 signals:
     void isLoadingChanged();
     void countChanged();

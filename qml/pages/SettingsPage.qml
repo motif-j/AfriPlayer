@@ -12,11 +12,12 @@ Page {
     id:rootPage
     anchors.fill: parent
 
+
     ListModel{
         id:pageModel
 
-        ListElement{name:"Playback "; source:"qrc:///assets/cover.png";page:"../settings/PlaybackView.qml"}
-        ListElement{name:"User Interface"; source:"qrc:///assets/cover.png"; page:"../settings/UserInterface.qml"}
+      //  ListElement{name:"Playback "; source:"qrc:///assets/cover.png";page:"../settings/PlaybackView.qml"}
+        //ListElement{name:"User Interface"; source:"qrc:///assets/cover.png"; page:"../settings/UserInterface.qml"}
         ListElement{name:"Music Library"; source:"qrc:///assets/cover.png";page:"../settings/LibraryView.qml"}
     }
 
@@ -63,13 +64,17 @@ Page {
             sourceComponent: playbackComp
         }
 
+        Component.onCompleted: {
+            rightView.source="../settings/LibraryView.qml"
+        }
+
     }
 
     Component{
         id:playbackComp
-        PlaybackView{
+       LibraryView{
 
-        }
+       }
     }
 
 //    Component{
@@ -81,7 +86,7 @@ Page {
 //    }
 //    Component{
 //        id:libComp
-//        LibraryView{
+//       LibraryView{
 
 //        }
 //    }

@@ -10,8 +10,19 @@ class PTracksAdapter : public AbstractTracksAdapter
 public:
     explicit PTracksAdapter(QObject *parent = nullptr);
 
+private:
+    int playlistId;
+
 public slots:
-      void loadTracks(int playlistId,int refresh=0);
+    void loadTracks(int playlistId,int refresh=0);
+
+
+    //listeners
+
+
+    // AbstractTracksAdapter interface
+private slots:
+    virtual void onTrackRemovedFromPlaylist(JTrack track,bool isFavorite) override;
 };
 
 #endif // PTRACKSADAPTER_H

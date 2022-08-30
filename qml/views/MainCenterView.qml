@@ -25,8 +25,7 @@ Item {
 
 
         Navigation{
-
-
+            id:mainNavigation
 
             navigationMode:{
                 if(Theme.isAndroid ){
@@ -103,6 +102,10 @@ Item {
 
 
                     TracksPage{
+                        onPushed: {
+                            globalPlId=0
+                        }
+
                         anchors.fill: parent
 
                     }
@@ -129,6 +132,8 @@ Item {
                 NavigationStack{
                     id:navStack
                     FavoriteTracksPage{
+
+
                         anchors.fill: parent
                         onNavigateUp:(pageTitle,playId)=> {
 
@@ -145,6 +150,11 @@ Item {
                     Component{
                         id:playlistPage
                         PlaylistPage{
+                            anchors.fill: parent
+                            anchors.topMargin: dp(Theme.navigationBar.height)
+                            onPopped: {
+                                globalPlId=0
+                            }
                             playlistId:globalPlId
                             playlistTitle:globalPlTitle
 

@@ -130,6 +130,19 @@ QFuture<JTrack> MainWorker::addTrackToPlaylist(int trackId, int playlistId)
 
         db.addTrackToPlaylist(*t,playlistId);
 
+        t=db.getTrack(trackId);
+
+        return *t;
+    });
+}
+
+QFuture<JTrack> MainWorker::removeTrackFromPlaylist(int trackId, int playlistId)
+{
+    return QtConcurrent::run(threadPool,[this,playlistId,trackId](){
+        JTrack *t= db.getTrack(trackId);
+
+        db.deleteTrackFromPlaylist(*t,playlistId);
+        t=db.getTrack(trackId);
 
         return *t;
     });
@@ -201,11 +214,11 @@ QFuture<JPlaylist> MainWorker::addPlaylist(JPlaylist playlist)
 {
     return QtConcurrent::run(threadPool,[this,playlist](){
 
-         db.addNewPlaylist(playlist);
+        db.addNewPlaylist(playlist);
 
-         auto pls=db.fetchPlaylistsFromRepository(10);
+        auto pls=db.fetchPlaylistsFromRepository(10);
 
-         JPlaylist first =pls->first();
+        JPlaylist first =pls->first();
         return first;
     });
 

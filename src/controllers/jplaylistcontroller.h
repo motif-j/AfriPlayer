@@ -48,6 +48,7 @@ public:
     JTrack getPreviousTrack();
     void addPlaylistToQueue(int playlistId,bool shuffle);
     void addTrackToPlaylist(int trackId,int playlistId);
+    void removeTrackFromPlaylist(int trackId, int playlistId);
 
     //playback functions
 private:
@@ -80,6 +81,7 @@ signals:
     void trackPlaybackStarted(JTrack track);
     void notifyAmBusy(bool);
     void notifyTrackAddedToPlaylist(JTrack track);
+    void notifyTrackRemovedFromPlaylist(JTrack track,bool isFavorite=false);
 
 };
 

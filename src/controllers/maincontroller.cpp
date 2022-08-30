@@ -61,6 +61,12 @@ void MainController::addTrackToPlaylist(int trackId, int playlistId)
 
 }
 
+void MainController::removeTrackFromPlaylist(int trackId, int playlistId)
+{
+
+    playlistController.removeTrackFromPlaylist( trackId,  playlistId);
+}
+
 
 
 void MainController::toggleShuffle()

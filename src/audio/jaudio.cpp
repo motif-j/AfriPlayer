@@ -20,6 +20,7 @@ JAudio::JAudio(QObject *parent)
     connect(&playerEngine,&AudioEngine::positionChanged,this,&JAudio::onPositionChanged);
     connect(&playlistController,&JPlaylistController::trackPlaybackStarted,this,&JAudio::onPlaylistPlaybackStarted);
     connect(&playlistController,&JPlaylistController::notifyTrackAddedToPlaylist,this,&JAudio::onTrackAddedToPlaylist);
+    connect(&playlistController,&JPlaylistController::notifyTrackRemovedFromPlaylist,this,&JAudio::onTrackRemovedFromPlaylist);
 
 
 
@@ -265,20 +266,54 @@ void JAudio::onEngineLockedChanged(bool locked)
 
 void JAudio::onPlaylistPlaybackStarted(JTrack track)
 {
-    qDebug()<<"COLORS IS "<<track.colors;
+    setCanPlay(false);
+    await(worker.getTrack(track.trackId),this,[this](JTrack res){
 
-    reloadTrack(track);
+        reloadTrack(res);
+        setCanPlay(true);
+    });
+
+
 
 }
 
 void JAudio::onTrackAddedToPlaylist(JTrack track)
 {
-    if(track.trackId==playingId){
-          reloadTrack(track);
+    // qDebug()<<"ON TRACK Added "<<track.isFavorite;
 
 
+
+    if(playingId==0){
+        if(ptrack.isFavorite==track.isFavorite){
+            return;
+        }
+        reloadTrack(track);
+    }else{
+        if(track.trackId==playingId){
+            reloadTrack(track);
+
+
+        }
     }
 
+
+}
+
+void JAudio::onTrackRemovedFromPlaylist(JTrack track)
+{
+    if(playingId==0){
+
+        if(ptrack.isFavorite==track.isFavorite){
+            return;
+        }
+        reloadTrack(track);
+    }else{
+        if(track.trackId==playingId){
+            reloadTrack(track);
+
+
+        }
+    }
 }
 
 const QVariant &JAudio::getPlayingTrackVar() const
@@ -329,13 +364,13 @@ void JAudio::reloadTrack(JTrack t)
     //  setIsPlaying(true);
 
     setDuration(t.duration);
-   // setPlayingId(t.trackId);
-    //playingId=t->trackId;
-        if(duration>0){
-            auto l=getFormattedTime(duration);
+    // setPlayingId(t.trackId);
+    // playingId=t.trackId;
+    if(duration>0){
+        auto l=getFormattedTime(duration);
 
-            setTrackLength(*l);
-        }
+        setTrackLength(*l);
+    }
 
 
     QTime *time =new QTime(0,0,0,0);

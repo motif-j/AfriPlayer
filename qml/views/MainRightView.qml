@@ -188,8 +188,23 @@ Rectangle{
                     }
                      Layout.alignment: Qt.AlignHCenter
                      onClicked: {
+                         let isFav=false
 
-                         jmusicModel.addPlayingTrackToFavorite()
+                         let pTrack=jmusicModel.playingTrack
+                         if(pTrack===undefined){
+                           isFav=false
+                         }
+
+                         isFav=pTrack["isFavorite"]
+
+                        console.debug("IS FAV "+isFav)
+                         if(isFav){
+                             jmusicModel.removePlayingTrackFromFavorite()
+                         }else{
+                             jmusicModel.addPlayingTrackToFavorite()
+                         }
+
+
 
                      }
 

@@ -21,6 +21,23 @@ Rectangle{
     property bool isFavorite: false
     property string  themeColor: ""
 
+    property int  cNavInd:mainNavigation.currentIndex
+
+    property bool isCustomPlaylist:{
+        if(cNavInd===3){
+            return true
+        }else{
+
+            return false
+
+        }
+
+
+
+
+
+    }
+
     property color thumbnailColor: jappmodel.getColors(themeColor)[0]
     property color thumbnailColor2: jappmodel.getColors(themeColor)[1]
     //  property color thumbnailColor3: Qt.rgba(Math.random(155),Math.random(200),Math.random(55),1)
@@ -149,6 +166,7 @@ Rectangle{
 
 
     RippleMouseArea{
+
         anchors.fill: parent
         acceptedButtons: Qt.RightButton | Qt.LeftButton
         onClicked: {
@@ -175,7 +193,7 @@ Rectangle{
         }
 
         Menu{
-            modal: false
+            modal: true
             id:menu
             onClosed: {
 
@@ -199,16 +217,45 @@ Rectangle{
             MenuSeparator {
                 contentItem: Rectangle {
                     implicitWidth: menu.width
-                    implicitHeight: 1
+                    implicitHeight: dp(1)
                     color: "#21be2b"
                 }
             }
+
+            Action{
+                text:{
+                    if(!isCustomPlaylist){
+                        return ""
+                    }
+
+                    return  "Remove From Playlist"
+                }
+                enabled: isCustomPlaylist
+                onTriggered: {
+                    jmusicModel.removeTrackFromPlaylist(trackId,globalPlId)
+                    menu.close()
+                }
+
+            }
+
+
             Menu{
                 id:plMenu
-                title: "Add To playlist"
+                title: {
+                    if(isCustomPlaylist){
+                        return ""
+                    }
+
+                    return  "Add To playlist"
+                }
+                enabled: !isCustomPlaylist
                 onOpened: {
 
+
                     plMenuAdapter.loadPlaylists(false)
+
+
+
                 }
 
                 contentItem:
@@ -218,6 +265,7 @@ Rectangle{
                     color: Theme.backgroundColor
                     clip: true
                     radius: dp(5)
+
 
 
                     AppListView{

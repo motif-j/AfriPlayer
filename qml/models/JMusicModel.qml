@@ -107,6 +107,9 @@ Item {
             mainController.addTrackToPlaylist(trackId,plId)
             // jmusicController.addTrackToPlaylist(trackId,plId);
         }
+        function removeTrackFromPlaylist(trackId,plId){
+            mainController.removeTrackFromPlaylist(trackId,plId)
+        }
 
         function addTrackToQueue(trackId){
 
@@ -134,6 +137,17 @@ Item {
         }
 
 
+
+        function removePlayingTrackFromFavorite(){
+            if(playingTrack===undefined){
+                return
+            }
+            let trackId=playingTrack["trackId"]
+
+            mainController.removeTrackFromPlaylist(trackId,1)
+
+        }
+
         function addPlayingTrackToFavorite(){
 
             if(playingTrack===undefined){
@@ -142,8 +156,6 @@ Item {
             let trackId=playingTrack["trackId"]
 
             mainController.addTrackToPlaylist(trackId,1)
-
-            //mainController.a
         }
 
 
