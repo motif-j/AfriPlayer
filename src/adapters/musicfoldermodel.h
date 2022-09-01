@@ -6,7 +6,7 @@
 #include <QSettings>
 #include <QString>
 #include <QStringList>
-#include "src/fileio/file_jfileio.h"
+#include  <src/fileio/jfileworker.h>
 #include <src/workers/mainworker.h>
 
 class MusicFolderModel : public QAbstractListModel
@@ -60,7 +60,7 @@ signals:
 
 private:
 
-    JFileIO &fileIo=JFileIO::getInstance();
+
     MainWorker &worker=MainWorker::getInstance();
 
 

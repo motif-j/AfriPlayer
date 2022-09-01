@@ -80,7 +80,6 @@ SOURCES += main.cpp \
     src/database/db_jmalkiadbinterface.cpp \
     src/engine/audioengine.cpp \
     src/engine/audioenginedroid.cpp \
-    src/fileio/file_jfileio.cpp \
     src/controllers/jplaylistcontroller.cpp \
     src/fileio/jfileworker.cpp \
     src/graphics/colorgenerator.cpp \
@@ -194,8 +193,6 @@ HEADERS += \
    src/database/db_jmalkiadbinterface.h \
     src/engine/audioengine.h \
     src/enums/jenums.h \
-    src/fileio/file_fileworker.h \
-   src/fileio/file_jfileio.h \
     src/fileio/jfileworker.h \
     src/graphics/colorgenerator.h \
     src/models/jmodels.h \
