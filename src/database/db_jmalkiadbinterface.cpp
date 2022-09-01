@@ -155,7 +155,7 @@ JTrack JMalkiaDbInterface::updateTrackDuration(JTrack track)
 
     sqlQuery->exec();
 
-     printError("Update Track duration ",sqlQuery);
+    printError("Update Track duration ",sqlQuery);
     delete sqlQuery;
 
     return *getTrack(track.trackId);
@@ -1326,7 +1326,18 @@ void JMalkiaDbInterface::removeFolder(QString path)
 
     sqlQuery->addBindValue(path);
 
-    sqlQuery->exec();
+    if(sqlQuery->exec()){
+
+        sqlQuery->finish();
+        sqlQuery->prepare("DELETE FROM tracks WHERE file_url LIKE ? ");
+
+        QString folderUrl="%";
+
+        path.replace("file:///","");
+        sqlQuery->addBindValue(folderUrl.append(path).append("%"));
+        sqlQuery->exec();
+    }
+
 
     printError("Remove Folder ",sqlQuery);
 

@@ -21,7 +21,7 @@ private:
     explicit ColorGenerator(QObject *parent = nullptr);
 
 private:
-    QRandomGenerator *randomGen=QRandomGenerator::system();
+    QRandomGenerator randomGen=QRandomGenerator::securelySeeded();
 
 
 
