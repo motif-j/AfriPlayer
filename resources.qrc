@@ -67,5 +67,6 @@
         <file>assets/play.png</file>
         <file>assets/playlist.png</file>
         <file>assets/qt.png</file>
+        <file>qml/pages/PlaylistFolderPage.qml</file>
     </qresource>
 </RCC>

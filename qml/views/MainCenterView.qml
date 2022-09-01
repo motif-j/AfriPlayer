@@ -168,6 +168,47 @@ Item {
             }
 
             NavigationItem{
+                title:"Folders"
+                icon: IconType.folder
+
+                NavigationStack{
+                    id:foldernavStack
+                    PlaylistFolderPage{
+
+
+                        anchors.fill: parent
+                        onNavigateUp:(pageTitle,playId)=> {
+
+                                         globalPlTitle=pageTitle
+                                         globalPlId=playId
+
+
+
+                                         foldernavStack.push(playlistPage)
+
+
+                                     }
+                    }
+                    Component{
+                        id:playlistPage
+                        PlaylistPage{
+                            anchors.fill: parent
+                            anchors.topMargin: dp(Theme.navigationBar.height)
+                            onPopped: {
+                                globalPlId=0
+                            }
+                            playlistId:globalPlId
+                            playlistTitle:globalPlTitle
+
+
+                        }
+
+
+                    }
+                }
+
+            }
+            NavigationItem{
                 title:"Settings"
                 icon: IconType.gear
 

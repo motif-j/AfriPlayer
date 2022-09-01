@@ -68,7 +68,7 @@ public:
 
    //playlist
 
-   QFuture<QList<JPlaylist>> getPlaylists(bool isHome);
+   QFuture<QList<JPlaylist>> getPlaylists(bool isHome,bool folders=false);
    QFuture<JPlaylist> addPlaylist(JPlaylist playlist);
 
 private:

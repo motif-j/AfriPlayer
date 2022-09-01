@@ -45,7 +45,7 @@ vlcplugins.source=vlc/bin/plugins
 DEPLOYMENTFOLDERS += vlcplugins
 }
 
-qmlFolder.source = qml
+#qmlFolder.source = qml
 #DEPLOYMENTFOLDERS += qmlFolder # comment for publishing
 
 
@@ -78,13 +78,10 @@ SOURCES += main.cpp \
     src/audio/jaudio.cpp \
     src/controllers/maincontroller.cpp \
     src/database/db_jmalkiadbinterface.cpp \
-    src/adapters/dm_tracksdataentry.cpp \
     src/engine/audioengine.cpp \
     src/engine/audioenginedroid.cpp \
     src/fileio/file_jfileio.cpp \
-    src/controllers/jmusiccontroller.cpp \
     src/controllers/jplaylistcontroller.cpp \
-    src/adapters/jplaylistdataentry.cpp \
     src/fileio/jfileworker.cpp \
     src/graphics/colorgenerator.cpp \
     src/utils/jsettings.cpp \
@@ -124,12 +121,15 @@ DISTFILES += \
     android/src/com/afriktek/qplayer/media/MediaService.java \
     android/src/com/afriktek/qplayer/media/NotificationStyle.java \
     android/src/com/afriktek/qplayer/models/MusicTrack.java \
+    qml/Main.qml \
     qml/audio/SoundManager.qml \
+    qml/components/ActuallyPlayingOverlay.qml \
     qml/components/JIconButton.qml \
     qml/components/PlayerBar2.qml \
     qml/components/PlayerBarController.qml \
     qml/components/SearchPageRow.qml \
     qml/components/TracksEmptyLIstView.qml \
+    qml/config.json \
     qml/data/JQTrack.qml \
     qml/libraries/Constants.qml \
     qml/libraries/JColors.qml \
@@ -145,8 +145,10 @@ DISTFILES += \
     qml/models/RightMusicInfoModel.qml \
     qml/models/SearchPageModel.qml \
   #  qml/models/SettingsModel.qml \
+    qml/models/SettingsModel.qml \
     qml/pages/FavoriteTracksPage.qml \
     qml/pages/MainPage.qml \
+    qml/pages/PlaylistFolderPage.qml \
     qml/pages/PlaylistPage.qml \
     qml/pages/SearchPage.qml \
     qml/pages/SettingsPage.qml \
@@ -190,7 +192,6 @@ HEADERS += \
     src/audio/jaudio.h \
     src/controllers/maincontroller.h \
    src/database/db_jmalkiadbinterface.h \
-    src/adapters/dm_tracksdataentry.h \
     src/engine/audioengine.h \
     src/enums/jenums.h \
     src/fileio/file_fileworker.h \
@@ -198,11 +199,7 @@ HEADERS += \
     src/fileio/jfileworker.h \
     src/graphics/colorgenerator.h \
     src/models/jmodels.h \
-    src/controllers/jmusiccontroller.h \
-    src/controllers/jmusiccontrollerinterface.h \
-    src/controllers/jmusiccontrollerworker.h \
     src/controllers/jplaylistcontroller.h \
-    src/adapters/jplaylistdataentry.h \
     src/models/jrole.h \
     src/utils/jsettings.h \
     src/utils/metadatamanager.h \

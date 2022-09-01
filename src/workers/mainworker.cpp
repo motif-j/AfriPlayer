@@ -214,11 +214,11 @@ QFuture<QList<JTrack> > MainWorker::searchForTracksByQuery(QString query)
     });
 }
 
-QFuture<QList<JPlaylist> > MainWorker::getPlaylists(bool isHome)
+QFuture<QList<JPlaylist> > MainWorker::getPlaylists(bool isHome,bool folders)
 {
-    return QtConcurrent::run(threadPool,[this,isHome](){
+    return QtConcurrent::run(threadPool,[this,isHome,folders](){
 
-        return *db.fetchPlaylistsFromRepository(10,isHome);
+        return *db.fetchPlaylistsFromRepository(10,isHome,folders);
     });
 
 

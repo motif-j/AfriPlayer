@@ -51,10 +51,10 @@ QHash<int, QByteArray> PlaylistAdapter::roleNames() const
     return mRoles.roles();
 }
 
-void PlaylistAdapter::loadPlaylists(bool isHome)
+void PlaylistAdapter::loadPlaylists(bool isHome,bool folders)
 {
     setIsLoading(true);
-    await(worker.getPlaylists(isHome),this,[this](QList<JPlaylist> result){
+    await(worker.getPlaylists(isHome,folders),this,[this](QList<JPlaylist> result){
 
         int index=0;
         foreach(JPlaylist p,result){

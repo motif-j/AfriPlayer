@@ -59,7 +59,14 @@ App {
     // }
 
 
+    AppModel{
+        id:jappmodel
+        dispatcher: appLogic
 
+        onMMenuClosed:{
+            console.debug("closes")
+        }
+    }
     ColorHelper{
         id:colorHelper
     }
@@ -72,22 +79,16 @@ App {
 
     }
 
+    SoundManager{
+        id:soundManager
+    }
+
     JMusicModel{
         id:jmusicModel
         dispatcher:jmusicLogic
     }
 
-    AppModel{
-        id:jappmodel
-        dispatcher: appLogic
 
-        onMMenuClosed:{
-            console.debug("closes")
-        }
-    }
-    SoundManager{
-        id:soundManager
-    }
 
 
     PlaylistAdapter{

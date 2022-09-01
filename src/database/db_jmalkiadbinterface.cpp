@@ -217,7 +217,7 @@ QList<JPlaylist> *JMalkiaDbInterface::fetchPlaylistsFromRepository(int limit,boo
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
     QList<JPlaylist> *tempList=new QList<JPlaylist>();
 
-    QString query="select * from playlists where pl_id NOT IN (2,3,4,7 ) AND pl_id<8 OR isFolder=1 limit 10";
+    QString query="select * from playlists where pl_id NOT IN (2,3,4,7 ) AND pl_id<8 ";
 
     if(!isHome){
         query="select * from playlists where pl_id>7 AND isFolder=?  ORDER BY pl_id DESC ";

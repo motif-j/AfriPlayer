@@ -49,12 +49,14 @@ Rectangle{
                 Layout.preferredHeight:  dp(150)
                 Layout.maximumHeight: dp(150)
                 radius: dp(10)
+                clip: true
                 color: Theme.secondaryBackgroundColor
-                RoundedImage{
+                Image {
+
 
                     fillMode: Image.Stretch
                     source:jmusicModel.thumbnailUrl
-                    radius: dp(10)
+                    //radius: dp(10)
                     anchors.fill: parent
 
                 }

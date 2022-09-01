@@ -31,7 +31,7 @@ public:
     void setCount(int newCount);
 
 public slots:
-    void loadPlaylists(bool isHome=false);
+    void loadPlaylists(bool isHome=false,bool folders=false);
     void addPlaylist(QString title);
 
 signals:

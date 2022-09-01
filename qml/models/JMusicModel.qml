@@ -20,15 +20,15 @@ Item {
     property bool isQueryingFiles: mainController.isQuering
     property bool crossFade: false
     property bool isLoading: dataEntry.isLoading
-    property var repeateMode: mainController.repeateMode
+    property int repeateMode: mainController.repeateMode
     property string thumbnailUrl: {
         if(playingTrack===undefined){
 
-            return "image://thumbnail/00"
+            return "image://gthumbnail/00"
         }else{
             let tId=playingTrack["colors"]
 
-            return "image://thumbnail/"+tId
+            return "image://gthumbnail/"+tId
 
         }
     }

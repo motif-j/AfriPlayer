@@ -5,8 +5,8 @@
 #include <QDir>
 
 
-#include "src/adapters/jplaylistdataentry.h"
-#include "src/adapters/dm_tracksdataentry.h"
+
+
 #include "src/adapters/tracksadpater.h"
 #include "src/adapters/ptracksadapter.h"
 #include "src/adapters/musicfoldermodel.h"
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<MTracksAdapter>("com.afriktek.qplayer",1,0,"TracksAdapter");
 
-    qmlRegisterType<JPlaylistDataEntry>("com.afriktek.qplayer",1,0,"JPlaylistModel");
+    //qmlRegisterType<JPlaylistDataEntry>("com.afriktek.qplayer",1,0,"JPlaylistModel");
     qmlRegisterType<MusicFolderModel>("com.afriktek.qplayer",1,0,"FolderDataEntry");
     qmlRegisterType<JAudio>("com.afriktek.qplayer",1,0,"JAudio");
     qmlRegisterType<MainController>("com.afriktek.qplayer",1,0,"MainController");
