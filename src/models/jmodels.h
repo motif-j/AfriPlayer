@@ -30,6 +30,7 @@ struct JTrack{
     bool isPlaying=false;
 
 
+
     QString trackName="";
     QString fileUrl="";
     QString albumName="";
@@ -50,6 +51,7 @@ struct JPlaylist{
     int playlistId;
     QString playlistTitle;
     QString colors;
+     bool isFolder=false;
 
     bool operator ==(JPlaylist other){
         return other.playlistId==this->playlistId;

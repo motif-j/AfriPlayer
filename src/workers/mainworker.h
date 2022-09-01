@@ -53,6 +53,7 @@ public:
     QFuture<JTrack> removeTrackFromPlaylist(int trackId,int playlistId);
 
     QFuture<JTrack> addTrackToQueue(int trackId);
+    QFuture<JTrack> updateTrackDuration(JTrack track);
 
     //folders
 public:

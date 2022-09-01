@@ -14,6 +14,7 @@ Rectangle{
     property int  trackId: 0
     property bool isFavorite: false
     property string  themeColor: ""
+    property bool isCustomPlaylist: false
 
     property color thumbnailColor: jappmodel.getColors(themeColor)[0]
     property color thumbnailColor2: jappmodel.getColors(themeColor)[1]
@@ -26,7 +27,7 @@ Rectangle{
         height: dp(70)
 
 
-        Rectangle{
+        RoundedImage{
             property int thumbnailSize:dp(50)
             Layout.fillWidth: true
             Layout.preferredWidth: thumbnailSize
@@ -36,11 +37,7 @@ Rectangle{
             radius: dp(5)
             Layout.alignment: Qt.AlignHCenter
             Layout.leftMargin: dp(5)
-
-            gradient: Gradient{
-                GradientStop{position: 0.0;color:thumbnailColor}
-                GradientStop{position: 1.0;color:thumbnailColor2}
-            }
+            source: "image://gthumbnail/"+ themeColor
 
         }
 
@@ -82,14 +79,7 @@ Rectangle{
 
     }
 
-    RippleMouseArea{
-        width:root.width
-        height: root.height
-        acceptedButtons: Qt.RightButton | Qt.LeftButton
-        onClicked: {
 
-        }
 
-    }
 }
 

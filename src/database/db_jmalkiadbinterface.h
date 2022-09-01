@@ -16,6 +16,7 @@
 #include <QThreadPool>
 #include <QMediaMetaData>
 #include <src/utils/jsettings.h>
+#include <src/graphics/colorgenerator.h>
 
 
 //  Q_DECLARE_METATYPE(JTrack);
@@ -46,7 +47,11 @@ public:
 public:
     QList<JTrack> *getTracks(const int lastId,const int limit);
     JTrack *getTrack(int trackId);
-    QList<JPlaylist> *fetchPlaylistsFromRepository(int limit,bool isHome=false);
+    JTrack updateTrackDuration(JTrack track);
+    JTrack getLastTrack();
+
+    QList<JPlaylist> *fetchPlaylistsFromRepository(int limit,bool isHome=false,bool folders=false);
+    JPlaylist getLastPlaylist();
 
     QList<JTrack> *randomizedPlaylist();
     QList<JTrack> *fetchPlaylistTracksFromRepo(int playlistId);
@@ -54,6 +59,7 @@ public:
 
     int generateLimit(int maxTrackId);
     void addTrackToPlaylist(JTrack track,int playlistId);
+    void addTrackToFolderPlaylist(JTrack track,int playlistId); //delete
     void deleteTrackFromPlaylist(JTrack track,int playlistId);
     void clearPlaylist(int playlistId);
     void addTrackToRecentlyPlayed(int trackId);
@@ -91,6 +97,7 @@ public:
 
 
     void addNewPlaylist(JPlaylist playlist);
+    void addNewFolderPlaylist(JPlaylist playlist);
     //constructor
 
 private:
@@ -121,6 +128,7 @@ private:
     QThreadPool m_pool;
     int lastQueuedId=0;
     JSettings &settings=JSettings::getInstance();
+    ColorGenerator &colorGen=ColorGenerator::getInstance();
 
 
     //functions

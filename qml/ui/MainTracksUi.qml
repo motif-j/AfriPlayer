@@ -64,20 +64,11 @@ Rectangle{
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter
                     Layout.leftMargin: dp(2)
-                    Rectangle{
+                   RoundedImage{
                         height: dp(60)
                         width: dp(60)
                         radius: dp(5)
-                        gradient:Gradient{
-                            GradientStop{
-                                position: 0.0
-                                color: thumbnailColor
-                            }
-                            GradientStop{
-                                position: 1.0
-                                color: thumbnailColor2
-                            }
-                        }
+                        source: "image://gthumbnail/"+ themeColor
                     }
 
 
@@ -184,7 +175,7 @@ Rectangle{
         }
         onDoubleClicked: {
             //playing track
-            jmusicLogic.trackPlayed(trackId)
+            jmusicLogic.playTrack(trackId)
 
         }
         onPressAndHold: {
@@ -277,6 +268,7 @@ Rectangle{
 
                             title:    model.playlistName
                             plId: model.playlistId
+                            themeColors:model.plcolors
                             id:plDelegate
 
                             RippleMouseArea{

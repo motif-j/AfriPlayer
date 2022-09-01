@@ -126,7 +126,7 @@ void JAudio::setPosition(int newPosition)
 void JAudio::pause()
 {
     if(canPlay){
-        setIsPlaying(false);
+       // setIsPlaying(false);
 
         playerEngine.pause();
     }
@@ -164,7 +164,6 @@ void JAudio::resume()
 
 void JAudio::onPositionChanged(float position,int newPos)
 {
-
     Q_UNUSED(position)
     setPosition(newPos);
 
@@ -215,6 +214,26 @@ void JAudio::onPlaybackStatusChanged(AudioEngine::PlayerState state)
         break;
     case AudioEngine::PlayerState::Playing:
     {
+        if(canPlay){
+            if(ptrack.duration==0){
+                qDebug()<<"Duration is "<<playerEngine.trackLength();
+                setCanPlay(false);
+                 pause();
+
+                JTrack test=ptrack;
+                test.duration=playerEngine.trackLength();
+                await(worker.updateTrackDuration(test),this,[this](JTrack res){
+
+                   reloadTrack(res);
+
+                    resume();
+                    setCanPlay(true);
+                });
+            }
+        }
+
+
+        // playerEngine.resume();
         setPlayingId(ptrack.trackId);
 
         setIsPlaying(true);
@@ -222,8 +241,6 @@ void JAudio::onPlaybackStatusChanged(AudioEngine::PlayerState state)
         // if(duration==0){
         //  playerEngine.pause();
         setDuration(playerEngine.trackLength());
-        // playerEngine.resume();
-
         auto l=getFormattedTime(duration);
 
         setTrackLength(*l);
@@ -246,7 +263,11 @@ void JAudio::onPlaybackStatusChanged(AudioEngine::PlayerState state)
     case AudioEngine::PlayerState::Ended:
         setIsPlaying(false);
 
-        // setPlayNext(1);
+        if(appSettings.getRepeatStatus()==RepeatMode::All){
+           setPlayNext(1);
+        }
+
+        //
         // setIsPlaying(false);
 
         break;
@@ -357,44 +378,51 @@ void JAudio::setPlayNext(int newPlayNext)
 
 
 
-void JAudio::reloadTrack(JTrack t)
+void JAudio::reloadTrack(JTrack tr)
 {
+    setCanPlay(false);
 
-    ptrack=t;
-    //  setIsPlaying(true);
+    await(worker.getTrack(tr.trackId),this,[this](JTrack t){
 
-    setDuration(t.duration);
-    // setPlayingId(t.trackId);
-    // playingId=t.trackId;
-    if(duration>0){
-        auto l=getFormattedTime(duration);
+        ptrack=t;
+        //  setIsPlaying(true);
 
-        setTrackLength(*l);
-    }
+        setDuration(t.duration);
+        // setPlayingId(t.trackId);
+        // playingId=t.trackId;
+        if(duration>0){
+            auto l=getFormattedTime(duration);
 
-
-    QTime *time =new QTime(0,0,0,0);
-
-    QTime nT=time->addMSecs(t.duration);
-
-    time=nullptr;
-
-    delete time;
-
-    QString formatedTime=formatTrackTime(nT);
+            setTrackLength(*l);
+        }
 
 
-    QVariantMap trackMap;
-    trackMap["trackName"]=t.trackName;
-    trackMap["trackId"]=t.trackId;
-    trackMap["albumName"]=t.albumName;
-    trackMap["artistName"]=t.artistName;
-    trackMap["duration"]=formatedTime;
-    trackMap["isFavorite"]=t.isFavorite;
-    trackMap["colors"]=t.colors;
-    trackMap["fileUrl"]=t.fileUrl;
+        QTime *time =new QTime(0,0,0,0);
 
-    setPlayingTrackVar(trackMap);
+        QTime nT=time->addMSecs(t.duration);
+
+        time=nullptr;
+
+        delete time;
+
+        QString formatedTime=formatTrackTime(nT);
+
+
+        QVariantMap trackMap;
+        trackMap["trackName"]=t.trackName;
+        trackMap["trackId"]=t.trackId;
+        trackMap["albumName"]=t.albumName;
+        trackMap["artistName"]=t.artistName;
+        trackMap["duration"]=formatedTime;
+        trackMap["isFavorite"]=t.isFavorite;
+        trackMap["colors"]=t.colors;
+        trackMap["fileUrl"]=t.fileUrl;
+
+        setPlayingTrackVar(trackMap);
+        setCanPlay(true);
+    });
+
+
 
 }
 

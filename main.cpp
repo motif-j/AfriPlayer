@@ -23,6 +23,8 @@
 #include <src/utils/thumbnailprovider.h>
 #include <src/utils/playergimageprovider.h>
 #include <src/utils/particleimageprovider.h>
+#include <src/utils/trackthumbnailprovider.h>
+#include <src/graphics/colorgenerator.h>
 
 
 //#include <VLCQtQml/QmlPlayer.h>
@@ -60,6 +62,7 @@ int main(int argc, char *argv[])
 
     qputenv("QML_DISABLE_DISK_CACHE","1");
 
+
     FelgoApplication felgo;
 
     // Use platform-specific fonts instead of Felgo's default font
@@ -70,6 +73,7 @@ int main(int argc, char *argv[])
     engine.addImageProvider(QLatin1String("thumbnail"),new ThumbnailProvider);
     engine.addImageProvider(QLatin1String("playerthumbnail"),new PlayerGImageProvider);
     engine.addImageProvider(QLatin1String("particle"),new ParticleImageProvider);
+     engine.addImageProvider(QLatin1String("gthumbnail"),new TrackThumbnailProvider);
 
     felgo.initialize(&engine);
 

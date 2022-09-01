@@ -24,6 +24,8 @@ Rectangle {
     property color color1: jappmodel.getColors(themeColor)[0]
     property color color2: jappmodel.getColors(themeColor)[1]
 
+
+
     ParticleSystem{
         id:particleSystem
         paused: !soundManager.isPlaying

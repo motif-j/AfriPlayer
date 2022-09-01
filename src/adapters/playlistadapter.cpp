@@ -24,6 +24,7 @@ QVariant PlaylistAdapter::data(const QModelIndex &index, int role) const
 
     JPlaylist playlistItem=playlists.value(row);
 
+
     switch (role) {
     case JRole::ROLE_PLAYLISTNAME:
         return QVariant(playlistItem.playlistTitle);
@@ -32,9 +33,14 @@ QVariant PlaylistAdapter::data(const QModelIndex &index, int role) const
 
         return QVariant(playlistItem.playlistId);
         break;
+    case JRole::ROLE_ISPLAYLISTFOLDER:
 
+        return QVariant(playlistItem.isFolder);
+
+
+    case JRole::ROLE_PLAYLIST_COLORS:
+        return QVariant(playlistItem.colors);
     }
-
 
     return QVariant();
 }
@@ -83,7 +89,7 @@ void PlaylistAdapter::add(JPlaylist p, int index)
 
         emit beginInsertRows(QModelIndex(),index,index);
 
-       playlists.insert(index,p);
+        playlists.insert(index,p);
 
         emit endInsertRows();
 

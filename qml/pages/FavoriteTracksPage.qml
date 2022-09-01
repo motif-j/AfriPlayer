@@ -39,6 +39,8 @@ Page {
             delegate: ItemPlaylist2{
                 title: model.playlistName
                 playlistId: model.playlistId
+                themeColors: model.plcolors
+                isFolder: model.isFolder
 
                 //title:qsTr(model)
 
@@ -50,6 +52,7 @@ Page {
                                       navigateUp(plTitle,playlistId)
 
                                   }
+
 
 
 

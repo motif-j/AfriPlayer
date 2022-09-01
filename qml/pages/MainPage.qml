@@ -50,9 +50,9 @@ Page{
         ColumnLayout{
             id:baseGrid
             width: page.width
-          //  columns: columnCount
-          //  columnSpacing:dp(10)
-           // rowSpacing: dp(10)
+            //  columns: columnCount
+            //  columnSpacing:dp(10)
+            // rowSpacing: dp(10)
 
             //Recently played tracks
 
@@ -67,7 +67,7 @@ Page{
                 }
 
                 Views.HomeHeader{
-                    title: "Playlist you may like "
+                    title: "Hello..."
                     bold:true
                     //Layout.alignment: Qt.AlignHCenter
 
@@ -93,6 +93,8 @@ Page{
 
                     title: model.playlistName
                     playlistId: model.playlistId
+                    isFolder:model.isFolder
+                    themeColors: model.plcolors
 
                     //title:qsTr(model)
 
@@ -106,16 +108,7 @@ Page{
                                       }
 
                 }
-                add:Transition {
 
-                    NumberAnimation {
-
-                        property: "x"
-                        duration: 500
-                        easing.type: Easing.InOutQuad
-                        from:-view.width
-                    }
-                }
 
 
             }
@@ -169,35 +162,39 @@ Page{
                         height: dp(70)
                         color: "#00000000"
 
-                        Views.HomeTracksView{
+                        Views.MainTracksUi{
                             id:tView
                             width:parent.width
                             trackName: model.trackName
                             artistName: model.artistName
                             trackId: model.trackId
-                             isFavorite: model.isFavorite
+                            isFavorite: model.isFavorite
                             themeColor:  model.colors
-
-
-
-
-                        }
-                        RippleMouseArea{
-                            width:rect.width
-                            height: dp(70)
+                              duration: model.duration
                             onClicked: {
                                 selectIndex(index)
-
-                                if(Theme.isAndroid){
-                                    jmusicLogic.playTrack(tView.trackId)
-                                }
                             }
 
-                            onDoubleClicked: {
-                                 selectIndex(index)
-                                 jmusicLogic.playTrack(tView.trackId)
-                            }
+
+
+
                         }
+                        //                        RippleMouseArea{
+                        //                            width:rect.width
+                        //                            height: dp(70)
+                        //                            onClicked: {
+                        //                                selectIndex(index)
+
+                        //                                if(Theme.isAndroid){
+                        //                                    jmusicLogic.playTrack(tView.trackId)
+                        //                                }
+                        //                            }
+
+                        //                            onDoubleClicked: {
+                        //                                selectIndex(index)
+                        //                                jmusicLogic.playTrack(tView.trackId)
+                        //                            }
+                        //                        }
                     }
                     highlight:Rectangle{
                         color: Theme.secondaryBackgroundColor
@@ -218,110 +215,117 @@ Page{
 
                 }
             }
-//            Rectangle{
-//                Layout.fillWidth: true
-//                height: dp(380)
-//                //   Layout.rightMargin:dp(2.5)
-//                color: Theme.backgroundColor
 
 
-//                //AI based playlist
-//                GridLayout {
-//                    height: parent.height
-//                    width: parent.width
-
-//                    id: grid
-//                    columns: 2
-//                    columnSpacing: dp(2)
-
-//                    Views.HomeHeader{
-//                        anchors.margins: dp(5)
-//                        title:"My Playlists"
-//                        bold:true
-//                        Layout.fillWidth: true
-//                        Layout.columnSpan: 2
-//                    }
-
-//                    Views.HomePlaylistView{
-//                        title:"Favorite Tracks"
-
-//                        Layout.fillWidth: true
-//                        Layout.fillHeight: true
-//                        Layout.preferredHeight: dp(150)
-//                        Layout.maximumHeight: dp(150)
-
-//                        onClicked:{
-//                            appLogic.navigateToPlaylistPage(title,Constants.favoritesPlaylists)
-
-//                            navigateUp(title,Constants.favoritesPlaylists)
+            //            Rectangle{
+            //                Layout.fillWidth: true
+            //                height: dp(380)
+            //                //   Layout.rightMargin:dp(2.5)
+            //                color: Theme.backgroundColor
 
 
-//                        }
-//                    }
-//                    Views.HomePlaylistView{
-//                        title:"Most Played"
-//                        Layout.fillWidth: true
-//                        Layout.fillHeight: true
-//                        Layout.preferredHeight: dp(150)
-//                        Layout.maximumHeight: dp(150)
+            //                //AI based playlist
+            //                GridLayout {
+            //                    height: parent.height
+            //                    width: parent.width
 
-//                        onClicked:{
-//                            appLogic.navigateToPlaylistPage(title,Constants.mostPlayedPlaylists)
+            //                    id: grid
+            //                    columns: 2
+            //                    columnSpacing: dp(2)
 
-//                            navigateUp(title,Constants.mostPlayedPlaylists)
+            //                    Views.HomeHeader{
+            //                        anchors.margins: dp(5)
+            //                        title:"My Playlists"
+            //                        bold:true
+            //                        Layout.fillWidth: true
+            //                        Layout.columnSpan: 2
+            //                    }
 
-//                        }
+            //                    Views.HomePlaylistView{
+            //                        title:"Favorite Tracks"
 
-//                    }
-//                    Views.HomePlaylistView{
-//                        title:"Least Played"
-//                        Layout.fillWidth: true
-//                        Layout.fillHeight: true
-//                        Layout.preferredHeight: dp(150)
-//                        Layout.maximumHeight: dp(150)
+            //                        Layout.fillWidth: true
+            //                        Layout.fillHeight: true
+            //                        Layout.preferredHeight: dp(150)
+            //                        Layout.maximumHeight: dp(150)
 
-//                        onClicked:{
-//                            appLogic.navigateToPlaylistPage(title,Constants.leastPlayedPlaylists)
+            //                        onClicked:{
+            //                            appLogic.navigateToPlaylistPage(title,Constants.favoritesPlaylists)
 
-//                            navigateUp(title,Constants.leastPlayedPlaylists)
-
-//                        }
-//                    }
-//                    Views.HomePlaylistView{
-//                        title:"Newest"
-//                        Layout.fillWidth: true
-//                        Layout.fillHeight: true
-//                        Layout.preferredHeight: dp(150)
-//                        Layout.maximumHeight: dp(150)
-
-//                        onClicked:{
-//                            appLogic.navigateToPlaylistPage(title,Constants.newestAddedTracks)
-
-//                            navigateUp(title,Constants.newestAddedTracks)
-
-//                        }
-//                    }
+            //                            navigateUp(title,Constants.favoritesPlaylists)
 
 
-//                    //Bottom Spacer
-//                    Rectangle{
-//                        Layout.fillWidth: true
-//                        Layout.preferredHeight: dp(50)
-//                        Layout.columnSpan: 2
-//                        color: Theme.backgroundColor
+            //                        }
+            //                    }
+            //                    Views.HomePlaylistView{
+            //                        title:"Most Played"
+            //                        Layout.fillWidth: true
+            //                        Layout.fillHeight: true
+            //                        Layout.preferredHeight: dp(150)
+            //                        Layout.maximumHeight: dp(150)
 
-//                    }
+            //                        onClicked:{
+            //                            appLogic.navigateToPlaylistPage(title,Constants.mostPlayedPlaylists)
 
-//                }
+            //                            navigateUp(title,Constants.mostPlayedPlaylists)
+
+            //                        }
+
+            //                    }
+            //                    Views.HomePlaylistView{
+            //                        title:"Least Played"
+            //                        Layout.fillWidth: true
+            //                        Layout.fillHeight: true
+            //                        Layout.preferredHeight: dp(150)
+            //                        Layout.maximumHeight: dp(150)
+
+            //                        onClicked:{
+            //                            appLogic.navigateToPlaylistPage(title,Constants.leastPlayedPlaylists)
+
+            //                            navigateUp(title,Constants.leastPlayedPlaylists)
+
+            //                        }
+            //                    }
+            //                    Views.HomePlaylistView{
+            //                        title:"Newest"
+            //                        Layout.fillWidth: true
+            //                        Layout.fillHeight: true
+            //                        Layout.preferredHeight: dp(150)
+            //                        Layout.maximumHeight: dp(150)
+
+            //                        onClicked:{
+            //                            appLogic.navigateToPlaylistPage(title,Constants.newestAddedTracks)
+
+            //                            navigateUp(title,Constants.newestAddedTracks)
+
+            //                        }
+            //                    }
+
+
+            //                    //Bottom Spacer
+            //                    Rectangle{
+            //                        Layout.fillWidth: true
+            //                        Layout.preferredHeight: dp(50)
+            //                        Layout.columnSpan: 2
+            //                        color: Theme.backgroundColor
+
+            //                    }
+
+            //                }
 
 
 
-//            }
+            //            }
 
 
 
         }
+
+
+
+
     }
+
 
 
     function selectIndex(index){

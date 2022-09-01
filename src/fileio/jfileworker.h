@@ -14,16 +14,7 @@
 #include <QtConcurrent>
 #include <QFuture>
 
-#include "taglib/taglib.h"
-#include <taglib/fileref.h>
-#include <taglib/tfile.h>
-#include <taglib/tag.h>
-#include <taglib/id3v2tag.h>
-#include <taglib/mpegfile.h>
-#include <taglib/attachedpictureframe.h>
-
-
-
+#include "src/utils/metadatamanager.h"
 #include <QDebug>
 #include <string>
 #include <wchar.h>

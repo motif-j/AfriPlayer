@@ -30,7 +30,9 @@ public:
         ROLE_PLAYLISTID=Qt::UserRole+18,
         ROLE_ISFAVORITE=Qt::UserRole+20,
         ROLE_ISPLAYING=Qt::UserRole+22,
-        ROLE_COLORS=Qt::UserRole+24
+        ROLE_COLORS=Qt::UserRole+24,
+        ROLE_ISPLAYLISTFOLDER=Qt::UserRole+26,
+        ROLE_PLAYLIST_COLORS=Qt::UserRole+28
 
 
     };
@@ -54,6 +56,8 @@ private:
         mRoles[ROLE_ISFAVORITE]="isFavorite";
         mRoles[ROLE_ISPLAYING]="isPlaying";
         mRoles[ROLE_COLORS]="colors";
+        mRoles[ROLE_ISPLAYLISTFOLDER]="isFolder";
+        mRoles[ROLE_PLAYLIST_COLORS]="plcolors";
     }
 
     QHash<int,QByteArray> mRoles;

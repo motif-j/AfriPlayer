@@ -33,19 +33,6 @@ QPixmap ParticleImageProvider::requestPixmap(const QString &id, QSize *size, con
     auto colorArray=id.split("-");
 
 
-    QString color1="";
-    QString color2="";
-
-    if(colorArray.count()==2){
-        color1=colorArray[0];
-        color2=colorArray[1];
-
-    }
-
-    if(color1.isEmpty() || color2.isEmpty()){
-        color1="#cc0000";
-        color2="#007fff";
-    }
     QRadialGradient linearGradient(QPointF(pWidth/2,pHeight/2),pWidth*0.25);
     QPainter painter(&pixmap);
     //  painter.setRenderHint(QPainter::Antialiasing);
@@ -60,9 +47,28 @@ QPixmap ParticleImageProvider::requestPixmap(const QString &id, QSize *size, con
     painter.setPen(pen);
     painter.fillRect(QRect(0,0,pWidth,pHeight),Qt::transparent);
     //  QLinearGradient linearGradient(0,0,0,height);
-    linearGradient.setColorAt(0,color1);
-    // linearGradient.setColorAt(0.5,Qt::blue);
-    linearGradient.setColorAt(1,color2);
+    if(colorArray.isEmpty()){
+        linearGradient.setColorAt(0,"#cc0000");
+        linearGradient.setColorAt(1,"#007fff");
+    }else{
+
+        int index=1;
+        for(QString color:colorArray){
+
+            if(index==1){
+                linearGradient.setColorAt(0,color);
+            }else{
+                double colorInd=(static_cast<double>(index)/static_cast<double>(colorArray.count()))*1.0;
+
+                linearGradient.setColorAt(colorInd,color);
+
+            }
+
+            index++;
+
+        }
+    }
+
     linearGradient.setSpread(QGradient::RepeatSpread);
 
     painter.fillPath(path,linearGradient);

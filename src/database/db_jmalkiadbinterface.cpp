@@ -143,23 +143,100 @@ JTrack *JMalkiaDbInterface::getTrack(int trackId)
 
 }
 
-QList<JPlaylist> *JMalkiaDbInterface::fetchPlaylistsFromRepository(int limit,bool isHome)
+JTrack JMalkiaDbInterface::updateTrackDuration(JTrack track)
+{
+    QString query="UPDATE tracks SET duration=? WHERE track_id=? ";
+
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+    sqlQuery->prepare(query);
+    sqlQuery->addBindValue(track.duration);
+    sqlQuery->addBindValue(track.trackId);
+
+    sqlQuery->exec();
+
+     printError("Update Track duration ",sqlQuery);
+    delete sqlQuery;
+
+    return *getTrack(track.trackId);
+
+}
+
+JTrack JMalkiaDbInterface::getLastTrack()
+{
+    JTrack *track=new JTrack;
+    QString query="SELECT track_id,track_name,artist_name,album_name,duration,file_url,colors  FROM tracks t LEFT Join albums a on a.album_id=t.album_id LEFT JOIN artists art on art.artist_id=t.artist_id where track_id=(SELECT max(track_id) FROM tracks)";
+
+
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+    auto isQueryPrepared=sqlQuery->prepare(query);
+
+
+
+    if(isQueryPrepared){
+        auto isExecuted=sqlQuery->exec();
+
+        if(isExecuted){
+
+            if(sqlQuery->first()){
+
+
+                track->trackId=sqlQuery->value(0).toInt();
+                track->trackName=sqlQuery->value(1).toString();
+                track->artistName=sqlQuery->value(2).toString();
+                track->albumName=sqlQuery->value(3).toString();
+                track->duration=sqlQuery->value(4).toLongLong();
+                track->fileUrl=sqlQuery->value(5).toString();
+                track->isFavorite=isTrackFavorite(track->trackId);
+                track->colors=sqlQuery->value(6).toString();
+
+                sqlQuery=nullptr;
+                delete sqlQuery;
+
+
+                return *track;
+            }
+
+        }
+
+
+    }
+
+    printError("Get single track ",sqlQuery);
+    sqlQuery=nullptr;
+    delete sqlQuery;
+
+    return *track;
+
+}
+
+QList<JPlaylist> *JMalkiaDbInterface::fetchPlaylistsFromRepository(int limit,bool isHome,bool folders)
 {
 
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
     QList<JPlaylist> *tempList=new QList<JPlaylist>();
 
-    QString query="select * from playlists where pl_id NOT IN (2,3,4,7 ) AND pl_id<8";
+    QString query="select * from playlists where pl_id NOT IN (2,3,4,7 ) AND pl_id<8 OR isFolder=1 limit 10";
 
     if(!isHome){
-        query="select * from playlists where pl_id>7 ORDER BY pl_id DESC ";
+        query="select * from playlists where pl_id>7 AND isFolder=?  ORDER BY pl_id DESC ";
     }
+
 
     auto prepare =sqlQuery->prepare(query);
     if(prepare){
 
+        if(!isHome){
 
 
+            if(folders){
+                sqlQuery->addBindValue(1);
+            }else{
+                sqlQuery->addBindValue(0);
+            }
+
+        }
         auto executed=sqlQuery->exec();
 
         if(executed){
@@ -170,7 +247,7 @@ QList<JPlaylist> *JMalkiaDbInterface::fetchPlaylistsFromRepository(int limit,boo
                 playlistItem.playlistId=sqlQuery->value(0).toInt();
                 playlistItem.playlistTitle=sqlQuery->value(1).toString();
                 playlistItem.colors=sqlQuery->value(2).toString();
-
+                playlistItem.isFolder=(sqlQuery->value(4).toInt()>0);
                 tempList->append(playlistItem);
             }
             sqlQuery=nullptr;
@@ -185,6 +262,47 @@ QList<JPlaylist> *JMalkiaDbInterface::fetchPlaylistsFromRepository(int limit,boo
     sqlQuery=nullptr;
     delete sqlQuery;
     return tempList;
+
+}
+
+JPlaylist JMalkiaDbInterface::getLastPlaylist()
+{
+
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+    QString query="select * from playlists where pl_id =(SELECT max(pl_id) FROM playlists )";
+
+    JPlaylist playlistItem;
+    auto prepare =sqlQuery->prepare(query);
+    if(prepare){
+
+
+
+        auto executed=sqlQuery->exec();
+
+        if(executed){
+            while(sqlQuery->next()){
+
+
+
+                playlistItem.playlistId=sqlQuery->value(0).toInt();
+                playlistItem.playlistTitle=sqlQuery->value(1).toString();
+                playlistItem.colors=sqlQuery->value(2).toString();
+                playlistItem.isFolder=sqlQuery->value(4).toBool();
+
+
+            }
+
+
+        }
+
+    }
+    printError("Get Last Playlist ",sqlQuery);
+
+    sqlQuery=nullptr;
+    delete sqlQuery;
+    return playlistItem;
+
 
 }
 
@@ -403,7 +521,7 @@ int JMalkiaDbInterface::generateLimit(int maxTrackId)
 
 void JMalkiaDbInterface::addTrackToPlaylist(JTrack track,int playlistId)
 {
-    qDebug()<<"Adding track to playlist "<<playlistId;
+
     QString  query="INSERT INTO playlist_tracks ( 'pl_id', 'track_id') VALUES ( ?, ?) ";
 
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
@@ -425,6 +543,33 @@ void JMalkiaDbInterface::addTrackToPlaylist(JTrack track,int playlistId)
     printError("Add track to playlist",sqlQuery);
 
     delete sqlQuery;
+}
+
+void JMalkiaDbInterface::addTrackToFolderPlaylist(JTrack track, int playlistId)
+{
+
+    QString  query="INSERT INTO playlist_tracks ( 'pl_id', 'track_id') VALUES ( ?, ?) ";
+
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+
+
+    if(sqlQuery->prepare(query)){
+        sqlQuery->addBindValue(playlistId);
+        sqlQuery->addBindValue(track.trackId);
+
+        sqlQuery->exec();
+
+
+
+    }
+
+
+
+    printError("Add track to folder playlist",sqlQuery);
+
+    delete sqlQuery;
+
 }
 
 void JMalkiaDbInterface::deleteTrackFromPlaylist(JTrack track, int playlistId)
@@ -747,20 +892,7 @@ void JMalkiaDbInterface::massInsert()
 
 void JMalkiaDbInterface::addNewTrack(JTrack track)
 {
-    QStringList *colors=new QStringList;
 
-    for(int i=0;i<2;i++){
-        int red=QRandomGenerator::global()->bounded(0,255);
-        int green=QRandomGenerator::global()->bounded(0,255);
-        int blue=QRandomGenerator::global()->bounded(0,255);
-
-        QColor *color=new QColor(red,green,blue);
-        colors->append(color->name(QColor::HexRgb));
-
-        delete color;
-
-
-    }
 
 
 
@@ -778,7 +910,7 @@ void JMalkiaDbInterface::addNewTrack(JTrack track)
     q->addBindValue(album);
 
     q->addBindValue(track.fileUrl);
-    q->addBindValue(colors->value(0).append("-").append(colors->value(1)));
+    q->addBindValue(colorGen.genColor());
     q->addBindValue(track.releaseYear);
     q->addBindValue(track.dateAdded);
 
@@ -790,7 +922,7 @@ void JMalkiaDbInterface::addNewTrack(JTrack track)
     q->finish();
     q=nullptr;
     delete q;
-    delete colors;
+
 
 
 }
@@ -1001,13 +1133,31 @@ void JMalkiaDbInterface::addNewPlaylist(JPlaylist playlist)
 
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
 
-    sqlQuery->prepare("INSERT INTO playlists (pl_title) VALUES (?) ");
+    sqlQuery->prepare("INSERT INTO playlists (pl_title,isFolder,colors) VALUES (?,?,?) ");
+
+    sqlQuery->addBindValue(playlist.playlistTitle);
+    sqlQuery->addBindValue(playlist.isFolder);
+    sqlQuery->addBindValue(colorGen.genColor());
+
+    sqlQuery->exec();
+
+    printError("Add Playlist ",sqlQuery);
+
+    delete sqlQuery;
+
+}
+
+void JMalkiaDbInterface::addNewFolderPlaylist(JPlaylist playlist)
+{
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+    sqlQuery->prepare("INSERT INTO folder_playlists (pl_title) VALUES (?) ");
 
     sqlQuery->addBindValue(playlist.playlistTitle);
 
     sqlQuery->exec();
 
-    printError("Add Playlist ",sqlQuery);
+    printError("Add Folder Playlist ",sqlQuery);
 
     delete sqlQuery;
 

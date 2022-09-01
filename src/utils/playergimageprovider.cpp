@@ -32,53 +32,37 @@ QPixmap PlayerGImageProvider::requestPixmap(const QString &id, QSize *size, cons
 
     auto colorArray=id.split("-");
 
-    qDebug()<<"Color Arr "<<colorArray.size();
-    QString color1="";
-    QString color2="";
 
-    if(colorArray.count()==2){
-        color1=colorArray[0];
-        color2=colorArray[1];
-
-    }
-
-    if(color1.isEmpty() || color2.isEmpty()){
-        color1="#cc0000";
-        color2="#007fff";
-    }
 
     QRadialGradient gradient(QPointF(pWidth/2,pHeight),pWidth*0.25);
     QPainter painter(&pixmap);
     //  QLinearGradient linearGradient(0,0,0,height);
-    gradient.setColorAt(0,color1);
-    gradient.setColorAt(1,color2);
+    if(colorArray.isEmpty()){
+        gradient.setColorAt(0,"#cc0000");
+        gradient.setColorAt(1,"#007fff");
+    }else{
+
+        int index=1;
+        for(QString color:colorArray){
+
+            if(index==1){
+                gradient.setColorAt(0,color);
+            }else{
+                double colorInd=(static_cast<double>(index)/static_cast<double>(colorArray.count()))*1.0;
+
+                gradient.setColorAt(colorInd,color);
+
+            }
+
+            index++;
+
+        }
+    }
     gradient.setSpread(QGradient::ReflectSpread);
 
     gradient.setInterpolationMode(QGradient::InterpolationMode::ColorInterpolation);
     painter.fillRect(QRect(0,0,pWidth,pHeight),gradient);
 
-//    //topLeft
-//    int sWidth=pWidth/2;
-//    int sHeight=pHeight/2;
-//    QRadialGradient tLgradient(QPointF(0,0),sWidth*0.25);
-
-//    tLgradient.setColorAt(0,color1);
-//    tLgradient.setColorAt(1,color2);
-
-//    tLgradient.setSpread(QGradient::RepeatSpread);
-
-//    painter.fillRect(QRect(0,0,sWidth,sHeight),tLgradient);
-
-//    //bottom right
-
-//    QRadialGradient bRgradient(QPointF(sWidth,sHeight),sWidth*0.25);
-
-//    bRgradient.setColorAt(0,color1);
-//    bRgradient.setColorAt(1,color2);
-
-//    bRgradient.setSpread(QGradient::RepeatSpread);
-
-//    painter.fillRect(QRect(pWidth-sWidth,pHeight-sHeight,sWidth,sHeight),bRgradient);
     return pixmap;
 
 }

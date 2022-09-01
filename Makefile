@@ -256,6 +256,7 @@ Makefile: QPlayer.pro C:/Qt/5.15.2/mingw81_64/mkspecs/win32-g++/qmake.conf C:/Qt
 		C:/Qt/5.15.2/mingw81_64/mkspecs/features/resolve_config.prf \
 		C:/Qt/5.15.2/mingw81_64/mkspecs/features/exclusive_builds_post.prf \
 		C:/Qt/5.15.2/mingw81_64/mkspecs/features/default_post.prf \
+		C:/Qt/5.15.2/mingw81_64/mkspecs/features/link_pkgconfig.prf \
 		C:/Qt/5.15.2/mingw81_64/mkspecs/features/file_copies.prf \
 		C:/Qt/5.15.2/mingw81_64/mkspecs/features/felgo.prf \
 		C:/Qt/5.15.2/mingw81_64/mkspecs/features/qml_debug.prf \
@@ -284,6 +285,7 @@ Makefile: QPlayer.pro C:/Qt/5.15.2/mingw81_64/mkspecs/win32-g++/qmake.conf C:/Qt
 		C:/Qt/5.15.2/mingw81_64/lib/Qt5Qml.prl \
 		C:/Qt/5.15.2/mingw81_64/lib/Qt5WebSockets.prl \
 		C:/Qt/5.15.2/mingw81_64/lib/Qt5Network.prl \
+		C:/Qt/5.15.2/mingw81_64/lib/Qt5Concurrent.prl \
 		C:/Qt/5.15.2/mingw81_64/lib/Qt5Bluetooth.prl \
 		C:/Qt/5.15.2/mingw81_64/lib/Qt5Core.prl \
 		C:/Qt/5.15.2/mingw81_64/lib/qtmain.prl \
@@ -475,6 +477,7 @@ C:/Qt/5.15.2/mingw81_64/mkspecs/features/win32/default_pre.prf:
 C:/Qt/5.15.2/mingw81_64/mkspecs/features/resolve_config.prf:
 C:/Qt/5.15.2/mingw81_64/mkspecs/features/exclusive_builds_post.prf:
 C:/Qt/5.15.2/mingw81_64/mkspecs/features/default_post.prf:
+C:/Qt/5.15.2/mingw81_64/mkspecs/features/link_pkgconfig.prf:
 C:/Qt/5.15.2/mingw81_64/mkspecs/features/file_copies.prf:
 C:/Qt/5.15.2/mingw81_64/mkspecs/features/felgo.prf:
 C:/Qt/5.15.2/mingw81_64/mkspecs/features/qml_debug.prf:
@@ -503,6 +506,7 @@ C:/Qt/5.15.2/mingw81_64/lib/Qt5QmlModels.prl:
 C:/Qt/5.15.2/mingw81_64/lib/Qt5Qml.prl:
 C:/Qt/5.15.2/mingw81_64/lib/Qt5WebSockets.prl:
 C:/Qt/5.15.2/mingw81_64/lib/Qt5Network.prl:
+C:/Qt/5.15.2/mingw81_64/lib/Qt5Concurrent.prl:
 C:/Qt/5.15.2/mingw81_64/lib/Qt5Bluetooth.prl:
 C:/Qt/5.15.2/mingw81_64/lib/Qt5Core.prl:
 C:/Qt/5.15.2/mingw81_64/lib/qtmain.prl:

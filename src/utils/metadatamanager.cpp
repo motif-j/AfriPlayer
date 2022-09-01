@@ -56,3 +56,53 @@ QPixmap MetaDataManager::getCoverImage(QString fileName,QPixmap image)
 
     return image;
 }
+
+JTrack MetaDataManager::retrieveMetaInfo(QFileInfo dirInfo)
+{
+    QDateTime *lastMd=new QDateTime(dirInfo.lastModified());
+
+    QByteArray fileName=QFile::encodeName(dirInfo.absoluteFilePath());
+
+    const char  *encodedName=fileName.constData();
+
+    TagLib::FileRef *file=new TagLib::FileRef(encodedName);
+     JTrack track;
+    if(!file->isNull()){
+
+
+        QString suffix=dirInfo.suffix();
+
+        QString title=file->tag()->title().toCString(true);
+        QString album =file->tag()->album().toCString(true);
+        QString artistName=file->tag()->artist().toCString(true);
+        QString fileUrl=dirInfo.absoluteFilePath();
+        int releaseYear=file->tag()->year();
+
+
+        long long duration=file->audioProperties()->lengthInMilliseconds();
+
+        if(title.isEmpty()){
+            title=dirInfo.fileName();
+        }
+
+        if(album.isEmpty()){
+            album="Unknown Album";
+        }
+
+        if(artistName.isEmpty()){
+            artistName="Unknown Artist";
+        }
+
+        track.trackName=title.simplified();
+        track.albumName=album.simplified();
+        track.duration=duration;
+        track.fileUrl=fileUrl.trimmed();
+        track.artistName=artistName.simplified();
+        track.releaseYear=releaseYear;
+        track.dateAdded=lastMd->toMSecsSinceEpoch();
+
+    }
+     delete lastMd;
+
+    return track;
+}

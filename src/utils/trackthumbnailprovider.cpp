@@ -1,18 +1,18 @@
-#include "thumbnailprovider.h"
+#include "trackthumbnailprovider.h"
 
+#include <QLinearGradient>
 #include <QPainter>
-#include <math.h>
+#include <QRandomGenerator>
 
-
-
-ThumbnailProvider::ThumbnailProvider()
-    : QQuickImageProvider(QQuickImageProvider::Pixmap)
+TrackThumbnailProvider::TrackThumbnailProvider()
+    :QQuickImageProvider(QQuickImageProvider::Pixmap)
 {
 
 }
 
-QPixmap ThumbnailProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
+QPixmap TrackThumbnailProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
+
 
 
     int width = 100;
@@ -35,9 +35,14 @@ QPixmap ThumbnailProvider::requestPixmap(const QString &id, QSize *size, const Q
     }
     auto colorArray=id.split("-");
 
+    int startX=QRandomGenerator::system()->bounded(0,pWidth);
+    int startY=QRandomGenerator::system()->bounded(0,pHeight);
+
+    int endX=QRandomGenerator::system()->bounded(0,pWidth);
+    int endY=QRandomGenerator::system()->bounded(0,pHeight);
 
 
-    QRadialGradient linearGradient(QPointF(pWidth/2,pHeight),pWidth*0.25);
+    QLinearGradient linearGradient(QPointF(startX,startY),QPointF(endX,endY));
     QPainter painter(&pixmap);
     //  QLinearGradient linearGradient(0,0,0,height);
 
@@ -65,7 +70,7 @@ QPixmap ThumbnailProvider::requestPixmap(const QString &id, QSize *size, const Q
 
         }
     }
-    linearGradient.setSpread(QGradient::RepeatSpread);
+    //linearGradient.setSpread(QGradient::ReflectSpread);
 
     painter.fillRect(QRect(0,0,pWidth,pHeight),linearGradient);
 
@@ -74,8 +79,4 @@ QPixmap ThumbnailProvider::requestPixmap(const QString &id, QSize *size, const Q
 
 
     return pixmap;
-    //  }
-
-    //   return MetaDataManager::getCoverImage(track->fileUrl,pixmap);
-
 }

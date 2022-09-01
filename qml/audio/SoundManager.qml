@@ -68,7 +68,7 @@ Item {
         }
 
         onPlayNextChanged: {
-            console.debug("NExt")
+
             jmusicModel.playNext()
         }
 

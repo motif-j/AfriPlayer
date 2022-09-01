@@ -86,11 +86,13 @@ SOURCES += main.cpp \
     src/controllers/jplaylistcontroller.cpp \
     src/adapters/jplaylistdataentry.cpp \
     src/fileio/jfileworker.cpp \
+    src/graphics/colorgenerator.cpp \
     src/utils/jsettings.cpp \
     src/utils/metadatamanager.cpp \
     src/utils/particleimageprovider.cpp \
     src/utils/playergimageprovider.cpp \
     src/utils/thumbnailprovider.cpp \
+    src/utils/trackthumbnailprovider.cpp \
     src/workers/mainworker.cpp
 
 
@@ -142,7 +144,7 @@ DISTFILES += \
     qml/models/PlaylistPageDataModel.qml \
     qml/models/RightMusicInfoModel.qml \
     qml/models/SearchPageModel.qml \
-    qml/models/SettingsModel.qml \
+  #  qml/models/SettingsModel.qml \
     qml/pages/FavoriteTracksPage.qml \
     qml/pages/MainPage.qml \
     qml/pages/PlaylistPage.qml \
@@ -194,6 +196,7 @@ HEADERS += \
     src/fileio/file_fileworker.h \
    src/fileio/file_jfileio.h \
     src/fileio/jfileworker.h \
+    src/graphics/colorgenerator.h \
     src/models/jmodels.h \
     src/controllers/jmusiccontroller.h \
     src/controllers/jmusiccontrollerinterface.h \
@@ -206,6 +209,7 @@ HEADERS += \
     src/utils/particleimageprovider.h \
     src/utils/playergimageprovider.h \
     src/utils/thumbnailprovider.h \
+    src/utils/trackthumbnailprovider.h \
     src/workers/mainworker.h
 
 
@@ -213,7 +217,7 @@ INCLUDEPATH += $$PWD/.
 DEPENDPATH += $$PWD/.
 
 
-win32{
+
 ##VLC
 unix|win32: LIBS += -L'C:/Program Files (x86)/VLC-Qt/lib/' -llibVLCQtCore.dll
 
@@ -226,6 +230,7 @@ unix|win32: LIBS += -L'C:/Program Files (x86)/taglib/lib/' -llibtag.dll
 INCLUDEPATH += 'C:/Program Files (x86)/taglib/include'
 DEPENDPATH += 'C:/Program Files (x86)/taglib/include'
 
-}
+
+
 
 

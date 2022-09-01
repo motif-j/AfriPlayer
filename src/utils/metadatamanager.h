@@ -32,6 +32,8 @@ class MetaDataManager
 public:
     MetaDataManager();
     static QPixmap getCoverImage(QString fileName,QPixmap image);
+
+    static JTrack retrieveMetaInfo(QFileInfo fileUrl);
 };
 
 #endif // METADATAMANAGER_H

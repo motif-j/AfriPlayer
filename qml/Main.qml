@@ -1,14 +1,15 @@
+
 import Felgo 3.0
 import QtQuick 2.0
 import "views"
 import com.afriktek.qplayer 1.0
-import QtQuick.Dialogs 1.3 as Dd
 import "components"
 import "./utilities"
 import "./logics"
 import "./models"
 import "./audio"
 import "./ui"
+
 App {
 
 

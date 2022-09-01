@@ -137,6 +137,7 @@ Rectangle{
 
                             title:    model.playlistName
                             plId: model.playlistId
+                            themeColors:model.plcolors
                             id:plDelegate
 
                             RippleMouseArea{

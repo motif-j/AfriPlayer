@@ -106,7 +106,8 @@ QFuture<QList<JTrack> > MainWorker::getTracks(int lastId)
         //        }
 
 
-        return *db.getTracks(lastId,20);
+        QThread::msleep(200);
+        return *db.getTracks(lastId,100);
     });
 
 }
@@ -155,6 +156,19 @@ QFuture<JTrack> MainWorker::addTrackToQueue(int trackId)
         db.queueTrack(trackId);
 
         return *db.getTrack(trackId);
+
+    });
+
+}
+
+QFuture<JTrack> MainWorker::updateTrackDuration(JTrack track)
+{
+    return QtConcurrent::run(threadPool,[this,track](){
+
+
+
+
+        return db.updateTrackDuration(track);
 
     });
 
