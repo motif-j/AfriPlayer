@@ -47,9 +47,9 @@ Page {
                 onPlaylistClicked:(plTitle)=>{
                                       // dynamicModel.add("blue")
 
-                                      appLogic.navigateToPlaylistPage(plTitle,playlistId)
+                                      appLogic.navigateToPlaylistPage(plTitle,playlistId,themeColors)
 
-                                      navigateUp(plTitle,playlistId)
+                                      navigateUp(plTitle,playlistId,themeColors)
 
                                   }
 

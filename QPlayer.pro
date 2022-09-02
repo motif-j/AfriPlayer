@@ -45,8 +45,8 @@ vlcplugins.source=vlc/bin/plugins
 DEPLOYMENTFOLDERS += vlcplugins
 }
 
-#qmlFolder.source = qml
-#DEPLOYMENTFOLDERS += qmlFolder # comment for publishing
+qmlFolder.source = qml
+DEPLOYMENTFOLDERS += qmlFolder # comment for publishing
 
 
 assetsFolder.source = assets
@@ -54,7 +54,7 @@ DEPLOYMENTFOLDERS += assetsFolder
 
 # Add more folders to ship with the application here
 
- RESOURCES += resources.qrc # uncomment for publishing
+# RESOURCES += resources.qrc # uncomment for publishing
 
 # NOTE: for PUBLISHING, perform the following steps:
 # 1. comment the DEPLOYMENTFOLDERS += qmlFolder line above, to avoid shipping your qml files with the application (instead they get compiled to the app binary)
@@ -75,6 +75,7 @@ SOURCES += main.cpp \
     src/adapters/queueadapter.cpp \
     src/adapters/searchadapter.cpp \
     src/adapters/tracksadpater.cpp \
+    src/ai/aiplaylistmanager.cpp \
     src/audio/jaudio.cpp \
     src/controllers/maincontroller.cpp \
     src/database/db_jmalkiadbinterface.cpp \
@@ -188,6 +189,7 @@ HEADERS += \
     src/adapters/queueadapter.h \
     src/adapters/searchadapter.h \
     src/adapters/tracksadpater.h \
+    src/ai/aiplaylistmanager.h \
     src/audio/jaudio.h \
     src/controllers/maincontroller.h \
    src/database/db_jmalkiadbinterface.h \
@@ -204,6 +206,7 @@ HEADERS += \
     src/utils/playergimageprovider.h \
     src/utils/thumbnailprovider.h \
     src/utils/trackthumbnailprovider.h \
+    src/workers/future_waiter.h \
     src/workers/mainworker.h
 
 

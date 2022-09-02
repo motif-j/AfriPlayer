@@ -27,7 +27,14 @@ Item {
 
         onIsPlayingChanged: {
             root.isPlaying=jmediaPlayer.isPlaying
+
         }
+
+        onPlaybackStartedChanged: {
+            console.debug("playback changed")
+            jmusicLogic.playStatChanged()
+        }
+
         onCanPlayChanged: {
             isBusy=!canPlay
 
@@ -43,6 +50,7 @@ Item {
             }
 
             if(initiatePlayNext(duration,position)){
+                jmusicLogic.playStatChanged()
                 if(repeatMode===1){
 
                     let t=jmusicModel.playingTrack

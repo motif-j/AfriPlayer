@@ -47,9 +47,9 @@ Page {
                 onPlaylistClicked:(plTitle)=>{
                                       // dynamicModel.add("blue")
 
-                                      appLogic.navigateToPlaylistPage(plTitle,playlistId)
+                                      appLogic.navigateToPlaylistPage(plTitle,playlistId,themeColors)
 
-                                      navigateUp(plTitle,playlistId)
+                                      navigateUp(plTitle,playlistId,themeColors)
 
                                   }
 
@@ -65,7 +65,7 @@ Page {
     AppButton{
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.bottomMargin: dp(Theme.navigationBar.height)
+        anchors.bottomMargin: dp(10)
         radius: dp(5)
         backgroundColor: Theme.secondaryBackgroundColor
         text: "Add"

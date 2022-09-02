@@ -13,7 +13,7 @@
 #include "src/engine/audioengine.h"
 #include <src/controllers/jplaylistcontroller.h>
 #include <QVariant>
-
+#include <src/ai/aiplaylistmanager.h>
 
 
 
@@ -33,6 +33,7 @@ class JAudio : public QObject
     Q_PROPERTY(int playbackStatus READ getPlaybackStatus WRITE setPlaybackStatus NOTIFY playbackStatusChanged)
     Q_PROPERTY(int playNext READ getPlayNext WRITE setPlayNext NOTIFY playNextChanged)
     Q_PROPERTY(QVariant playingTrackVar READ getPlayingTrackVar WRITE setPlayingTrackVar NOTIFY playingTrackVarChanged)
+    Q_PROPERTY(int playbackStarted READ getPlaybackStarted WRITE setPlaybackStarted NOTIFY playbackStartedChanged)
 
 
     Q_PROPERTY(QString trackLength READ getTrackLength WRITE setTrackLength NOTIFY trackLengthChanged)
@@ -74,6 +75,9 @@ public:
 
     const QVariant &getPlayingTrackVar() const;
     void setPlayingTrackVar(const QVariant &newPlayingTrackVar);
+
+    int getPlaybackStarted() const;
+    void setPlaybackStarted(int newPlaybackStarted);
 
 public slots:
     void pause();
@@ -117,11 +121,13 @@ private:
     QString trackLength="00:00";
     QVariant playingTrackVar;
     JTrack ptrack;
+    int playbackStarted=0;
 
 
 private:
     void reloadTrack(JTrack t);
     QString *getFormattedTime(int time);
+
 
 
 
@@ -141,6 +147,7 @@ signals:
     void playNextChanged();
     void trackLengthChanged();
     void playingTrackVarChanged();
+    void playbackStartedChanged();
 };
 
 #endif // JAUDIO_H

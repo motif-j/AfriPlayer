@@ -265,6 +265,7 @@ void JAudio::onPlaybackStatusChanged(AudioEngine::PlayerState state)
 
         if(appSettings.getRepeatStatus()==RepeatMode::All){
            setPlayNext(1);
+           setIsPlaying(true);
         }
 
         //
@@ -287,6 +288,8 @@ void JAudio::onEngineLockedChanged(bool locked)
 
 void JAudio::onPlaylistPlaybackStarted(JTrack track)
 {
+
+    setPlaybackStarted(2);
     setCanPlay(false);
     await(worker.getTrack(track.trackId),this,[this](JTrack res){
 
@@ -335,6 +338,19 @@ void JAudio::onTrackRemovedFromPlaylist(JTrack track)
 
         }
     }
+}
+
+int JAudio::getPlaybackStarted() const
+{
+    return playbackStarted;
+}
+
+void JAudio::setPlaybackStarted(int newPlaybackStarted)
+{
+    if (playbackStarted == newPlaybackStarted)
+        return;
+    playbackStarted = newPlaybackStarted;
+    emit playbackStartedChanged();
 }
 
 const QVariant &JAudio::getPlayingTrackVar() const

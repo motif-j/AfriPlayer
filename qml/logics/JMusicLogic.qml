@@ -8,6 +8,7 @@ Item {
     signal trackPlayed(int trackId)
 
     signal playTrack(int trackId);
+    signal playStatChanged;
 
 
 }

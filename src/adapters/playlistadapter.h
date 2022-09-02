@@ -32,6 +32,8 @@ public:
 
 public slots:
     void loadPlaylists(bool isHome=false,bool folders=false);
+    void loadAiPlaylists();
+
     void addPlaylist(QString title);
 
 signals:

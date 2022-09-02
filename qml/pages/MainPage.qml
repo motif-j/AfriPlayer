@@ -2,17 +2,19 @@ import QtQuick 2.3
 import Felgo 3.0
 import QtQuick.Layouts 1.3
 import com.afriktek.qplayer 1.0
-import "../ui" as Views
+import "../ui"
 import "../models"
 
 
 
 Page{
     navigationBarTranslucency: 1
+    navigationBarHidden: true
     id:page
     anchors.fill: parent
 
-    signal navigateUp(pageTitle:string ,playlistId:int)
+    signal navigateUp(pageTitle:string ,playlistId:int,themeColor:string)
+
 
     property int  columnCount: {
         if(page.width>450){
@@ -36,7 +38,10 @@ Page{
     MainPageDataModel{
         id:mainPageDm
         dispatcher:appLogic
+        dispatcher2:jmusicLogic
     }
+
+
 
 
 
@@ -66,7 +71,7 @@ Page{
                     color: Theme.backgroundColor
                 }
 
-                Views.HomeHeader{
+               HomeHeader{
                     title: "Hello..."
                     bold:true
                     //Layout.alignment: Qt.AlignHCenter
@@ -89,7 +94,7 @@ Page{
                 model:mainPageDm.playlistModel
 
                 emptyText.text: "Please wait"
-                delegate:Views.ItemPlaylist2{
+                delegate:ItemPlaylist2{
 
                     title: model.playlistName
                     playlistId: model.playlistId
@@ -101,9 +106,9 @@ Page{
                     onPlaylistClicked:(plTitle)=>{
                                           // dynamicModel.add("blue")
 
-                                          appLogic.navigateToPlaylistPage(plTitle,playlistId)
+                                          appLogic.navigateToPlaylistPage(plTitle,playlistId,themeColors)
 
-                                          navigateUp(plTitle,playlistId)
+                                          navigateUp(plTitle,playlistId,themeColors)
 
                                       }
 
@@ -115,107 +120,156 @@ Page{
 
             //
 
-            Rectangle{
-                id:rect
+            RowLayout{
                 Layout.fillWidth: true
-                //   Layout.leftMargin:  dp(5)
-                // Layout.rightMargin: columnCount>1?dp(0):dp(5)
-                height: dp(380)
 
-                color: Theme.backgroundColor
-                //Playing Que
 
-                AppListView{
-                    width:rect.width
 
-                    id:recentList
-                    interactive: false
-                    model:mainPageDm.tracksModel
-                    currentIndex: mainPageDm.tracksModel.activeIndex
-                    emptyText.text: {
+                Rectangle{
+                    id:rect
+                    Layout.fillWidth: true
+                    //   Layout.leftMargin:  dp(5)
+                    // Layout.rightMargin: columnCount>1?dp(0):dp(5)
+                    height: dp(380)
 
-                        if(mainPageDm.recentTracksEmpty){
-                            if(!mainPageDm.isLoading){
-                                return "Your recent Tracks will appear here"
+                    color: Theme.backgroundColor
+                    //Playing Que
+
+                    AppListView{
+                        width:rect.width
+
+                        id:recentList
+                        interactive: false
+                        model:mainPageDm.tracksModel
+                        currentIndex: mainPageDm.tracksModel.activeIndex
+                        emptyText.text: {
+
+                            if(mainPageDm.recentTracksEmpty){
+                                if(!mainPageDm.isLoading){
+                                    return "Your recent Tracks will appear here"
+                                }else{
+                                    return ""
+                                }
+
+
                             }else{
                                 return ""
                             }
-
-
-                        }else{
-                            return ""
                         }
+
+                        clip: true
+                        desktopScrollEnabled: true
+                        header: HomeHeader{
+                            anchors.margins: dp(5)
+                            title:"Recently Played"
+                            bold:true
+
+                        }
+
+
+                        delegate: Rectangle{
+                            width: rect.width
+                            height: dp(70)
+                            color: "#00000000"
+
+                            MainTracksUi{
+                                id:tView
+                                width:parent.width
+                                trackName: model.trackName
+                                artistName: model.artistName
+                                trackId: model.trackId
+                                isFavorite: model.isFavorite
+                                themeColor:  model.colors
+                                duration: model.duration
+                                onClicked: {
+                                    selectIndex(index)
+                                }
+
+
+
+
+                            }
+                            //                        RippleMouseArea{
+                            //                            width:rect.width
+                            //                            height: dp(70)
+                            //                            onClicked: {
+                            //                                selectIndex(index)
+
+                            //                                if(Theme.isAndroid){
+                            //                                    jmusicLogic.playTrack(tView.trackId)
+                            //                                }
+                            //                            }
+
+                            //                            onDoubleClicked: {
+                            //                                selectIndex(index)
+                            //                                jmusicLogic.playTrack(tView.trackId)
+                            //                            }
+                            //                        }
+                        }
+                        highlight:Rectangle{
+                            color: Theme.secondaryBackgroundColor
+                            radius: dp(5)
+
+
+                        }
+
                     }
+
+                    AppActivityIndicator{
+                        id:indicator
+                        anchors.centerIn: parent
+                        color:Theme.tintLightColor
+                        visible:mainPageDm.isLoading
+                        iconSize: dp(40)
+
+
+                    }
+                }
+
+                Rectangle{
+                    Layout.fillWidth: true
+                    height: dp(380)
+                    color: "transparent"
 
                     clip: true
-                    desktopScrollEnabled: true
-                    header: Views.HomeHeader{
-                        anchors.margins: dp(5)
-                        title:"Recently Played"
-                        bold:true
 
-                    }
+                    GridView{
 
-
-                    delegate: Rectangle{
-                        width: rect.width
-                        height: dp(70)
-                        color: "#00000000"
-
-                        Views.MainTracksUi{
-                            id:tView
-                            width:parent.width
-                            trackName: model.trackName
-                            artistName: model.artistName
-                            trackId: model.trackId
-                            isFavorite: model.isFavorite
-                            themeColor:  model.colors
-                              duration: model.duration
-                            onClicked: {
-                                selectIndex(index)
-                            }
-
-
-
+                        header: HomeHeader{
+                            anchors.margins: dp(5)
+                            title:"You may want to Look at..."
+                            bold:true
 
                         }
-                        //                        RippleMouseArea{
-                        //                            width:rect.width
-                        //                            height: dp(70)
-                        //                            onClicked: {
-                        //                                selectIndex(index)
-
-                        //                                if(Theme.isAndroid){
-                        //                                    jmusicLogic.playTrack(tView.trackId)
-                        //                                }
-                        //                            }
-
-                        //                            onDoubleClicked: {
-                        //                                selectIndex(index)
-                        //                                jmusicLogic.playTrack(tView.trackId)
-                        //                            }
-                        //                        }
-                    }
-                    highlight:Rectangle{
-                        color: Theme.secondaryBackgroundColor
-                        radius: dp(5)
+                        id:grid
+                        cellWidth: parent.width*0.5
+                        cellHeight:dp(160)
 
 
+                        model: mainPageDm.aiPlModel
+                        anchors.fill:parent
+                        interactive: false
+
+                        delegate: HomePlaylistView{
+                            width:grid.cellWidth
+                            height: grid.cellHeight
+                            title: model.playlistName
+                            playlistId: model.playlistId
+                            onPlaylistClicked:()=>{
+                                                  let plTitle=title
+                                                  // dynamicModel.add("blue")
+
+                                                  appLogic.navigateToPlaylistPage(plTitle,playlistId,model.plcolors)
+
+                                                  navigateUp(plTitle,playlistId,model.plcolors)
+
+                                              }
+                        }
                     }
 
                 }
 
-                AppActivityIndicator{
-                    id:indicator
-                    anchors.centerIn: parent
-                    color:Theme.tintLightColor
-                    visible:mainPageDm.isLoading
-                    iconSize: dp(40)
-
-
-                }
             }
-
 
             //            Rectangle{
             //                Layout.fillWidth: true

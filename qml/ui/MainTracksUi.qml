@@ -64,12 +64,12 @@ Rectangle{
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter
                     Layout.leftMargin: dp(2)
-                   RoundedImage{
-                        height: dp(60)
-                        width: dp(60)
-                        radius: dp(5)
-                        source: "image://gthumbnail/"+ themeColor
-                    }
+//                   RoundedImage{
+//                        height: dp(60)
+//                        width: dp(60)
+//                        radius: dp(5)
+//                        source: "image://gthumbnail/"+ themeColor
+//                    }
 
 
                     Rectangle{

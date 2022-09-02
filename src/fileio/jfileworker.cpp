@@ -55,6 +55,7 @@ QFuture<int> JFileWorker::queryAllFiles()
                         // QString path=dirInfo.path();
 
                         QString plName=dirInfo.absoluteDir().dirName();
+                        QString parentUrl=dirInfo.filePath();
 
                         JTrack track=MetaDataManager::retrieveMetaInfo(dirInfo);
                         db.addNewTrack(track);
@@ -64,9 +65,11 @@ QFuture<int> JFileWorker::queryAllFiles()
 
                         //add this folder to folder playlist
 
+                        parentUrl.replace(dirInfo.fileName(),"");
                         JPlaylist pl;
                         pl.isFolder=true;
                         pl.playlistTitle=plName;
+                        pl.folderUrl=parentUrl;
 
                         //check if the playlist exists
                         // int eq=QString::compare(lstPlaylist.playlistTitle,plName)

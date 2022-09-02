@@ -21,6 +21,7 @@ struct JTrack{
     int artistId=0;
     int albumId=0;
     int releaseYear=0;
+    int play_count=0;
 
     long long dateAdded=0;
     long long duration=0;
@@ -51,7 +52,8 @@ struct JPlaylist{
     int playlistId;
     QString playlistTitle;
     QString colors;
-     bool isFolder=false;
+    bool isFolder=false;
+    QString folderUrl="";
 
     bool operator ==(JPlaylist other){
         return other.playlistId==this->playlistId;

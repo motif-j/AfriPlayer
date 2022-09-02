@@ -9,6 +9,7 @@
 #include <src/utils/jsettings.h>
 #include <src/workers/mainworker.h>
 #include <src/engine/audioengine.h>
+#include <src/ai/aiplaylistmanager.h>
 
 
 class JPlaylistController : public QObject
@@ -47,6 +48,7 @@ public:
     JTrack getNextTrack();
     JTrack getPreviousTrack();
     void addPlaylistToQueue(int playlistId,bool shuffle);
+    void addPlaylistToQueue(QList<JTrack>,bool shuffle);
     void addTrackToPlaylist(int trackId,int playlistId);
     void removeTrackFromPlaylist(int trackId, int playlistId);
 
@@ -70,6 +72,7 @@ private:
     JSettings &settings=JSettings::getInstance();
     MainWorker &worker=MainWorker::getInstance();
     AudioEngine &engine=AudioEngine::getInstance();
+    AiPlaylistManager &aiManager=AiPlaylistManager::getInstance();
 
     int indexFromPlaylist(int playingTrackId);
     int playingIndex;

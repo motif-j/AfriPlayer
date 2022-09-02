@@ -37,6 +37,10 @@ public:
 
         return instance;
     }
+public:
+    QThreadPool *getPool(){
+        return threadPool;
+    }
 
     //Functions
 public:
@@ -45,6 +49,7 @@ public:
     QFuture<JTrack> getTrack(int trackId);
 
     QFuture<QList<JTrack>> queuePlaylistTrack(int playlistId,bool append);
+    QFuture<QList<JTrack>> queuePlaylistTrack(QList<JTrack> tracks,bool append);
     QFuture<QList<JTrack>> getQueuedPlaylist();
     QFuture<QList<JTrack>> getTracks(int lastId);
 
@@ -69,6 +74,7 @@ public:
    //playlist
 
    QFuture<QList<JPlaylist>> getPlaylists(bool isHome,bool folders=false);
+   QFuture<QList<JPlaylist>> getAiPlaylist();
    QFuture<JPlaylist> addPlaylist(JPlaylist playlist);
 
 private:

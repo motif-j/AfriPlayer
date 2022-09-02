@@ -9,6 +9,7 @@ Item {
 
     property string globalPlTitle: ""
     property int globalPlId: -1
+    property string globalThemeColor: ""
     Rectangle{
         width: parent.width
         height: parent.height
@@ -61,10 +62,11 @@ Item {
 
                     MainPage{
                         anchors.fill: parent
-                        onNavigateUp:(pageTitle,playId)=> {
+                        onNavigateUp:(pageTitle,playId,themeColors)=> {
 
                                          globalPlTitle=pageTitle
                                          globalPlId=playId
+                                         globalThemeColor=themeColors
 
 
 
@@ -73,6 +75,7 @@ Item {
 
                                      }
 
+
                     }
 
                     Component{
@@ -80,12 +83,21 @@ Item {
                         PlaylistPage{
                             playlistId:globalPlId
                             playlistTitle:globalPlTitle
+                            themeColors: globalThemeColor
 
 
                         }
 
 
                     }
+
+                    //                    Component{
+                    //                        id:aiPlaylistPage
+                    //                        AiPlaylistPage{
+                    //                            playlistId: globalPlId
+                    //                            playlistTitle: globalPlTitle
+                    //                        }
+                    //                    }
 
 
                 }
@@ -139,6 +151,7 @@ Item {
 
                                          globalPlTitle=pageTitle
                                          globalPlId=playId
+                                         //globalThemeColor=themeColors
 
 
 
@@ -199,6 +212,7 @@ Item {
                             }
                             playlistId:globalPlId
                             playlistTitle:globalPlTitle
+                            themeColors: globalThemeColor
 
 
                         }

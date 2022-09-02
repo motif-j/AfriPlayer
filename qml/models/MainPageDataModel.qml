@@ -9,14 +9,21 @@ Item {
     property bool isLoading: dataEntry.isLoading
 
     property alias dispatcher: conn.target
+     property alias dispatcher2: conn2.target
 
     property var tracksModel: dataEntry
+    property var  aiPlModel: aiPlaylists
 
     PlaylistAdapter{
 
 
         id:jplaylistModel
     }
+
+    PlaylistAdapter{
+     id:aiPlaylists
+    }
+
 
 
     PlaylistTracksAdapter{
@@ -35,12 +42,20 @@ Item {
             }
         }
     }
+    Connections{
+        id:conn2
+        onPlayStatChanged:function(trackId){
+            dataEntry.clearTracks();
+            loadRecent()
+        }
+    }
 
     function loadRecent(){
         dataEntry.loadTracks(-1,0)
     }
     function loadPlaylists(){
         jplaylistModel.loadPlaylists(true)
+        aiPlaylists.loadAiPlaylists()
     }
 
 }

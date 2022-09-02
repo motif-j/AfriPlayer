@@ -97,7 +97,7 @@ QList<JTrack> *JMalkiaDbInterface::getTracks(const int lastId,const int limit)
 
 JTrack *JMalkiaDbInterface::getTrack(int trackId)
 {
-    QString query="SELECT track_id,track_name,artist_name,album_name,duration,file_url,colors  FROM tracks t LEFT Join albums a on a.album_id=t.album_id LEFT JOIN artists art on art.artist_id=t.artist_id where track_id=?";
+    QString query="SELECT track_id,track_name,artist_name,album_name,duration,file_url,colors,play_count  FROM tracks t LEFT Join albums a on a.album_id=t.album_id LEFT JOIN artists art on art.artist_id=t.artist_id where track_id=?";
 
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
 
@@ -122,6 +122,8 @@ JTrack *JMalkiaDbInterface::getTrack(int trackId)
                 track->fileUrl=sqlQuery->value(5).toString();
                 track->isFavorite=isTrackFavorite(track->trackId);
                 track->colors=sqlQuery->value(6).toString();
+                track->play_count=sqlQuery->value(7).toInt();
+
 
                 sqlQuery=nullptr;
                 delete sqlQuery;
@@ -265,6 +267,46 @@ QList<JPlaylist> *JMalkiaDbInterface::fetchPlaylistsFromRepository(int limit,boo
 
 }
 
+QList<JPlaylist> *JMalkiaDbInterface::fetchAiPlaylistsFromRepo()
+{
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+    QList<JPlaylist> *tempList=new QList<JPlaylist>();
+
+    QString query="select * from playlists where pl_id IN (2,3,4,7 ) AND pl_id<8 ";
+
+
+    auto prepare =sqlQuery->prepare(query);
+    if(prepare){
+
+
+        auto executed=sqlQuery->exec();
+
+        if(executed){
+            while(sqlQuery->next()){
+
+                JPlaylist playlistItem;
+
+                playlistItem.playlistId=sqlQuery->value(0).toInt();
+                playlistItem.playlistTitle=sqlQuery->value(1).toString();
+                playlistItem.colors=sqlQuery->value(2).toString();
+                playlistItem.isFolder=(sqlQuery->value(4).toInt()>0);
+                tempList->append(playlistItem);
+            }
+            sqlQuery=nullptr;
+            delete sqlQuery;
+
+            return tempList;
+        }
+
+    }
+    printError("Get AI playlists ",sqlQuery);
+
+    sqlQuery=nullptr;
+    delete sqlQuery;
+    return tempList;
+
+}
+
 JPlaylist JMalkiaDbInterface::getLastPlaylist()
 {
 
@@ -359,10 +401,10 @@ QList<JTrack> *JMalkiaDbInterface::randomizedPlaylist()
 
         for(int i=1;i<=totalTracks;i++){
             //generate a random Id for every entry
-            if(i<=50){
+            if(i<=100){
 
                 if(endId>0){
-                    int randId=QRandomGenerator::global()->bounded(startId,endId);
+                    int randId=randomGen.bounded(startId,endId+1);
                     auto track=this->getTrack(randId);
 
                     auto isDup=tracks->contains(*track);
@@ -376,6 +418,8 @@ QList<JTrack> *JMalkiaDbInterface::randomizedPlaylist()
 
 
 
+            }else{
+                break;
             }
 
         }
@@ -929,7 +973,21 @@ void JMalkiaDbInterface::addNewTrack(JTrack track)
 
 void JMalkiaDbInterface::updateTrack(JTrack track)
 {
+    QString query="UPDATE tracks SET track_name=?,year=?,play_count=?,duration=? WHERE track_id=? ";
 
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+    sqlQuery->prepare(query);
+    sqlQuery->addBindValue(track.trackName);
+    sqlQuery->addBindValue(track.releaseYear);
+    sqlQuery->addBindValue(track.play_count);
+    sqlQuery->addBindValue(track.duration);
+    sqlQuery->addBindValue(track.trackId);
+
+    sqlQuery->exec();
+
+    printError("Update Track ",sqlQuery);
+    delete sqlQuery;
 
 }
 
@@ -1133,11 +1191,12 @@ void JMalkiaDbInterface::addNewPlaylist(JPlaylist playlist)
 
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
 
-    sqlQuery->prepare("INSERT INTO playlists (pl_title,isFolder,colors) VALUES (?,?,?) ");
+    sqlQuery->prepare("INSERT INTO playlists (pl_title,isFolder,colors,folder_url) VALUES (?,?,?,?) ");
 
     sqlQuery->addBindValue(playlist.playlistTitle);
     sqlQuery->addBindValue(playlist.isFolder);
     sqlQuery->addBindValue(colorGen.genColor());
+    sqlQuery->addBindValue(playlist.folderUrl);
 
     sqlQuery->exec();
 
@@ -1160,6 +1219,189 @@ void JMalkiaDbInterface::addNewFolderPlaylist(JPlaylist playlist)
     printError("Add Folder Playlist ",sqlQuery);
 
     delete sqlQuery;
+
+}
+
+QList<JTrack> JMalkiaDbInterface::getMostPlayedTracks()
+{
+
+    QList<JTrack> *tempList=new QList<JTrack>();
+
+    QSqlQuery *query =new QSqlQuery(mDb);
+    query->prepare("SELECT track_id,track_name,artist_name,album_name,duration,file_url,colors,play_count FROM tracks t LEFT Join albums a on a.album_id=t.album_id LEFT JOIN artists art on art.artist_id=t.artist_id ORDER BY play_count DESC limit 50");
+
+    auto querySuccess= query->exec();
+
+    if(!querySuccess){
+        printError("Get Most playedTracks",query);
+        // qDebug()<<"Query failed "<<query->lastError().text();
+        delete query;
+        return *new QList<JTrack>();
+    }
+
+    while(query->next()){
+        JTrack track;
+
+
+        track.trackId=query->value(0).toInt();
+        track.trackName=query->value(1).toString();
+        track.duration=query->value(4).toLongLong();
+        track.artistName=query->value(2).toString();
+        track.albumName=query->value(3).toString();
+        track.fileUrl=query->value(5).toString();
+        track.isFavorite=isTrackFavorite(track.trackId);
+        track.colors=query->value(6).toString();
+        track.play_count=query->value(7).toInt();
+
+
+
+        tempList->append(track);
+
+
+
+    }
+
+    delete query;
+
+
+    return *tempList;
+
+}
+
+QList<JTrack> JMalkiaDbInterface::getLeastPlayedTracks()
+{
+    QList<JTrack> *tempList=new QList<JTrack>();
+
+    QSqlQuery *query =new QSqlQuery(mDb);
+    query->prepare("SELECT track_id,track_name,artist_name,album_name,duration,file_url,colors,play_count FROM tracks t LEFT Join albums a on a.album_id=t.album_id LEFT JOIN artists art on art.artist_id=t.artist_id ORDER BY play_count ASC limit 50");
+
+    auto querySuccess= query->exec();
+
+    if(!querySuccess){
+        printError("Get Most playedTracks",query);
+        // qDebug()<<"Query failed "<<query->lastError().text();
+        delete query;
+        return *new QList<JTrack>();
+    }
+
+    while(query->next()){
+        JTrack track;
+
+
+        track.trackId=query->value(0).toInt();
+        track.trackName=query->value(1).toString();
+        track.duration=query->value(4).toLongLong();
+        track.artistName=query->value(2).toString();
+        track.albumName=query->value(3).toString();
+        track.fileUrl=query->value(5).toString();
+        track.isFavorite=isTrackFavorite(track.trackId);
+        track.colors=query->value(6).toString();
+        track.play_count=query->value(7).toInt();
+
+
+
+        tempList->append(track);
+
+
+
+    }
+
+    delete query;
+
+
+    return *tempList;
+
+
+}
+
+QList<JTrack> JMalkiaDbInterface::getNewestTracks()
+{
+    QList<JTrack> *tempList=new QList<JTrack>();
+
+    QSqlQuery *query =new QSqlQuery(mDb);
+    query->prepare("SELECT track_id,track_name,artist_name,album_name,duration,file_url,colors,play_count FROM tracks t LEFT Join albums a on a.album_id=t.album_id LEFT JOIN artists art on art.artist_id=t.artist_id ORDER BY date_added DESC limit 50");
+
+    auto querySuccess= query->exec();
+
+    if(!querySuccess){
+        printError("Get Most playedTracks",query);
+        // qDebug()<<"Query failed "<<query->lastError().text();
+        delete query;
+        return *new QList<JTrack>();
+    }
+
+    while(query->next()){
+        JTrack track;
+
+
+        track.trackId=query->value(0).toInt();
+        track.trackName=query->value(1).toString();
+        track.duration=query->value(4).toLongLong();
+        track.artistName=query->value(2).toString();
+        track.albumName=query->value(3).toString();
+        track.fileUrl=query->value(5).toString();
+        track.isFavorite=isTrackFavorite(track.trackId);
+        track.colors=query->value(6).toString();
+        track.play_count=query->value(7).toInt();
+
+
+
+        tempList->append(track);
+
+
+
+    }
+
+    delete query;
+
+
+    return *tempList;
+
+
+}
+
+QList<JTrack> JMalkiaDbInterface::getOldestTracks()
+{
+    QList<JTrack> *tempList=new QList<JTrack>();
+
+    QSqlQuery *query =new QSqlQuery(mDb);
+    query->prepare("SELECT track_id,track_name,artist_name,album_name,duration,file_url,colors,play_count FROM tracks t LEFT Join albums a on a.album_id=t.album_id LEFT JOIN artists art on art.artist_id=t.artist_id ORDER BY date_added ASC limit 50");
+
+    auto querySuccess= query->exec();
+
+    if(!querySuccess){
+        printError("Get Oldest playedTracks",query);
+        // qDebug()<<"Query failed "<<query->lastError().text();
+        delete query;
+        return *new QList<JTrack>();
+    }
+
+    while(query->next()){
+        JTrack track;
+
+
+        track.trackId=query->value(0).toInt();
+        track.trackName=query->value(1).toString();
+        track.duration=query->value(4).toLongLong();
+        track.artistName=query->value(2).toString();
+        track.albumName=query->value(3).toString();
+        track.fileUrl=query->value(5).toString();
+        track.isFavorite=isTrackFavorite(track.trackId);
+        track.colors=query->value(6).toString();
+        track.play_count=query->value(7).toInt();
+
+
+
+        tempList->append(track);
+
+
+
+    }
+
+    delete query;
+
+
+    return *tempList;
 
 }
 
@@ -1322,6 +1564,7 @@ void JMalkiaDbInterface::removeFolder(QString path)
 {
     QSqlQuery *sqlQuery=new QSqlQuery(mDb);
 
+    //delete the folder
     sqlQuery->prepare("DELETE FROM music_libs WHERE folder =? ");
 
     sqlQuery->addBindValue(path);
@@ -1329,12 +1572,28 @@ void JMalkiaDbInterface::removeFolder(QString path)
     if(sqlQuery->exec()){
 
         sqlQuery->finish();
+
+
+
+
+        //delete the tracks
         sqlQuery->prepare("DELETE FROM tracks WHERE file_url LIKE ? ");
 
         QString folderUrl="%";
 
         path.replace("file:///","");
-        sqlQuery->addBindValue(folderUrl.append(path).append("%"));
+        folderUrl.append(path).append("%");
+
+        sqlQuery->addBindValue(folderUrl);
+
+        sqlQuery->exec();
+
+        sqlQuery->finish();
+        //delete folders
+        sqlQuery->prepare("DELETE FROM playlists WHERE folder_url LIKE ? ");
+
+        sqlQuery->addBindValue(folderUrl);
+
         sqlQuery->exec();
     }
 

@@ -118,10 +118,12 @@ Item {
         }
 
         function playNext(){
+
             if(soundManager.isBusy){
                 return
             }
 
+             jmusicLogic.playStatChanged()
 
             mainController.playNext()
 
@@ -132,6 +134,7 @@ Item {
                 return
             }
 
+             jmusicLogic.playStatChanged()
             mainController.playPrevious()
 
         }
@@ -161,7 +164,7 @@ Item {
 
         function addPlaylistToQue(playlistId,shuffle){
             dataEntry.clearTracks()
-            mainController.addPlaylistToQueue(playlistId)
+          //  mainController.addPlaylistToQueue(playlistId)
 
         }
         function toggleShuffle(){

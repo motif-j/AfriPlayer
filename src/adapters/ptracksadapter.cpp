@@ -17,17 +17,50 @@ void PTracksAdapter::loadTracks(int playlistId, int refresh)
 
     await(this->woker.getPlaylistTracks(playlistId,refresh),this,[this](QList<JTrack> result){
 
-        setIsLoading(false);
+
         int index=0;
         foreach(JTrack track,result){
             this->add(track,index);
 
             index++;
         }
-
+        setIsLoading(false);
 
     });
 
+
+
+}
+
+void PTracksAdapter::loadAiTracks(int playlistId)
+{
+    if(!isLoading){
+        setIsLoading(true);
+        await(aiManager.getAiTracks(playlistId),this,[this](QList<JTrack> result){
+
+
+            int index=0;
+            foreach(JTrack track,result){
+                this->add(track,index);
+
+                index++;
+            }
+            setIsLoading(false);
+        });
+    }
+
+
+}
+
+void PTracksAdapter::addTracksToQueue(bool append)
+{
+    if(!isLoading){
+        setIsLoading(true);
+        this->playlistController.addPlaylistToQueue(tracks,append);
+
+        setIsLoading(false);
+
+    }
 
 
 }

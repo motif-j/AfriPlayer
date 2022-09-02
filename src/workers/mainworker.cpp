@@ -85,6 +85,32 @@ QFuture<QList<JTrack> > MainWorker::queuePlaylistTrack(int playlistId, bool appe
 
 }
 
+QFuture<QList<JTrack> > MainWorker::queuePlaylistTrack(QList<JTrack> tracks, bool append)
+{
+    return QtConcurrent::run(threadPool,[this,tracks,append](){
+
+        QThread::msleep(200);
+        if(!append){
+            //clear the que
+
+            db.clearQueue();
+        }
+
+        foreach(JTrack t, tracks){
+            db.queueTrack(t.trackId);
+        }
+
+
+
+        auto queue=db.fetchNext10QueuedTracks();
+
+        return *queue;
+
+
+    });
+
+}
+
 QFuture<QList<JTrack> > MainWorker::getQueuedPlaylist()
 {
     return QtConcurrent::run(threadPool,[this](){
@@ -221,6 +247,15 @@ QFuture<QList<JPlaylist> > MainWorker::getPlaylists(bool isHome,bool folders)
         return *db.fetchPlaylistsFromRepository(10,isHome,folders);
     });
 
+
+}
+
+QFuture<QList<JPlaylist> > MainWorker::getAiPlaylist()
+{
+    return QtConcurrent::run(threadPool,[this](){
+
+        return *db.fetchAiPlaylistsFromRepo();
+    });
 
 }
 

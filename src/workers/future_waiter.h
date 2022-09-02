@@ -1,0 +1,4 @@
+#ifndef FUTURE_WAITER_H
+#define FUTURE_WAITER_H
+
+#endif // FUTURE_WAITER_H

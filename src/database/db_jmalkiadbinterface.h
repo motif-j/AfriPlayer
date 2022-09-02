@@ -48,9 +48,11 @@ public:
     QList<JTrack> *getTracks(const int lastId,const int limit);
     JTrack *getTrack(int trackId);
     JTrack updateTrackDuration(JTrack track);
+
     JTrack getLastTrack();
 
     QList<JPlaylist> *fetchPlaylistsFromRepository(int limit,bool isHome=false,bool folders=false);
+    QList<JPlaylist> *fetchAiPlaylistsFromRepo();
     JPlaylist getLastPlaylist();
 
     QList<JTrack> *randomizedPlaylist();
@@ -98,6 +100,12 @@ public:
 
     void addNewPlaylist(JPlaylist playlist);
     void addNewFolderPlaylist(JPlaylist playlist);
+
+    //AI based playlist
+    QList<JTrack> getMostPlayedTracks();
+    QList<JTrack> getLeastPlayedTracks();
+    QList<JTrack> getNewestTracks();
+    QList<JTrack> getOldestTracks();
     //constructor
 
 private:
@@ -129,6 +137,8 @@ private:
     int lastQueuedId=0;
     JSettings &settings=JSettings::getInstance();
     ColorGenerator &colorGen=ColorGenerator::getInstance();
+
+    QRandomGenerator randomGen=QRandomGenerator::securelySeeded();
 
 
     //functions

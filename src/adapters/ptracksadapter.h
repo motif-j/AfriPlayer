@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <src/adapters/tracksadpater.h>
+#include <src/ai/aiplaylistmanager.h>
 
 class PTracksAdapter : public AbstractTracksAdapter
 {
@@ -10,11 +11,16 @@ class PTracksAdapter : public AbstractTracksAdapter
 public:
     explicit PTracksAdapter(QObject *parent = nullptr);
 
+
+private:
+    AiPlaylistManager &aiManager=AiPlaylistManager::getInstance();
 private:
     int playlistId;
 
 public slots:
     void loadTracks(int playlistId,int refresh=0);
+    void loadAiTracks(int playlistId);
+    void addTracksToQueue(bool append);
 
 
     //listeners

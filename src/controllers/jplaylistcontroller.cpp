@@ -209,6 +209,35 @@ void JPlaylistController::addPlaylistToQueue(int playlistId, bool shuffle)
 
 }
 
+void JPlaylistController::addPlaylistToQueue(QList<JTrack> tracks, bool append)
+{
+    Q_UNUSED(append)
+
+    if(!isLoading){
+        setIsLoading(true);
+        playlist->clear();
+        await(worker.queuePlaylistTrack(tracks,false),this,[this](QList<JTrack> queuedTracks){
+
+
+            int index=0;
+            foreach(JTrack t, queuedTracks){
+                if(index==0){
+
+                    loadPlayingTrackToQueuePlaylist(t);
+                }else{
+
+
+                    this-> addTrackToQueue(t,false);
+                }
+                index++;
+            }
+
+            setIsLoading(false);
+
+        });
+    }
+}
+
 void JPlaylistController::addTrackToPlaylist(int trackId, int playlistId)
 {
 
@@ -251,6 +280,10 @@ void JPlaylistController::playFromUrl(JTrack track)
     emit trackPlaybackStarted(track);
 
     toggleTrackAsPlayed(track.trackId);
+
+    //increment play count
+    aiManager.incrementPlayCount(track.trackId);
+
     engine.play();
 
 

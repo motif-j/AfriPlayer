@@ -53,20 +53,41 @@ QHash<int, QByteArray> PlaylistAdapter::roleNames() const
 
 void PlaylistAdapter::loadPlaylists(bool isHome,bool folders)
 {
-    setIsLoading(true);
-    await(worker.getPlaylists(isHome,folders),this,[this](QList<JPlaylist> result){
+    if(!isLoading){
+        setIsLoading(true);
 
-        int index=0;
-        foreach(JPlaylist p,result){
-            add(p,index);
-            index++;
-        }
+        await(worker.getPlaylists(isHome,folders),this,[this](QList<JPlaylist> result){
 
-        setIsLoading(false);
+            int index=0;
+            foreach(JPlaylist p,result){
+                add(p,index);
+                index++;
+            }
 
-    });
+            setIsLoading(false);
 
+        });
+    }
 
+}
+
+void PlaylistAdapter::loadAiPlaylists()
+{
+    if(!isLoading){
+        setIsLoading(true);
+
+        await(worker.getAiPlaylist(),this,[this](QList<JPlaylist> result){
+
+            int index=0;
+            foreach(JPlaylist p,result){
+                add(p,index);
+                index++;
+            }
+
+            setIsLoading(false);
+
+        });
+    }
 }
 
 void PlaylistAdapter::addPlaylist(QString title)

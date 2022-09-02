@@ -191,12 +191,12 @@ QPixmap TrackThumbnailProvider::requestPixmap(const QString &id, QSize *size, co
     int startX=QRandomGenerator::system()->bounded(0,pWidth);
     int startY=QRandomGenerator::system()->bounded(0,pHeight);
 
-    int endX=QRandomGenerator::system()->bounded(0,pWidth);
-    int endY=QRandomGenerator::system()->bounded(0,pHeight);
+   // int endX=QRandomGenerator::system()->bounded(0,pWidth);
+    //int endY=QRandomGenerator::system()->bounded(0,pHeight);
 
 
 
-    QLinearGradient linearGradient(QPointF(startX,startY),QPointF(endX,endY));
+    QRadialGradient linearGradient(QPointF(startX,startY),pWidth*0.80);
     QPainter painter(&pixmap);
     //  QLinearGradient linearGradient(0,0,0,height);
 

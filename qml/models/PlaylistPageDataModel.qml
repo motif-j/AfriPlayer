@@ -63,10 +63,20 @@ Item {
 
 
     function reloadTracks(){
+        switch(playlistId){
+        case 2:
+        case 3:
+        case 4:
+        case 7:
+            tracksAdapter.clearTracks()
+            loadAiTracks()
+            break;
+        default:
 
 
-        tracksAdapter.clearTracks()
-        loadMoreTracks(1)
+            tracksAdapter.clearTracks()
+            loadMoreTracks(1)
+        }
     }
 
     function clearPlaylist(){
@@ -75,27 +85,49 @@ Item {
 
     function loadMoreTracks(refresh=0){
 
-        if(!tracksAdapter.isLoading){
-            //this reduces the possibility of loading data twice concurrently
+        switch(playlistId){
+        case 2:
+        case 3:
+        case 4:
+        case 7:
+
+            loadAiTracks()
+            break
+
+        default:
 
 
-            tracksAdapter.loadTracks(playlistId,refresh)
-            // dataEntry.loadPlaylistTracks(playlistId,refresh)
 
-        }else{
-            console.debug("Busy")
+            if(!tracksAdapter.isLoading){
+                //this reduces the possibility of loading data twice concurrently
+
+
+                tracksAdapter.loadTracks(playlistId,refresh)
+                // dataEntry.loadPlaylistTracks(playlistId,refresh)
+
+            }else{
+                console.debug("Busy")
+            }
         }
-
 
     }
 
 
     function addPlaylistToQueue(shuffle){
+
+
         if(playlistId>-1){
             jmusicModel.addPlaylistToQue(playlistId,shuffle)
+            tracksAdapter.addTracksToQueue(false)
         }
 
 
+    }
+
+    function loadAiTracks(){
+        if(!tracksAdapter.isLoading){
+            tracksAdapter.loadAiTracks(playlistId)
+        }
     }
 
 
