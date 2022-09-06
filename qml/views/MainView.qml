@@ -22,7 +22,7 @@ Rectangle{
         id: layout
         anchors.fill: parent
         columns: Theme.isPortrait?1:2
-        columnSpacing: dp(5)
+        columnSpacing: dp(2)
 
         onColumnsChanged: {
             if(layout.columns>1){
@@ -47,7 +47,7 @@ Rectangle{
             Layout.fillWidth: true
             visible: layout.columns>1
             Layout.fillHeight: true
-            Layout.minimumWidth: dp(220)
+            Layout.minimumWidth: dp(240)
             Layout.maximumWidth: dp(280)
             id:rightViewLoader
 

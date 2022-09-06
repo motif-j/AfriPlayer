@@ -22,6 +22,7 @@ release/playergimageprovider.o
 release/thumbnailprovider.o
 release/trackthumbnailprovider.o
 release/mainworker.o
+release/qrc_resources.o
 release/moc_mtracksadapter.o
 release/moc_musicfoldermodel.o
 release/moc_playlistadapter.o

@@ -27,7 +27,7 @@ PRODUCT_VERSION_CODE = 1
 # main.qml file (App::licenseKey for your app or GameWindow::licenseKey for your game)
 # Only used for local builds and Felgo Cloud Builds (https://felgo.com/cloud-builds)
 # Not used if using Felgo Live
-PRODUCT_LICENSE_KEY = ""
+PRODUCT_LICENSE_KEY = "882317CBA082F4CBB712AE2E4FC00F1AC596F5140CFF286EFAC92A38C07BA488E3D4362E1E00A9F99EAD5ED73C29DC34360D8FCAB2C5056C58E7DB9A81A1E9C823935B299F12B10D1653696D431EDA55935AA08F5F07025A8B0C6EDB6193A315D878DC3E4B90A012781DA441DCC90FAAA219E21D5817B95D31D16908C928DABB53710846BC91D90B475BB775BC35E548C97DCB1E1D6B73EB575D90F4865DACCFE84054683B23547F85553036F73BFA58DDBDF63EBE4A681C558CCB2836D768FCE5B5E0514DFB5F83A9ED2519BE1499F4B312820B1814F22CA2B4DEB1E16C7D89507C17E532846DAAF5E1EAFFD651EB75B5DF8ED5DFC54D66F79CC3A1848C7666E432B6102C3BDBFB3C42510F7B12176084D3AFFF260B1B20438BD1BCD95057BFF2FFDF8A6B3A248716BECC9E3358BE54"
 
 
 win32{
@@ -45,8 +45,8 @@ vlcplugins.source=vlc/bin/plugins
 DEPLOYMENTFOLDERS += vlcplugins
 }
 
-qmlFolder.source = qml
-DEPLOYMENTFOLDERS += qmlFolder # comment for publishing
+#qmlFolder.source = qml
+#DEPLOYMENTFOLDERS += qmlFolder # comment for publishing
 
 
 assetsFolder.source = assets
@@ -54,7 +54,7 @@ DEPLOYMENTFOLDERS += assetsFolder
 
 # Add more folders to ship with the application here
 
-# RESOURCES += resources.qrc # uncomment for publishing
+ RESOURCES += resources.qrc # uncomment for publishing
 
 # NOTE: for PUBLISHING, perform the following steps:
 # 1. comment the DEPLOYMENTFOLDERS += qmlFolder line above, to avoid shipping your qml files with the application (instead they get compiled to the app binary)
@@ -164,6 +164,7 @@ DISTFILES += \
     qml/ui/HomeHeader.qml \
     qml/ui/HomePlaylistView.qml \
     qml/ui/HomeTracksView.qml \
+    qml/ui/ItemGridPlaylistView.qml \
     qml/ui/ItemPlaylist2.qml \
     qml/ui/ItemSqTrack.qml \
     qml/ui/JIconButton.qml \

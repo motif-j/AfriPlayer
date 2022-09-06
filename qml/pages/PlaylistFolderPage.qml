@@ -11,8 +11,11 @@ Page {
     height: parent.height
     useSafeArea: false
     id:root
+    onAppeared: {
 
-    signal navigateUp(pageTitle:string ,playlistId:int)
+    }
+
+    signal navigateUp(pageTitle:string ,playlistId:int,themeColor:string)
 
     PlaylistAdapter{
         id:adapter
@@ -22,11 +25,13 @@ Page {
 
 
     ColumnLayout{
-        anchors.fill: parent
-        anchors.topMargin: dp(Theme.navigationBar.height)
+        width: parent.width
+        height:parent.height
+       // anchors.topMargin: dp(Theme.navigationBar.height)
 
 
         GridView{
+            Layout.topMargin: dp(Theme.navigationBar.height)
             Layout.alignment: Qt.AlignHCenter
             Layout.fillHeight: true
             Layout.fillWidth: true
@@ -34,6 +39,7 @@ Page {
             model: adapter
             cellWidth:dp(330)
             cellHeight: dp(230)
+
 
 
             delegate: ItemPlaylist2{

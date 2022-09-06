@@ -96,6 +96,19 @@ int AbstractTracksAdapter::getIndexFromId(int trackId)
     return -1;
 }
 
+const QString &AbstractTracksAdapter::getTotalTracksDuration() const
+{
+    return totalTracksDuration;
+}
+
+void AbstractTracksAdapter::setTotalTracksDuration(const QString &newTotalTracksDuration)
+{
+    if (totalTracksDuration == newTotalTracksDuration)
+        return;
+    totalTracksDuration = newTotalTracksDuration;
+    emit totalTracksDurationChanged();
+}
+
 
 
 bool AbstractTracksAdapter::getIsLoading() const
@@ -128,6 +141,22 @@ void AbstractTracksAdapter::clearTracks()
 
 }
 
+void AbstractTracksAdapter::calculateTrackDuration()
+{
+    if(tracks.isEmpty()){
+        setTotalTracksDuration("00:00:00");
+
+        return;
+    }
+
+
+    await(woker.calculateTotalTrackTime(tracks),this,[this](QString time){
+
+        setTotalTracksDuration(time);
+    });
+
+}
+
 void AbstractTracksAdapter::onBusyChanged(bool loading)
 {
     setIsLoading(loading);
@@ -136,38 +165,38 @@ void AbstractTracksAdapter::onBusyChanged(bool loading)
 void AbstractTracksAdapter::onTrackAddedToPlaylist(JTrack track)
 {
     qDebug()<<"On added to Playlist Adapter";
-  int ind=getIndexFromId(track.trackId);
-  if(ind==-1){
-      return;
-  }
+    int ind=getIndexFromId(track.trackId);
+    if(ind==-1){
+        return;
+    }
 
-  if(tracks.isEmpty()){
-      return;
-  }
+    if(tracks.isEmpty()){
+        return;
+    }
 
-  auto t=tracks.value(ind);
+    auto t=tracks.value(ind);
 
-  track.isPlaying=t.isPlaying;
-  update(track,ind);
+    track.isPlaying=t.isPlaying;
+    update(track,ind);
 
 
 }
 
 void AbstractTracksAdapter::onTrackRemovedFromPlaylist(JTrack track,bool isFavorite)
 {
-  int ind=getIndexFromId(track.trackId);
-  if(ind==-1){
-      return;
-  }
+    int ind=getIndexFromId(track.trackId);
+    if(ind==-1){
+        return;
+    }
 
-  if(tracks.isEmpty()){
-      return;
-  }
+    if(tracks.isEmpty()){
+        return;
+    }
 
-  auto t=tracks.value(ind);
+    auto t=tracks.value(ind);
 
-  track.isPlaying=t.isPlaying;
-  update(track,ind);
+    track.isPlaying=t.isPlaying;
+    update(track,ind);
 
 }
 

@@ -7,8 +7,37 @@ PTracksAdapter::PTracksAdapter(QObject *parent)
 
 }
 
+bool PTracksAdapter::getIsUserPlaylist() const
+{
+    return isUserPlaylist;
+}
+
+void PTracksAdapter::setIsUserPlaylist(bool newIsUserPlaylist)
+{
+    if (isUserPlaylist == newIsUserPlaylist)
+        return;
+    isUserPlaylist = newIsUserPlaylist;
+    emit isUserPlaylistChanged();
+}
+
 void PTracksAdapter::loadTracks(int playlistId, int refresh)
 {
+
+    if(playlistId<8){
+        setIsUserPlaylist(false);
+    }else{
+
+        //get playlist
+
+        await(woker.getPlaylist(playlistId),this,[this](JPlaylist playlist){
+
+            if(playlist.isFolder){
+                setIsUserPlaylist(false);
+            }else{
+                setIsUserPlaylist(true);
+            }
+        });
+    }
     setIsLoading(true);
     this->playlistId=playlistId;
 
@@ -25,6 +54,7 @@ void PTracksAdapter::loadTracks(int playlistId, int refresh)
             index++;
         }
         setIsLoading(false);
+        calculateTrackDuration();
 
     });
 
@@ -34,6 +64,10 @@ void PTracksAdapter::loadTracks(int playlistId, int refresh)
 
 void PTracksAdapter::loadAiTracks(int playlistId)
 {
+    if(playlistId<8){
+        setIsUserPlaylist(false);
+    }
+
     if(!isLoading){
         setIsLoading(true);
         await(aiManager.getAiTracks(playlistId),this,[this](QList<JTrack> result){
@@ -46,6 +80,7 @@ void PTracksAdapter::loadAiTracks(int playlistId)
                 index++;
             }
             setIsLoading(false);
+             calculateTrackDuration();
         });
     }
 

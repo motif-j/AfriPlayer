@@ -12,7 +12,9 @@ QtObject {
     readonly property  color deepPurple200:"#b39ddb"
     readonly property  color brown300:"#a1887f"
     readonly property  color pink500:"#e91e63"
-     readonly property  color pink100:"#f8bbd0"
+    readonly property  color pink100:"#f8bbd0"
     readonly property  color bluegray50:"#eceff1"
+    readonly property color blueLight: "#44C0F0"//"#04d9f8"
+    readonly property color purple2: "#453be3"
 
 }

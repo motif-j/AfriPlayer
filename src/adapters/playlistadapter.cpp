@@ -104,6 +104,54 @@ void PlaylistAdapter::addPlaylist(QString title)
 
 }
 
+void PlaylistAdapter::renamePlaylist(QString newTitle, int playlistId)
+{
+
+    await(worker.updatePlaylist(playlistId,newTitle),this,[this](JPlaylist pl){
+
+
+        int index=getIndexFromId(pl.playlistId);
+
+        if(index==-1){
+            return;
+        }
+
+        playlists.replace(index,pl);
+
+        QModelIndex top=createIndex(index,0);
+        QModelIndex bottom=createIndex(index,0);
+        emit dataChanged(top,bottom);
+
+
+    });
+
+
+}
+
+void PlaylistAdapter::deletePlaylist(int playlistId)
+{
+
+    await(worker.deletePlaylist(playlistId),this,[this,playlistId](int res){
+
+
+        int index=getIndexFromId(playlistId);
+
+        if(index==-1){
+            return;
+        }
+
+        emit beginRemoveRows(QModelIndex(),index,index);
+        playlists.removeAt(index);
+        emit endRemoveRows();
+
+        setCount(playlists.count());
+
+
+    });
+}
+
+
+
 void PlaylistAdapter::add(JPlaylist p, int index)
 {
     if(!playlists.contains(p)){
@@ -116,6 +164,29 @@ void PlaylistAdapter::add(JPlaylist p, int index)
 
         setCount(playlists.count());
     }
+}
+
+int PlaylistAdapter::getIndexFromId(int plId)
+{
+    bool hasFound=false;
+    int index=0;
+
+    foreach(JPlaylist t,playlists){
+        if(t.playlistId==plId)
+        {
+            hasFound=true;
+            break;
+        }
+
+
+
+        index++;
+    }
+    if(hasFound){
+        return index;
+    }
+
+    return -1;
 }
 
 int PlaylistAdapter::getCount() const

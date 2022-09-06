@@ -12,7 +12,7 @@ class PlaylistAdapter : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(bool isLoading READ getIsLoading WRITE setIsLoading NOTIFY isLoadingChanged)
-     Q_PROPERTY(int count READ getCount WRITE setCount NOTIFY countChanged)
+    Q_PROPERTY(int count READ getCount WRITE setCount NOTIFY countChanged)
 public:
     explicit PlaylistAdapter(QObject *parent = nullptr);
 
@@ -35,6 +35,8 @@ public slots:
     void loadAiPlaylists();
 
     void addPlaylist(QString title);
+    void renamePlaylist(QString newTitle,int playlistId);
+    void deletePlaylist(int playlistId);
 
 signals:
     void isLoadingChanged();
@@ -49,6 +51,7 @@ private:
 
 private:
     void add(JPlaylist p,int index);
+    int getIndexFromId(int plId);
 
 private:
     bool isLoading=false;

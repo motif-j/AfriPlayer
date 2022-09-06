@@ -255,8 +255,13 @@ void JAudio::onPlaybackStatusChanged(AudioEngine::PlayerState state)
         setPlaybackStatus(2);
         break;
     case AudioEngine::PlayerState::Stopped:
-        // setIsPlaying(false);
+        setIsPlaying(false);
         //setPlaybackStatus(1);
+
+        if(appSettings.getRepeatStatus()==RepeatMode::All){
+           setPlayNext(1);
+           setIsPlaying(true);
+        }
 
         qDebug()<<"Stopped";
         break;

@@ -162,8 +162,12 @@ Item {
         }
 
 
-        function addPlaylistToQue(playlistId,shuffle){
-            dataEntry.clearTracks()
+        function addPlaylistToQue(playlistId,append){
+            if(!append){
+                 dataEntry.clearTracks()
+            }
+
+
           //  mainController.addPlaylistToQueue(playlistId)
 
         }

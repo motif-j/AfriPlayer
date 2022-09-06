@@ -111,7 +111,7 @@ Rectangle{
                         }
                     }
 
-                     anchors.centerIn: parent
+                     //anchors.centerIn: parent
 
                     SequentialAnimation{
                         id:seqTrackAnimator
@@ -123,7 +123,7 @@ Rectangle{
 
                             target: trackText
                             property: "x"
-                            duration: 2500
+                            duration: 5500
                             from: trackContainer.width-trackText.width
                             to:0
                             id:trackAnimatorReverse
@@ -134,7 +134,7 @@ Rectangle{
                             target: trackText
                             property: "x"
                             from: 0
-                            duration: 2500
+                            duration: 5500
                             to:trackContainer.width-trackText.width
                             id:trackAnimatorReverse2
 

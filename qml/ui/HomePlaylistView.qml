@@ -2,11 +2,28 @@ import QtQuick 2.3
 import Felgo 3.0
 import QtQuick.Layouts 1.3
 
+
 Rectangle{
     id:homePlaylistRect
     property string title: ""
     property int playlistId : 0
+
+    property int  cNavInd:mainNavigation.currentIndex
+
+    property bool isCustomPlaylist:{
+        if(cNavInd===3){
+            return true
+        }else{
+
+            return false
+
+        }
+
+    }
+
+
     signal playlistClicked;
+
 
     clip: true
     color: Theme.backgroundColor
@@ -37,8 +54,17 @@ Rectangle{
     RippleMouseArea{
         width: homePlaylistRect.width
         height: homePlaylistRect.height
+
         onClicked: {
+
             homePlaylistRect.playlistClicked()
+
+
+
         }
+
+
+
     }
 }
+

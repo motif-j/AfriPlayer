@@ -53,7 +53,11 @@ public:
 
     QList<JPlaylist> *fetchPlaylistsFromRepository(int limit,bool isHome=false,bool folders=false);
     QList<JPlaylist> *fetchAiPlaylistsFromRepo();
+
     JPlaylist getLastPlaylist();
+    JPlaylist getPlaylist(int playlistId);
+    JPlaylist updatePlaylist(JPlaylist playlist);
+    void removePlaylist(int playlistId);
 
     QList<JTrack> *randomizedPlaylist();
     QList<JTrack> *fetchPlaylistTracksFromRepo(int playlistId);

@@ -10,6 +10,7 @@ import "../models"
 
 Page {
 
+
     property string playlistTitle: ""
     property int  playlistId: ({})
     property bool isLoading: true
@@ -24,6 +25,52 @@ Page {
 
     useSafeArea: false
     id:rootPage
+    //    rightBarItem: NavigationBarItem {
+    //        Row {
+    //            property real backButtonWidth: dp(Theme.navigationBar.height)
+    //            height: dp(Theme.navigationBar.height)
+    //            width: rootPage.width - backButtonWidth
+    //            anchors.right: parent.right
+
+    //            SearchBar {
+    //                id: searchBar
+    //                inputBackgroundColor: Theme.secondaryBackgroundColor
+    //                barBackgroundColor: "transparent"
+    //                showClearButton: false
+    //                anchors.verticalCenter: parent.verticalCenter
+
+    //                width: textField.displayText != "" ? parent.width - clearButton.width - dp(Theme.contentPadding) : parent.width
+    //                Behavior on width {NumberAnimation{duration: 150; easing.type: Easing.InOutQuad}}
+
+    //                textField.onDisplayTextChanged:{
+    //                }// dataModel.buildModelUponSearch(textField.displayText)
+
+    //                onAccepted: {
+    //                    console.debug(searchTerm)
+    //                    //pageModel.searchForAtrack(searchTerm)
+    //                }
+    //            }
+
+    //            AppButton {
+    //                id: clearButton
+    //                flat: true
+    //                text: "Clear"
+    //                anchors.verticalCenter: parent.verticalCenter
+    //                horizontalMargin: 0
+    //                textColor: Theme.textColor
+    //                textColorPressed: Qt.darker(Theme.textColor, 1.2)
+    //                textSize: sp(14)
+
+    //                opacity: searchBar.textField.displayText != ""
+    //                Behavior on opacity {NumberAnimation{duration: 150}}
+
+    //                onClicked: {
+    //                    searchBar.textField.focus = false
+    //                    searchBar.textField.clear()
+    //                }
+    //            }
+    //        }
+    //    }
 
 
     PlaylistPageDataModel{
@@ -57,9 +104,7 @@ Page {
     }
 
     Component{
-        id:headerContent
-
-
+        id:headerComp
         ColumnLayout{
             width: parent.width
             height:  dp(Theme.navigationBar.height)+dp(225)
@@ -77,18 +122,21 @@ Page {
                 Layout.rightMargin: dp(10)
 
                 RoundedImage{
+                    id:thumbnail
                     Layout.fillWidth: true
                     Layout.preferredWidth:  dp(220)
                     Layout.maximumWidth: dp(220)
                     Layout.preferredHeight: dp(220)
                     radius: dp(5)
                     fillMode: Image.Stretch
+
                     source: "image://gthumbnail/"+themeColors
                 }
 
                 ColumnLayout{
                     Layout.fillWidth: true
                     height: dp(220)
+                    spacing: dp(5)
 
 
                     AppText{
@@ -98,12 +146,29 @@ Page {
                         font.bold: true
                         Layout.fillHeight: true
                     }
+                    AppText{
+                        fontSize: 16
+                        text: dataModel.count+" songs  "
+                        font.bold: true
+                        color: Theme.secondaryTextColor
+                        Layout.fillHeight: true
+                    }
+
+                    AppText{
+                        fontSize: 20
+                        text: dataModel.totalTrackDuration
+                        font.bold: true
+                        color: Theme.secondaryTextColor
+                        Layout.fillHeight: true
+                        font.family:  Constants.lcdFont.name
+                        font.letterSpacing: dp(5)
+                    }
 
 
                     RowLayout{
                         Layout.fillHeight: true
                         Layout.fillWidth: true
-                        spacing: dp(5)
+                        spacing: dp(2)
                         AppButton{
                             Layout.margins: dp(2)
                             Layout.alignment: Qt.AlignHCenter
@@ -119,14 +184,68 @@ Page {
 
                             }
                         }
+                        AppButton{
+                            Layout.margins: dp(2)
+                            Layout.alignment: Qt.AlignHCenter
+                            flat:false
+                            radius: dp(5)
+                            enabled: dataModel.count>0
+                            text: "Append to Current Playlist"
+                            iconLeft: IconType.plus
+                            textColor: Theme.textColor
+                            backgroundColor: Theme.secondaryBackgroundColor
+                            onClicked: {
+                                dataModel.addPlaylistToQueue(true)
+
+                            }
+                        }
+                        //                        AppButton{
+                        //                            Layout.margins: dp(2)
+                        //                            Layout.alignment: Qt.AlignHCenter
+                        //                            flat:false
+                        //                            radius: dp(5)
+                        //                            enabled: dataModel.isUserPlaylist
+                        //                            text: "Rename"
+
+                        //                            iconLeft: IconType.edit
+                        //                            textColor: Theme.textColor
+                        //                            backgroundColor: Theme.secondaryBackgroundColor
+                        //                            onClicked: InputDialog.inputTextSingleLine(rootPage,"Rename Playlist",playlistTitle,
+                        //                                                                       function(ok,plTitle){
+                        //                                                                           if(ok){
+                        //                                                                              // adapter.addPlaylist(plTitle)
+                        //                                                                           }
+                        //                                                                       }
+
+                        //                                                                       )
+                        //                        }
+                        //                        AppButton{
+                        //                            Layout.margins: dp(2)
+                        //                            Layout.alignment: Qt.AlignHCenter
+                        //                            flat:false
+                        //                            radius: dp(5)
+                        //                            enabled: dataModel.isUserPlaylist
+                        //                            text: "Delete"
+                        //                            iconLeft: IconType.trash
+                        //                            textColor: Theme.textColor
+                        //                            backgroundColor: Theme.secondaryBackgroundColor
+                        //                            onClicked: {
+                        //                                //dataModel.addPlaylistToQueue(true)
+
+                        //                            }
+                        //                        }
 
                     }
 
                 }
 
             }
+
+
+
         }
     }
+
     //    ColumnLayout{
     //        width:parent.width
     //        height: parent.height
@@ -170,7 +289,8 @@ Page {
     //        }
 
     LinearGradient{
-        anchors.fill: parent
+        width: parent.width
+        height: parent.height
         start: Qt.point(0,0)
         end:Qt.point(parent.width/2,parent.height/2)
 
@@ -181,13 +301,10 @@ Page {
 
 
         AppListView{
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            id:tracksListView
             width: parent.width
+            height: parent.height
+            id:tracksListView
 
-
-            // anchors.fill: parent
 
             model: dataModel.model
 
@@ -240,7 +357,9 @@ Page {
 
             }
 
-            header: headerContent
+            header:  headerComp
+
+
 
 
         }
@@ -285,7 +404,9 @@ Page {
     }
 
     Component.onCompleted: {
+
         appLogic.navigateToPlaylistPage(playlistTitle,playlistId,themeColors)
+
 
         dataModel.loadMoreTracks()
     }

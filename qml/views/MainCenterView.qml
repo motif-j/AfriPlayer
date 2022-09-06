@@ -145,13 +145,11 @@ Item {
                     id:navStack
                     FavoriteTracksPage{
 
-
-                        anchors.fill: parent
-                        onNavigateUp:(pageTitle,playId)=> {
+                        onNavigateUp:(pageTitle,playId,themeColors)=> {
 
                                          globalPlTitle=pageTitle
                                          globalPlId=playId
-                                         //globalThemeColor=themeColors
+                                         globalThemeColor=themeColors
 
 
 
@@ -163,13 +161,14 @@ Item {
                     Component{
                         id:playlistPage
                         PlaylistPage{
-                            anchors.fill: parent
+
                             anchors.topMargin: dp(Theme.navigationBar.height)
                             onPopped: {
                                 globalPlId=0
                             }
                             playlistId:globalPlId
                             playlistTitle:globalPlTitle
+                            themeColors: globalThemeColor
 
 
                         }
@@ -189,13 +188,12 @@ Item {
                     PlaylistFolderPage{
 
 
-                        anchors.fill: parent
-                        onNavigateUp:(pageTitle,playId)=> {
+
+                        onNavigateUp:(pageTitle,playId,themeColor)=> {
 
                                          globalPlTitle=pageTitle
                                          globalPlId=playId
-
-
+                                         globalThemeColor=themeColor
 
                                          foldernavStack.push(playlistPage)
 
@@ -205,8 +203,7 @@ Item {
                     Component{
                         id:playlistPage
                         PlaylistPage{
-                            anchors.fill: parent
-                            anchors.topMargin: dp(Theme.navigationBar.height)
+                           // anchors.topMargin: dp(Theme.navigationBar.height)
                             onPopped: {
                                 globalPlId=0
                             }

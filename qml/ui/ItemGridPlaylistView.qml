@@ -18,8 +18,7 @@ Rectangle{
 
 
     color: Theme.backgroundColor
-    width:dp(320)
-    height: dp(220)
+
     property int  cNavInd:mainNavigation.currentIndex
 
     property bool isCustomPlaylist:{

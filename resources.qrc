@@ -68,5 +68,7 @@
         <file>assets/playlist.png</file>
         <file>assets/qt.png</file>
         <file>qml/pages/PlaylistFolderPage.qml</file>
+        <file>qml/pages/AiPlaylistPage.qml</file>
+        <file>qml/ui/ItemGridPlaylistView.qml</file>
     </qresource>
 </RCC>

@@ -22,6 +22,7 @@ debug/playergimageprovider.o
 debug/thumbnailprovider.o
 debug/trackthumbnailprovider.o
 debug/mainworker.o
+debug/qrc_resources.o
 debug/moc_mtracksadapter.o
 debug/moc_musicfoldermodel.o
 debug/moc_playlistadapter.o

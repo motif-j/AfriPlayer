@@ -13,6 +13,7 @@ import "./ui"
 App {
 
 
+visibility: "Maximized"
 
     // You get free licenseKeys from https://felgo.com/licenseKey
     // With a licenseKey you can:
@@ -26,7 +27,7 @@ App {
         Theme.colors.textColor="#ffffff"
         Theme.colors.secondaryTextColor=JColors.bluegray50
         Theme.colors.secondaryBackgroundColor=JColors.sideBarColor
-        Theme.colors.tintColor=JColors.pink500
+        Theme.colors.tintColor=JColors.purple2
 
         Theme.navigationBar.backgroundColor=JColors.backgroundColor
         Theme.navigationBar.titleColor="#ffffff"
@@ -34,13 +35,13 @@ App {
         Theme.navigationAppDrawer.backgroundColor=JColors.sideBarColor
         Theme.navigationAppDrawer.itemBackgroundColor=JColors.sideBarColor
         Theme.navigationAppDrawer.textColor=JColors.purple100
-        Theme.navigationAppDrawer.activeTextColor=JColors.pink500
+        Theme.navigationAppDrawer.activeTextColor=JColors.blueLight
         Theme.navigationAppDrawer.dividerColor=Theme.secondaryBackgroundColor
 
 
         Theme.navigationTabBar.backgroundColor=JColors.sideBarColor
         Theme.navigationTabBar.titleColor=JColors.purple100
-        Theme.navigationTabBar.titlePressedColor=JColors.pink500
+        Theme.navigationTabBar.titlePressedColor=JColors.blueLight
 
 
         Theme.listItem.backgroundColor=Theme.backgroundColor

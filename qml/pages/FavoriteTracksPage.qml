@@ -6,13 +6,17 @@ import com.afriktek.qplayer 1.0
 //import QtQuick.Dialogs 1.3
 
 Page {
+
+    // property string themeColor: ""
+
     title: "Playlists"
     width: parent.width
     height: parent.height
     useSafeArea: false
     id:root
 
-    signal navigateUp(pageTitle:string ,playlistId:int)
+
+    signal navigateUp(pageTitle:string ,playlistId:int,themeColor:string)
 
     PlaylistAdapter{
         id:adapter
@@ -22,14 +26,17 @@ Page {
 
 
     ColumnLayout{
-        anchors.fill: parent
-        anchors.topMargin: dp(Theme.navigationBar.height)
+        width: parent.width
+        height:parent.height
+        //anchors.topMargin: dp(Theme.navigationBar.height)
 
 
         GridView{
+            Layout.topMargin: dp(Theme.navigationBar.height)
             Layout.alignment: Qt.AlignHCenter
             Layout.fillHeight: true
             Layout.fillWidth: true
+
 
             model: adapter
             cellWidth:dp(330)
@@ -53,6 +60,35 @@ Page {
 
                                   }
 
+                onRenamePlaylist: {
+                    InputDialog.inputTextSingleLine(root,"Rename Playlist",title,
+                                                    function(ok,plTitle){
+                                                        if(ok){
+                                                            if(plTitle!==""){
+
+                                                                adapter.renamePlaylist(plTitle,playlistId)
+                                                            }
+
+                                                        }
+                                                    }
+
+                                                    )
+
+
+                }
+
+                onDeletePlaylist: {
+
+                    NativeDialog.confirm("Delete playlist","Confirm to Delete "+title,
+                                         function(ok){
+                                             if(ok){
+                                                 adapter.deletePlaylist(playlistId)
+                                             }
+
+
+                                         })
+
+                }
 
 
 

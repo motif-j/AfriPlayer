@@ -10,6 +10,8 @@ Item {
     property int playlistId: -1
     property int activeIndex: 0//dataEntry.activeIndex
     property bool doneFetching: false//dataEntry.doneFetching
+    property bool isUserPlaylist: tracksAdapter.isUserPlaylist
+    property string  totalTrackDuration: tracksAdapter.totalTracksDuration
 
 
     signal jdownkeyPressed()
@@ -113,12 +115,12 @@ Item {
     }
 
 
-    function addPlaylistToQueue(shuffle){
+    function addPlaylistToQueue(append){
 
 
         if(playlistId>-1){
-            jmusicModel.addPlaylistToQue(playlistId,shuffle)
-            tracksAdapter.addTracksToQueue(false)
+            jmusicModel.addPlaylistToQue(playlistId,append)
+            tracksAdapter.addTracksToQueue(append)
         }
 
 

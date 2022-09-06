@@ -7,6 +7,7 @@
 #include <QThreadPool>
 #include <QFuture>
 #include <QList>
+#include <QTime>
 
 #include "src/database/db_jmalkiadbinterface.h"
 #include "src/models/jmodels.h"
@@ -15,6 +16,8 @@
 /*
  *This class implements the heavy tasks for the list adapters
  */
+
+extern QString formatTrackTime(QTime time);
 
 class MainWorker : public QObject
 {
@@ -60,6 +63,8 @@ public:
     QFuture<JTrack> addTrackToQueue(int trackId);
     QFuture<JTrack> updateTrackDuration(JTrack track);
 
+    QFuture<QString> calculateTotalTrackTime(QList<JTrack> tracks);
+
     //folders
 public:
     QFuture<QStringList> loadFolders();
@@ -76,6 +81,9 @@ public:
    QFuture<QList<JPlaylist>> getPlaylists(bool isHome,bool folders=false);
    QFuture<QList<JPlaylist>> getAiPlaylist();
    QFuture<JPlaylist> addPlaylist(JPlaylist playlist);
+   QFuture<JPlaylist> getPlaylist(int playlistId);
+   QFuture<JPlaylist> updatePlaylist(int playlistId,QString title);
+   QFuture<int> deletePlaylist(int playlistId);
 
 private:
     QThreadPool *threadPool;

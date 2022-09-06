@@ -59,7 +59,7 @@ QPixmap MetaDataManager::getCoverImage(QString fileName,QPixmap image)
 
 JTrack MetaDataManager::retrieveMetaInfo(QFileInfo dirInfo)
 {
-    QDateTime *lastMd=new QDateTime(dirInfo.lastModified());
+    QDateTime *lastMd=new QDateTime(dirInfo.birthTime());
 
     QByteArray fileName=QFile::encodeName(dirInfo.absoluteFilePath());
 

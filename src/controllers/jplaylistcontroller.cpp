@@ -178,21 +178,29 @@ JTrack JPlaylistController::getPreviousTrack()
 
 }
 
-void JPlaylistController::addPlaylistToQueue(int playlistId, bool shuffle)
+void JPlaylistController::addPlaylistToQueue(int playlistId, bool append)
 {
-    Q_UNUSED(shuffle)
+
 
     if(!isLoading){
         setIsLoading(true);
-        playlist->clear();
-        await(worker.queuePlaylistTrack(playlistId,false),this,[this](QList<JTrack> queuedTracks){
+        if(!append){
+             playlist->clear();
+        }
+
+        await(worker.queuePlaylistTrack(playlistId,append),this,[this,append](QList<JTrack> queuedTracks){
 
 
             int index=0;
             foreach(JTrack t, queuedTracks){
                 if(index==0){
+                    if(!append){
+                          loadPlayingTrackToQueuePlaylist(t);
+                    }else{
+                        this-> addTrackToQueue(t,false);
+                    }
 
-                    loadPlayingTrackToQueuePlaylist(t);
+
                 }else{
 
 
@@ -215,15 +223,23 @@ void JPlaylistController::addPlaylistToQueue(QList<JTrack> tracks, bool append)
 
     if(!isLoading){
         setIsLoading(true);
-        playlist->clear();
-        await(worker.queuePlaylistTrack(tracks,false),this,[this](QList<JTrack> queuedTracks){
+        if(!append){
+             playlist->clear();
+        }
+
+        await(worker.queuePlaylistTrack(tracks,append),this,[this,append](QList<JTrack> queuedTracks){
 
 
             int index=0;
             foreach(JTrack t, queuedTracks){
                 if(index==0){
+                    if(!append){
+                          loadPlayingTrackToQueuePlaylist(t);
+                    }else{
+                        this-> addTrackToQueue(t,false);
+                    }
 
-                    loadPlayingTrackToQueuePlaylist(t);
+
                 }else{
 
 

@@ -11,7 +11,7 @@ Page {
     property alias searchTerm: searchBar.text
 
     onPushed: {
-          searchBar.textField.forceActiveFocus()
+        searchBar.textField.forceActiveFocus()
 
     }
 
@@ -70,8 +70,9 @@ Page {
         id: searchResultsList
         anchors.fill: parent
         anchors.topMargin: dp(40)
-   highlightMoveDuration: 500
+        highlightMoveDuration: 500
         model: pageModel.model
+        desktopScrollEnabled: true
 
         delegate:  MainTracksUi{
             width: searchResultsList.width
@@ -137,17 +138,17 @@ Page {
 
     function handleListViewIndexUp(){
         let cIndex=searchResultsList.currentIndex
-         cIndex++
+        cIndex++
         if(cIndex>tracksModel.count-1){
             cIndex=tracksModel.count-1
         }
-       searchResultsList.currentIndex=cIndex
+        searchResultsList.currentIndex=cIndex
 
 
     }
     function handleListViewIndexDown(){
         let cIndex=searchResultsList.currentIndex
-         cIndex--
+        cIndex--
         if(cIndex<0){
             cIndex=0
         }
@@ -156,7 +157,7 @@ Page {
     }
 
     function selectIndex(index){
-     searchResultsList.currentIndex= index
+        searchResultsList.currentIndex= index
     }
 
 }

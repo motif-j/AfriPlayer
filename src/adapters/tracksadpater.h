@@ -19,6 +19,8 @@ class AbstractTracksAdapter : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(bool isLoading READ getIsLoading WRITE setIsLoading NOTIFY isLoadingChanged)
     Q_PROPERTY(int count READ getCount WRITE setCount NOTIFY countChanged)
+    Q_PROPERTY(QString totalTracksDuration READ getTotalTracksDuration WRITE setTotalTracksDuration NOTIFY totalTracksDurationChanged)
+
 
 public:
     AbstractTracksAdapter(QObject *parent = nullptr){
@@ -52,10 +54,13 @@ protected:
 
 private:
     int count=0;
+    QString totalTracksDuration="00:00";
+private:
     JRole &roles=JRole::getInstance();
 private:
 
     // QAbstractItemModel interface
+
 
 public:
     virtual int rowCount(const QModelIndex &parent) const override;
@@ -70,18 +75,24 @@ public:
     int getCount() const;
     void setCount(int newCount);
 
+    const QString &getTotalTracksDuration() const;
+    void setTotalTracksDuration(const QString &newTotalTracksDuration);
+
 public slots:
 
     void clearTracks();
 
+
     //listeners
 protected slots:
+     void calculateTrackDuration();
     void onBusyChanged(bool loading);
     void onTrackAddedToPlaylist(JTrack track);
     virtual   void onTrackRemovedFromPlaylist(JTrack track,bool isFavorite=false);
 signals:
     void isLoadingChanged();
     void countChanged();
+    void totalTracksDurationChanged();
 };
 
 #endif // TRACKSADPATER_H

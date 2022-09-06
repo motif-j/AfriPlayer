@@ -32,10 +32,6 @@ Rectangle{
 
         }
 
-
-
-
-
     }
 
     property color thumbnailColor: jappmodel.getColors(themeColor)[0]
@@ -117,7 +113,7 @@ Rectangle{
 
                     Layout.alignment: Qt.AlignRight
                     // Layout.maximumWidth: dp(80)
-                    Layout.preferredWidth: dp(80)
+                    Layout.preferredWidth: dp(50)
                     maximumLineCount: 1
                     elide: Text.ElideRight
 
@@ -133,7 +129,7 @@ Rectangle{
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignRight
                     // Layout.maximumWidth: dp(100)
-                    Layout.preferredWidth: dp(50)
+                    Layout.preferredWidth: dp(40)
                     maximumLineCount: 1
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 

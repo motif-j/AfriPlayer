@@ -348,6 +348,87 @@ JPlaylist JMalkiaDbInterface::getLastPlaylist()
 
 }
 
+JPlaylist JMalkiaDbInterface::getPlaylist(int playlistId)
+{
+
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+    QString query="select * from playlists where pl_id =? ";
+
+    JPlaylist playlistItem;
+    auto prepare =sqlQuery->prepare(query);
+    if(prepare){
+
+        sqlQuery->addBindValue(playlistId);
+
+
+        auto executed=sqlQuery->exec();
+
+        if(executed){
+            while(sqlQuery->next()){
+
+
+
+                playlistItem.playlistId=sqlQuery->value(0).toInt();
+                playlistItem.playlistTitle=sqlQuery->value(1).toString();
+                playlistItem.colors=sqlQuery->value(2).toString();
+                playlistItem.isFolder=sqlQuery->value(4).toBool();
+
+
+            }
+
+
+        }
+
+    }
+    printError("Get  Playlist ",sqlQuery);
+
+    sqlQuery=nullptr;
+    delete sqlQuery;
+    return playlistItem;
+
+
+
+}
+
+JPlaylist JMalkiaDbInterface::updatePlaylist(JPlaylist playlist)
+{
+    QString query="UPDATE playlists SET pl_title=?,colors=? WHERE pl_id=? ";
+
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+    sqlQuery->prepare(query);
+    sqlQuery->addBindValue(playlist.playlistTitle);
+    sqlQuery->addBindValue(playlist.colors);
+    sqlQuery->addBindValue(playlist.playlistId);
+
+    sqlQuery->exec();
+
+    printError("Update Playlist ",sqlQuery);
+    delete sqlQuery;
+
+    return getPlaylist(playlist.playlistId);
+}
+
+void JMalkiaDbInterface::removePlaylist(int playlistId)
+{
+
+    QString query="DELETE FROM playlists WHERE pl_id=? ";
+
+    QSqlQuery *sqlQuery=new QSqlQuery(mDb);
+
+    sqlQuery->prepare(query);
+
+    sqlQuery->addBindValue(playlistId);
+
+    sqlQuery->exec();
+
+    printError("Delete Playlist ",sqlQuery);
+
+    delete sqlQuery;
+
+}
+
 QList<JTrack> *JMalkiaDbInterface::randomizedPlaylist()
 {
     int startId=0;
@@ -882,9 +963,6 @@ QList<JTrack> *JMalkiaDbInterface::fetchNext10QueuedTracks()
 
         isLocked=false;
 
-        foreach(JTrack t, *tracks){
-            qDebug()<<t.trackName;
-        }
 
         return tracks;
 

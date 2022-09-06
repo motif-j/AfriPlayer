@@ -200,6 +200,34 @@ QFuture<JTrack> MainWorker::updateTrackDuration(JTrack track)
 
 }
 
+QFuture<QString> MainWorker::calculateTotalTrackTime(QList<JTrack> tracks)
+{
+
+    return QtConcurrent::run(threadPool,[tracks](){
+
+        long long totalTrackTime=0;
+
+        foreach(JTrack t, tracks){
+
+            totalTrackTime+=t.duration;
+        }
+
+        QTime *time=new QTime(0,0,0,0);
+
+        QTime nT=  time->addMSecs(totalTrackTime);
+
+        QString formattedTime=formatTrackTime(nT);
+
+        // delete time;
+        // delete &nT;
+
+        return formattedTime;
+    });
+
+
+
+}
+
 QFuture<QStringList> MainWorker::loadFolders()
 {
     return QtConcurrent::run(threadPool,[this](){
@@ -271,4 +299,38 @@ QFuture<JPlaylist> MainWorker::addPlaylist(JPlaylist playlist)
         return first;
     });
 
+}
+
+QFuture<JPlaylist> MainWorker::getPlaylist(int playlistId)
+{
+    return QtConcurrent::run(threadPool,[this,playlistId](){
+
+
+        return db.getPlaylist(playlistId);
+    });
+
+}
+
+QFuture<JPlaylist> MainWorker::updatePlaylist(int playlistId,QString title)
+{
+    return QtConcurrent::run(threadPool,[this,playlistId,title](){
+
+        auto pl=db.getPlaylist(playlistId);
+
+        pl.playlistTitle=title;
+        db.updatePlaylist(pl);
+
+        return db.getPlaylist(playlistId);
+    });
+}
+
+QFuture<int> MainWorker::deletePlaylist(int playlistId)
+{
+    return QtConcurrent::run(threadPool,[this,playlistId](){
+
+        db.removePlaylist(playlistId);
+
+        return 1;
+
+    });
 }

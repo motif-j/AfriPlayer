@@ -13,7 +13,7 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DUNICODE -D_UNICODE -DWIN32 -DMINGW_HAS_SECURE_API=1 -DQT_QML_DEBUG -DQT_NO_DEBUG -DQT_MULTIMEDIA_LIB -DQT_QUICK_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_QMLMODELS_LIB -DQT_QML_LIB -DQT_WEBSOCKETS_LIB -DQT_NETWORK_LIB -DQT_CONCURRENT_LIB -DQT_BLUETOOTH_LIB -DQT_CORE_LIB -DQT_NEEDS_QMAIN
+DEFINES       = -DUNICODE -D_UNICODE -DWIN32 -DMINGW_HAS_SECURE_API=1 -DPRODUCT_LICENSE_KEY=\"882317CBA082F4CBB712AE2E4FC00F1AC596F5140CFF286EFAC92A38C07BA488E3D4362E1E00A9F99EAD5ED73C29DC34360D8FCAB2C5056C58E7DB9A81A1E9C823935B299F12B10D1653696D431EDA55935AA08F5F07025A8B0C6EDB6193A315D878DC3E4B90A012781DA441DCC90FAAA219E21D5817B95D31D16908C928DABB53710846BC91D90B475BB775BC35E548C97DCB1E1D6B73EB575D90F4865DACCFE84054683B23547F85553036F73BFA58DDBDF63EBE4A681C558CCB2836D768FCE5B5E0514DFB5F83A9ED2519BE1499F4B312820B1814F22CA2B4DEB1E16C7D89507C17E532846DAAF5E1EAFFD651EB75B5DF8ED5DFC54D66F79CC3A1848C7666E432B6102C3BDBFB3C42510F7B12176084D3AFFF260B1B20438BD1BCD95057BFF2FFDF8A6B3A248716BECC9E3358BE54\" -DQT_QML_DEBUG -DQT_NO_DEBUG -DQT_MULTIMEDIA_LIB -DQT_QUICK_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_QMLMODELS_LIB -DQT_QML_LIB -DQT_WEBSOCKETS_LIB -DQT_NETWORK_LIB -DQT_CONCURRENT_LIB -DQT_BLUETOOTH_LIB -DQT_CORE_LIB -DQT_NEEDS_QMAIN
 CFLAGS        = -fno-keep-inline-dllexport -O2 -Wall -Wextra -Wextra $(DEFINES)
 CXXFLAGS      = -fno-keep-inline-dllexport -O2 -Wall -Wextra -Wextra -fexceptions -mthreads $(DEFINES)
 INCPATH       = -I. -I. -I"C:\Program Files (x86)\VLC-Qt\include" -I"C:\Program Files (x86)\taglib\include" -IC:\Qt\5.15.2\mingw81_64\include\Felgo -IC:\Qt\5.15.2\mingw81_64\include -IC:\Qt\5.15.2\mingw81_64\include\QtMultimedia -IC:\Qt\5.15.2\mingw81_64\include\QtQuick -IC:\Qt\5.15.2\mingw81_64\include\QtWidgets -IC:\Qt\5.15.2\mingw81_64\include\QtGui -IC:\Qt\5.15.2\mingw81_64\include\QtANGLE -IC:\Qt\5.15.2\mingw81_64\include\QtSql -IC:\Qt\5.15.2\mingw81_64\include\QtQmlModels -IC:\Qt\5.15.2\mingw81_64\include\QtQml -IC:\Qt\5.15.2\mingw81_64\include\QtWebSockets -IC:\Qt\5.15.2\mingw81_64\include\QtNetwork -IC:\Qt\5.15.2\mingw81_64\include\QtConcurrent -IC:\Qt\5.15.2\mingw81_64\include\QtBluetooth -IC:\Qt\5.15.2\mingw81_64\include\QtCore -Irelease -I/include -IC:\Qt\5.15.2\mingw81_64\mkspecs\win32-g++ 
@@ -73,7 +73,8 @@ SOURCES       = main.cpp \
 		src\utils\playergimageprovider.cpp \
 		src\utils\thumbnailprovider.cpp \
 		src\utils\trackthumbnailprovider.cpp \
-		src\workers\mainworker.cpp release\moc_mtracksadapter.cpp \
+		src\workers\mainworker.cpp release\qrc_resources.cpp \
+		release\moc_mtracksadapter.cpp \
 		release\moc_musicfoldermodel.cpp \
 		release\moc_playlistadapter.cpp \
 		release\moc_ptracksadapter.cpp \
@@ -114,6 +115,7 @@ OBJECTS       = release/main.o \
 		release/thumbnailprovider.o \
 		release/trackthumbnailprovider.o \
 		release/mainworker.o \
+		release/qrc_resources.o \
 		release/moc_mtracksadapter.o \
 		release/moc_musicfoldermodel.o \
 		release/moc_playlistadapter.o \
@@ -267,10 +269,10 @@ qmake: FORCE
 qmake_all: FORCE
 
 dist:
-	$(ZIP) QPlayer.zip $(SOURCES) $(DIST) QPlayer.pro C:\Qt\5.15.2\mingw81_64\mkspecs\features\spec_pre.prf C:\Qt\5.15.2\mingw81_64\mkspecs\qdevice.pri C:\Qt\5.15.2\mingw81_64\mkspecs\features\device_config.prf C:\Qt\5.15.2\mingw81_64\mkspecs\common\sanitize.conf C:\Qt\5.15.2\mingw81_64\mkspecs\common\gcc-base.conf C:\Qt\5.15.2\mingw81_64\mkspecs\common\g++-base.conf C:\Qt\5.15.2\mingw81_64\mkspecs\common\angle.conf C:\Qt\5.15.2\mingw81_64\mkspecs\features\win32\windows_vulkan_sdk.prf C:\Qt\5.15.2\mingw81_64\mkspecs\common\windows-vulkan.conf C:\Qt\5.15.2\mingw81_64\mkspecs\common\g++-win32.conf C:\Qt\5.15.2\mingw81_64\mkspecs\common\windows-desktop.conf C:\Qt\5.15.2\mingw81_64\mkspecs\qconfig.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3danimation.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3danimation_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dcore.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dcore_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dextras.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dextras_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dinput.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dinput_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dlogic.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dlogic_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquick.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquick_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickanimation.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickanimation_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickextras.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickextras_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickinput.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickinput_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickrender.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickrender_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickscene2d.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickscene2d_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3drender.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3drender_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_accessibility_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_axbase.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_axbase_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_axcontainer.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_axcontainer_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_axserver.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_axserver_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_bluetooth.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_bluetooth_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_bodymovin_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_bootstrap_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_charts.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_charts_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_concurrent.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_concurrent_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_core.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_core_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_datavisualization.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_datavisualization_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_dbus.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_dbus_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_designer.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_designer_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_designercomponents_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_devicediscovery_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_edid_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_egl_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_eventdispatcher_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_fb_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_fontdatabase_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_gamepad.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_gamepad_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_gui.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_gui_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_help.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_help_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_location.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_location_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_multimedia.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_multimedia_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_multimediawidgets.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_multimediawidgets_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_network.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_network_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_networkauth.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_networkauth_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_nfc.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_nfc_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_opengl.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_opengl_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_openglextensions.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_openglextensions_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_packetprotocol_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_platformcompositor_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_positioning.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_positioning_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_positioningquick.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_positioningquick_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_printsupport.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_printsupport_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_purchasing.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_purchasing_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qml.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qml_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmldebug_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmldevtools_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmlmodels.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmlmodels_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmltest.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmltest_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmlworkerscript.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmlworkerscript_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3d.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3d_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3dassetimport.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3dassetimport_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3drender.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3drender_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3druntimerender.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3druntimerender_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3dutils.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3dutils_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quickcontrols2.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quickcontrols2_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quickparticles_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quickshapes_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quicktemplates2.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quicktemplates2_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quickwidgets.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quickwidgets_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_remoteobjects.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_remoteobjects_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_repparser.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_repparser_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_script.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_script_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_scripttools.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_scripttools_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_scxml.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_scxml_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_sensors.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_sensors_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_serialbus.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_serialbus_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_serialport.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_serialport_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_sql.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_sql_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_svg.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_svg_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_testlib.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_testlib_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_texttospeech.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_texttospeech_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_theme_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_uiplugin.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_uitools.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_uitools_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_virtualkeyboard.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_virtualkeyboard_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_vulkan_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_webchannel.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_webchannel_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_websockets.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_websockets_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_widgets.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_widgets_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_windowsuiautomation_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_winextras.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_winextras_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_xml.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_xml_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_xmlpatterns.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_xmlpatterns_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_zlib_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\features\qt_functions.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\qt_config.prf C:\Qt\5.15.2\mingw81_64\mkspecs\win32-g++\qmake.conf C:\Qt\5.15.2\mingw81_64\mkspecs\features\spec_post.prf .qmake.stash C:\Qt\5.15.2\mingw81_64\mkspecs\features\exclusive_builds.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\toolchain.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\default_pre.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\win32\default_pre.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\resolve_config.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\exclusive_builds_post.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\default_post.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\build_pass.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\link_pkgconfig.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\file_copies.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\felgo.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\qml_debug.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\precompile_header.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\warn_on.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\qt.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\resources_functions.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\resources.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\moc.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\win32\opengl.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\uic.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\qmake_use.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\win32\windows.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\testcase_targets.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\exceptions.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\yacc.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\lex.prf QPlayer.pro C:\Qt\5.15.2\mingw81_64\lib\Felgo.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Multimedia.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Quick.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Widgets.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Gui.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Sql.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5QmlModels.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Qml.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5WebSockets.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Network.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Concurrent.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Bluetooth.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Core.prl C:\Qt\5.15.2\mingw81_64\lib\qtmain.prl  taglib\bin\libtag.dll taglib\bin\libtag_c.dll vlc\bin\libvlc.dll vlc\bin\libvlccore.dll vlc\bin\libVLCQtCore.dll vlc\bin\libVLCQtQml.dll vlc\bin\libVLCQtWidgets.dll   C:\Qt\5.15.2\mingw81_64\mkspecs\features\data\dummy.cpp src\adapters\mtracksadapter.h src\adapters\musicfoldermodel.h src\adapters\playlistadapter.h src\adapters\ptracksadapter.h src\adapters\queueadapter.h src\adapters\searchadapter.h src\adapters\tracksadpater.h src\ai\aiplaylistmanager.h src\audio\jaudio.h src\controllers\maincontroller.h src\database\db_jmalkiadbinterface.h src\engine\audioengine.h src\enums\jenums.h src\fileio\jfileworker.h src\graphics\colorgenerator.h src\models\jmodels.h src\controllers\jplaylistcontroller.h src\models\jrole.h src\utils\jsettings.h src\utils\metadatamanager.h src\utils\particleimageprovider.h src\utils\playergimageprovider.h src\utils\thumbnailprovider.h src\utils\trackthumbnailprovider.h src\workers\future_waiter.h src\workers\mainworker.h  main.cpp src\adapters\mtracksadapter.cpp src\adapters\musicfoldermodel.cpp src\adapters\playlistadapter.cpp src\adapters\ptracksadapter.cpp src\adapters\queueadapter.cpp src\adapters\searchadapter.cpp src\adapters\tracksadpater.cpp src\ai\aiplaylistmanager.cpp src\audio\jaudio.cpp src\controllers\maincontroller.cpp src\database\db_jmalkiadbinterface.cpp src\engine\audioengine.cpp src\engine\audioenginedroid.cpp src\controllers\jplaylistcontroller.cpp src\fileio\jfileworker.cpp src\graphics\colorgenerator.cpp src\utils\jsettings.cpp src\utils\metadatamanager.cpp src\utils\particleimageprovider.cpp src\utils\playergimageprovider.cpp src\utils\thumbnailprovider.cpp src\utils\trackthumbnailprovider.cpp src\workers\mainworker.cpp     
+	$(ZIP) QPlayer.zip $(SOURCES) $(DIST) QPlayer.pro C:\Qt\5.15.2\mingw81_64\mkspecs\features\spec_pre.prf C:\Qt\5.15.2\mingw81_64\mkspecs\qdevice.pri C:\Qt\5.15.2\mingw81_64\mkspecs\features\device_config.prf C:\Qt\5.15.2\mingw81_64\mkspecs\common\sanitize.conf C:\Qt\5.15.2\mingw81_64\mkspecs\common\gcc-base.conf C:\Qt\5.15.2\mingw81_64\mkspecs\common\g++-base.conf C:\Qt\5.15.2\mingw81_64\mkspecs\common\angle.conf C:\Qt\5.15.2\mingw81_64\mkspecs\features\win32\windows_vulkan_sdk.prf C:\Qt\5.15.2\mingw81_64\mkspecs\common\windows-vulkan.conf C:\Qt\5.15.2\mingw81_64\mkspecs\common\g++-win32.conf C:\Qt\5.15.2\mingw81_64\mkspecs\common\windows-desktop.conf C:\Qt\5.15.2\mingw81_64\mkspecs\qconfig.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3danimation.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3danimation_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dcore.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dcore_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dextras.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dextras_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dinput.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dinput_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dlogic.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dlogic_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquick.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquick_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickanimation.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickanimation_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickextras.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickextras_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickinput.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickinput_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickrender.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickrender_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickscene2d.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3dquickscene2d_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3drender.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_3drender_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_accessibility_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_axbase.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_axbase_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_axcontainer.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_axcontainer_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_axserver.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_axserver_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_bluetooth.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_bluetooth_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_bodymovin_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_bootstrap_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_charts.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_charts_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_concurrent.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_concurrent_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_core.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_core_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_datavisualization.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_datavisualization_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_dbus.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_dbus_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_designer.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_designer_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_designercomponents_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_devicediscovery_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_edid_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_egl_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_eventdispatcher_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_fb_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_fontdatabase_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_gamepad.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_gamepad_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_gui.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_gui_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_help.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_help_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_location.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_location_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_multimedia.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_multimedia_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_multimediawidgets.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_multimediawidgets_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_network.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_network_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_networkauth.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_networkauth_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_nfc.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_nfc_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_opengl.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_opengl_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_openglextensions.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_openglextensions_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_packetprotocol_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_platformcompositor_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_positioning.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_positioning_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_positioningquick.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_positioningquick_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_printsupport.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_printsupport_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_purchasing.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_purchasing_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qml.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qml_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmldebug_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmldevtools_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmlmodels.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmlmodels_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmltest.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmltest_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmlworkerscript.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qmlworkerscript_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3d.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3d_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3dassetimport.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3dassetimport_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3drender.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3drender_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3druntimerender.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3druntimerender_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3dutils.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick3dutils_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quick_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quickcontrols2.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quickcontrols2_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quickparticles_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quickshapes_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quicktemplates2.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quicktemplates2_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quickwidgets.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_quickwidgets_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_remoteobjects.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_remoteobjects_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_repparser.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_repparser_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_script.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_script_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_scripttools.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_scripttools_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_scxml.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_scxml_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_sensors.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_sensors_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_serialbus.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_serialbus_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_serialport.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_serialport_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_sql.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_sql_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_svg.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_svg_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_testlib.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_testlib_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_texttospeech.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_texttospeech_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_theme_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_uiplugin.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_uitools.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_uitools_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_virtualkeyboard.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_virtualkeyboard_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_vulkan_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_webchannel.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_webchannel_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_websockets.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_websockets_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_widgets.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_widgets_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_windowsuiautomation_support_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_winextras.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_winextras_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_xml.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_xml_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_xmlpatterns.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_xmlpatterns_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\modules\qt_lib_zlib_private.pri C:\Qt\5.15.2\mingw81_64\mkspecs\features\qt_functions.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\qt_config.prf C:\Qt\5.15.2\mingw81_64\mkspecs\win32-g++\qmake.conf C:\Qt\5.15.2\mingw81_64\mkspecs\features\spec_post.prf .qmake.stash C:\Qt\5.15.2\mingw81_64\mkspecs\features\exclusive_builds.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\toolchain.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\default_pre.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\win32\default_pre.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\resolve_config.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\exclusive_builds_post.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\default_post.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\build_pass.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\link_pkgconfig.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\file_copies.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\felgo.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\qml_debug.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\precompile_header.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\warn_on.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\qt.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\resources_functions.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\resources.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\moc.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\win32\opengl.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\uic.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\qmake_use.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\win32\windows.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\testcase_targets.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\exceptions.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\yacc.prf C:\Qt\5.15.2\mingw81_64\mkspecs\features\lex.prf QPlayer.pro resources.qrc C:\Qt\5.15.2\mingw81_64\lib\Felgo.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Multimedia.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Quick.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Widgets.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Gui.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Sql.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5QmlModels.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Qml.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5WebSockets.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Network.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Concurrent.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Bluetooth.prl C:\Qt\5.15.2\mingw81_64\lib\Qt5Core.prl C:\Qt\5.15.2\mingw81_64\lib\qtmain.prl  taglib\bin\libtag.dll taglib\bin\libtag_c.dll vlc\bin\libvlc.dll vlc\bin\libvlccore.dll vlc\bin\libVLCQtCore.dll vlc\bin\libVLCQtQml.dll vlc\bin\libVLCQtWidgets.dll  resources.qrc C:\Qt\5.15.2\mingw81_64\mkspecs\features\data\dummy.cpp src\adapters\mtracksadapter.h src\adapters\musicfoldermodel.h src\adapters\playlistadapter.h src\adapters\ptracksadapter.h src\adapters\queueadapter.h src\adapters\searchadapter.h src\adapters\tracksadpater.h src\ai\aiplaylistmanager.h src\audio\jaudio.h src\controllers\maincontroller.h src\database\db_jmalkiadbinterface.h src\engine\audioengine.h src\enums\jenums.h src\fileio\jfileworker.h src\graphics\colorgenerator.h src\models\jmodels.h src\controllers\jplaylistcontroller.h src\models\jrole.h src\utils\jsettings.h src\utils\metadatamanager.h src\utils\particleimageprovider.h src\utils\playergimageprovider.h src\utils\thumbnailprovider.h src\utils\trackthumbnailprovider.h src\workers\future_waiter.h src\workers\mainworker.h  main.cpp src\adapters\mtracksadapter.cpp src\adapters\musicfoldermodel.cpp src\adapters\playlistadapter.cpp src\adapters\ptracksadapter.cpp src\adapters\queueadapter.cpp src\adapters\searchadapter.cpp src\adapters\tracksadpater.cpp src\ai\aiplaylistmanager.cpp src\audio\jaudio.cpp src\controllers\maincontroller.cpp src\database\db_jmalkiadbinterface.cpp src\engine\audioengine.cpp src\engine\audioenginedroid.cpp src\controllers\jplaylistcontroller.cpp src\fileio\jfileworker.cpp src\graphics\colorgenerator.cpp src\utils\jsettings.cpp src\utils\metadatamanager.cpp src\utils\particleimageprovider.cpp src\utils\playergimageprovider.cpp src\utils\thumbnailprovider.cpp src\utils\trackthumbnailprovider.cpp src\workers\mainworker.cpp     
 
 clean: compiler_clean 
-	-$(DEL_FILE) release\main.o release\mtracksadapter.o release\musicfoldermodel.o release\playlistadapter.o release\ptracksadapter.o release\queueadapter.o release\searchadapter.o release\tracksadpater.o release\aiplaylistmanager.o release\jaudio.o release\maincontroller.o release\db_jmalkiadbinterface.o release\audioengine.o release\audioenginedroid.o release\jplaylistcontroller.o release\jfileworker.o release\colorgenerator.o release\jsettings.o release\metadatamanager.o release\particleimageprovider.o release\playergimageprovider.o release\thumbnailprovider.o release\trackthumbnailprovider.o release\mainworker.o release\moc_mtracksadapter.o release\moc_musicfoldermodel.o release\moc_playlistadapter.o release\moc_ptracksadapter.o release\moc_queueadapter.o release\moc_searchadapter.o release\moc_tracksadpater.o release\moc_aiplaylistmanager.o release\moc_jaudio.o release\moc_maincontroller.o release\moc_db_jmalkiadbinterface.o release\moc_audioengine.o release\moc_jfileworker.o release\moc_colorgenerator.o release\moc_jplaylistcontroller.o release\moc_jsettings.o release\moc_mainworker.o
+	-$(DEL_FILE) release\main.o release\mtracksadapter.o release\musicfoldermodel.o release\playlistadapter.o release\ptracksadapter.o release\queueadapter.o release\searchadapter.o release\tracksadpater.o release\aiplaylistmanager.o release\jaudio.o release\maincontroller.o release\db_jmalkiadbinterface.o release\audioengine.o release\audioenginedroid.o release\jplaylistcontroller.o release\jfileworker.o release\colorgenerator.o release\jsettings.o release\metadatamanager.o release\particleimageprovider.o release\playergimageprovider.o release\thumbnailprovider.o release\trackthumbnailprovider.o release\mainworker.o release\qrc_resources.o release\moc_mtracksadapter.o release\moc_musicfoldermodel.o release\moc_playlistadapter.o release\moc_ptracksadapter.o release\moc_queueadapter.o release\moc_searchadapter.o release\moc_tracksadpater.o release\moc_aiplaylistmanager.o release\moc_jaudio.o release\moc_maincontroller.o release\moc_db_jmalkiadbinterface.o release\moc_audioengine.o release\moc_jfileworker.o release\moc_colorgenerator.o release\moc_jplaylistcontroller.o release\moc_jsettings.o release\moc_mainworker.o
 	-$(DEL_FILE) release\app_icon_res.o
 
 distclean: clean 
@@ -323,8 +325,82 @@ libVLCQtWidgets.dll: vlc/bin/libVLCQtWidgets.dll
 
 compiler_no_pch_compiler_make_all:
 compiler_no_pch_compiler_clean:
-compiler_rcc_make_all:
+compiler_rcc_make_all: release/qrc_resources.cpp
 compiler_rcc_clean:
+	-$(DEL_FILE) release\qrc_resources.cpp
+release/qrc_resources.cpp: resources.qrc \
+		C:/Qt/5.15.2/mingw81_64/bin/rcc.exe \
+		qml/config.json \
+		qml/Main.qml \
+		qml/libraries/JQMusicController.qml \
+		qml/libraries/JColors.qml \
+		qml/libraries/Constants.qml \
+		qml/libraries/JIconType.qml \
+		qml/utilities/ColorHelper.qml \
+		qml/settings/PlaybackView.qml \
+		qml/settings/UserInterface.qml \
+		qml/settings/PreferenceItem.qml \
+		qml/settings/LibraryView.qml \
+		qml/settings/setviews/UiView.qml \
+		qml/settings/setviews/FolderView.qml \
+		qml/settings/setviews/SwitchPreference.qml \
+		qml/settings/models/FolderViewModel.qml \
+		qml/data/JQTrack.qml \
+		qml/views/MainCenterView.qml \
+		qml/views/PlayerView.qml \
+		qml/views/MainRightView.qml \
+		qml/views/MainLeftView.qml \
+		qml/views/MainView.qml \
+		qml/ui/JIconButton.qml \
+		qml/ui/HomeTracksView.qml \
+		qml/ui/MainTracksUi.qml \
+		qml/ui/HomeHeader.qml \
+		qml/ui/ItemPlaylist2.qml \
+		qml/ui/PlayingOverlay.qml \
+		qml/ui/PlaylistMenuItem.qml \
+		qml/ui/QueTrack.qml \
+		qml/ui/HomePlaylistView.qml \
+		qml/ui/ItemSqTrack.qml \
+		qml/ui/PlayingQueue.qml \
+		qml/logics/AppLogics.qml \
+		qml/logics/TracksLogic.qml \
+		qml/logics/JMusicLogic.qml \
+		qml/components/PlayerBar2.qml \
+		qml/components/JIconButton.qml \
+		qml/components/SearchPageRow.qml \
+		qml/components/ActuallyPlayingOverlay.qml \
+		qml/components/PlayerBarController.qml \
+		qml/components/TracksEmptyLIstView.qml \
+		qml/audio/SoundManager.qml \
+		qml/models/RightMusicInfoModel.qml \
+		qml/models/AppModel.qml \
+		qml/models/SettingsModel.qml \
+		qml/models/JMusicModel.qml \
+		qml/models/PlaylistPageDataModel.qml \
+		qml/models/SearchPageModel.qml \
+		qml/models/PlayingQueModel.qml \
+		qml/models/MainPageDataModel.qml \
+		qml/models/TracksPageDataModel.qml \
+		qml/pages/AiPlaylistPage.qml \
+		qml/pages/PlaylistPage.qml \
+		qml/pages/MainPage.qml \
+		qml/pages/FavoriteTracksPage.qml \
+		qml/pages/SettingsPage.qml \
+		qml/pages/TracksPage.qml \
+		qml/pages/PlaylistFolderPage.qml \
+		qml/pages/SearchPage.qml \
+		assets/cover.png \
+		assets/play.png \
+		assets/font_icon.otf \
+		assets/lcd.ttf \
+		assets/malkia.db \
+		assets/more_horizontal.png \
+		assets/qt.png \
+		assets/felgo-logo.png \
+		assets/pause.png \
+		assets/playlist.png
+	C:\Qt\5.15.2\mingw81_64\bin\rcc.exe -name resources resources.qrc -o release\qrc_resources.cpp
+
 compiler_moc_predefs_make_all: release/moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) release\moc_predefs.h
@@ -918,6 +994,7 @@ release/moc_musicfoldermodel.cpp: src/adapters/musicfoldermodel.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtGui/QColor \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QFile \
 		src/workers/mainworker.h \
+		C:/Qt/5.15.2/mingw81_64/include/QtCore/QTime \
 		release/moc_predefs.h \
 		C:/Qt/5.15.2/mingw81_64/bin/moc.exe
 	C:\Qt\5.15.2\mingw81_64\bin\moc.exe $(DEFINES) --include F:/Programing/QtWorld/QPlayer/release/moc_predefs.h -IC:/Qt/5.15.2/mingw81_64/mkspecs/win32-g++ -IF:/Programing/QtWorld/QPlayer -IF:/Programing/QtWorld/QPlayer -I"C:/Program Files (x86)/VLC-Qt/include" -I"C:/Program Files (x86)/taglib/include" -IC:/Qt/5.15.2/mingw81_64/include/Felgo -IC:/Qt/5.15.2/mingw81_64/include -IC:/Qt/5.15.2/mingw81_64/include/QtMultimedia -IC:/Qt/5.15.2/mingw81_64/include/QtQuick -IC:/Qt/5.15.2/mingw81_64/include/QtWidgets -IC:/Qt/5.15.2/mingw81_64/include/QtGui -IC:/Qt/5.15.2/mingw81_64/include/QtANGLE -IC:/Qt/5.15.2/mingw81_64/include/QtSql -IC:/Qt/5.15.2/mingw81_64/include/QtQmlModels -IC:/Qt/5.15.2/mingw81_64/include/QtQml -IC:/Qt/5.15.2/mingw81_64/include/QtWebSockets -IC:/Qt/5.15.2/mingw81_64/include/QtNetwork -IC:/Qt/5.15.2/mingw81_64/include/QtConcurrent -IC:/Qt/5.15.2/mingw81_64/include/QtBluetooth -IC:/Qt/5.15.2/mingw81_64/include/QtCore -IC:/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++ -IC:/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/x86_64-w64-mingw32 -IC:/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward -IC:/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include -IC:/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed -IC:/Qt/Tools/mingw810_64/x86_64-w64-mingw32/include src\adapters\musicfoldermodel.h -o release\moc_musicfoldermodel.cpp
@@ -1152,6 +1229,7 @@ release/moc_playlistadapter.cpp: src/adapters/playlistadapter.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtConcurrent/qtconcurrentversion.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QThreadPool \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QFuture \
+		C:/Qt/5.15.2/mingw81_64/include/QtCore/QTime \
 		src/database/db_jmalkiadbinterface.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/QSqlDatabase \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/qsqldatabase.h \
@@ -2576,6 +2654,8 @@ release/moc_aiplaylistmanager.cpp: src/ai/aiplaylistmanager.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtGui/qcolor.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtGui/qrgb.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtGui/qrgba64.h \
+		src/workers/mainworker.h \
+		C:/Qt/5.15.2/mingw81_64/include/QtCore/QTime \
 		release/moc_predefs.h \
 		C:/Qt/5.15.2/mingw81_64/bin/moc.exe
 	C:\Qt\5.15.2\mingw81_64\bin\moc.exe $(DEFINES) --include F:/Programing/QtWorld/QPlayer/release/moc_predefs.h -IC:/Qt/5.15.2/mingw81_64/mkspecs/win32-g++ -IF:/Programing/QtWorld/QPlayer -IF:/Programing/QtWorld/QPlayer -I"C:/Program Files (x86)/VLC-Qt/include" -I"C:/Program Files (x86)/taglib/include" -IC:/Qt/5.15.2/mingw81_64/include/Felgo -IC:/Qt/5.15.2/mingw81_64/include -IC:/Qt/5.15.2/mingw81_64/include/QtMultimedia -IC:/Qt/5.15.2/mingw81_64/include/QtQuick -IC:/Qt/5.15.2/mingw81_64/include/QtWidgets -IC:/Qt/5.15.2/mingw81_64/include/QtGui -IC:/Qt/5.15.2/mingw81_64/include/QtANGLE -IC:/Qt/5.15.2/mingw81_64/include/QtSql -IC:/Qt/5.15.2/mingw81_64/include/QtQmlModels -IC:/Qt/5.15.2/mingw81_64/include/QtQml -IC:/Qt/5.15.2/mingw81_64/include/QtWebSockets -IC:/Qt/5.15.2/mingw81_64/include/QtNetwork -IC:/Qt/5.15.2/mingw81_64/include/QtConcurrent -IC:/Qt/5.15.2/mingw81_64/include/QtBluetooth -IC:/Qt/5.15.2/mingw81_64/include/QtCore -IC:/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++ -IC:/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/x86_64-w64-mingw32 -IC:/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward -IC:/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include -IC:/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed -IC:/Qt/Tools/mingw810_64/x86_64-w64-mingw32/include src\ai\aiplaylistmanager.h -o release\moc_aiplaylistmanager.cpp
@@ -3104,6 +3184,7 @@ release/moc_maincontroller.cpp: src/controllers/maincontroller.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtConcurrent/qtconcurrentversion.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QThreadPool \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QFuture \
+		C:/Qt/5.15.2/mingw81_64/include/QtCore/QTime \
 		src/database/db_jmalkiadbinterface.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/QSqlDatabase \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/qsqldatabase.h \
@@ -4160,6 +4241,7 @@ release/moc_jplaylistcontroller.cpp: src/controllers/jplaylistcontroller.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtConcurrent/qtconcurrentversion.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QThreadPool \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QFuture \
+		C:/Qt/5.15.2/mingw81_64/include/QtCore/QTime \
 		src/database/db_jmalkiadbinterface.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/QSqlDatabase \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/qsqldatabase.h \
@@ -4504,6 +4586,7 @@ release/moc_mainworker.cpp: src/workers/mainworker.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QThreadPool \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QFuture \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QList \
+		C:/Qt/5.15.2/mingw81_64/include/QtCore/QTime \
 		src/database/db_jmalkiadbinterface.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/QSqlDatabase \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/qsqldatabase.h \
@@ -4551,7 +4634,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean 
+compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_header_clean 
 
 
 
@@ -5601,7 +5684,8 @@ release/musicfoldermodel.o: src/adapters/musicfoldermodel.cpp src/adapters/music
 		src/graphics/colorgenerator.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtGui/QColor \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QFile \
-		src/workers/mainworker.h
+		src/workers/mainworker.h \
+		C:/Qt/5.15.2/mingw81_64/include/QtCore/QTime
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\musicfoldermodel.o src\adapters\musicfoldermodel.cpp
 
 release/playlistadapter.o: src/adapters/playlistadapter.cpp src/adapters/playlistadapter.h \
@@ -5834,6 +5918,7 @@ release/playlistadapter.o: src/adapters/playlistadapter.cpp src/adapters/playlis
 		C:/Qt/5.15.2/mingw81_64/include/QtConcurrent/qtconcurrentversion.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QThreadPool \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QFuture \
+		C:/Qt/5.15.2/mingw81_64/include/QtCore/QTime \
 		src/database/db_jmalkiadbinterface.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/QSqlDatabase \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/qsqldatabase.h \
@@ -7247,7 +7332,9 @@ release/aiplaylistmanager.o: src/ai/aiplaylistmanager.cpp src/ai/aiplaylistmanag
 		C:/Qt/5.15.2/mingw81_64/include/QtGui/QColor \
 		C:/Qt/5.15.2/mingw81_64/include/QtGui/qcolor.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtGui/qrgb.h \
-		C:/Qt/5.15.2/mingw81_64/include/QtGui/qrgba64.h
+		C:/Qt/5.15.2/mingw81_64/include/QtGui/qrgba64.h \
+		src/workers/mainworker.h \
+		C:/Qt/5.15.2/mingw81_64/include/QtCore/QTime
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\aiplaylistmanager.o src\ai\aiplaylistmanager.cpp
 
 release/jaudio.o: src/audio/jaudio.cpp src/audio/jaudio.h \
@@ -7773,6 +7860,7 @@ release/maincontroller.o: src/controllers/maincontroller.cpp src/controllers/mai
 		C:/Qt/5.15.2/mingw81_64/include/QtConcurrent/qtconcurrentversion.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QThreadPool \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QFuture \
+		C:/Qt/5.15.2/mingw81_64/include/QtCore/QTime \
 		src/database/db_jmalkiadbinterface.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/QSqlDatabase \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/qsqldatabase.h \
@@ -8569,6 +8657,7 @@ release/jplaylistcontroller.o: src/controllers/jplaylistcontroller.cpp src/contr
 		C:/Qt/5.15.2/mingw81_64/include/QtConcurrent/qtconcurrentversion.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QThreadPool \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QFuture \
+		C:/Qt/5.15.2/mingw81_64/include/QtCore/QTime \
 		src/database/db_jmalkiadbinterface.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/QSqlDatabase \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/qsqldatabase.h \
@@ -10245,6 +10334,7 @@ release/mainworker.o: src/workers/mainworker.cpp src/workers/mainworker.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QThreadPool \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QFuture \
 		C:/Qt/5.15.2/mingw81_64/include/QtCore/QList \
+		C:/Qt/5.15.2/mingw81_64/include/QtCore/QTime \
 		src/database/db_jmalkiadbinterface.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/QSqlDatabase \
 		C:/Qt/5.15.2/mingw81_64/include/QtSql/qsqldatabase.h \
@@ -10277,6 +10367,9 @@ release/mainworker.o: src/workers/mainworker.cpp src/workers/mainworker.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtGui/qrgb.h \
 		C:/Qt/5.15.2/mingw81_64/include/QtGui/qrgba64.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\mainworker.o src\workers\mainworker.cpp
+
+release/qrc_resources.o: release/qrc_resources.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\qrc_resources.o release\qrc_resources.cpp
 
 release/moc_mtracksadapter.o: release/moc_mtracksadapter.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\moc_mtracksadapter.o release\moc_mtracksadapter.cpp
@@ -10340,15 +10433,6 @@ uninstall_itemvlcplugins: FORCE
 	-$(DEL_DIR) F:$(INSTALL_ROOT:@msyshack@%=%)\Programing\QtWorld\QPlayer 
 
 
-install_itemqmlFolder: first FORCE
-	@if not exist F:$(INSTALL_ROOT:@msyshack@%=%)\Programing\QtWorld\QPlayer mkdir F:$(INSTALL_ROOT:@msyshack@%=%)\Programing\QtWorld\QPlayer & if not exist F:$(INSTALL_ROOT:@msyshack@%=%)\Programing\QtWorld\QPlayer exit 1
-	$(QINSTALL) F:\Programing\QtWorld\QPlayer\qml F:$(INSTALL_ROOT:@msyshack@%=%)\Programing\QtWorld\QPlayer\qml
-
-uninstall_itemqmlFolder: FORCE
-	-$(DEL_FILE) F:$(INSTALL_ROOT:@msyshack@%=%)\Programing\QtWorld\QPlayer\qml
-	-$(DEL_DIR) F:$(INSTALL_ROOT:@msyshack@%=%)\Programing\QtWorld\QPlayer 
-
-
 install_itemassetsFolder: first FORCE
 	@if not exist F:$(INSTALL_ROOT:@msyshack@%=%)\Programing\QtWorld\QPlayer mkdir F:$(INSTALL_ROOT:@msyshack@%=%)\Programing\QtWorld\QPlayer & if not exist F:$(INSTALL_ROOT:@msyshack@%=%)\Programing\QtWorld\QPlayer exit 1
 	$(QINSTALL) F:\Programing\QtWorld\QPlayer\assets F:$(INSTALL_ROOT:@msyshack@%=%)\Programing\QtWorld\QPlayer\assets
@@ -10358,9 +10442,9 @@ uninstall_itemassetsFolder: FORCE
 	-$(DEL_DIR) F:$(INSTALL_ROOT:@msyshack@%=%)\Programing\QtWorld\QPlayer 
 
 
-install: install_itemvlcplugins install_itemqmlFolder install_itemassetsFolder  FORCE
+install: install_itemvlcplugins install_itemassetsFolder  FORCE
 
-uninstall: uninstall_itemvlcplugins uninstall_itemqmlFolder uninstall_itemassetsFolder  FORCE
+uninstall: uninstall_itemvlcplugins uninstall_itemassetsFolder  FORCE
 
 FORCE:
 
