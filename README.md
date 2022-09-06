@@ -3,8 +3,9 @@ CrossPlatform Music player built with Qt and Felgo.
 
 ## Open Source Libraries Used
 1. TagLib
-2. VlcQt - LibVlc
+2. VlcQt - LibVlc.
 
-##Screens
+Screens
 
 ![Tux,Screen 1](screens/scrn1.png)
+![Tux,Screen 2](screens/scrn2.png)
