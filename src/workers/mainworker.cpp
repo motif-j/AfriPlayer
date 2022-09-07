@@ -7,41 +7,43 @@ QFuture<QList<JTrack> > MainWorker::getPlaylistTracks(int playlistId, int refres
 {
 
     return QtConcurrent::run(threadPool,[this,playlistId,refreshCode](){
+        QThread::msleep(500);
 
         if(playlistId==-1){
 
             return *db.fetchRecentlyPlayedTracks();
         }
 
-        auto currentPlaylist=db.fetchPlaylistTracksFromRepo(playlistId);
+
         switch (playlistId) {
 
         case JMalkiaDbInterface::ID_RAND:
         case JMalkiaDbInterface::ID_SONGSYOUMAYKNOW:
         {
 
-            if(currentPlaylist->isEmpty() || refreshCode==1){
+//            if(currentPlaylist->isEmpty() || refreshCode==1){
 
-                currentPlaylist->clear();
-                db.clearPlaylist(playlistId);
-                auto randPlaylist=db.randomizedPlaylist();
+//                currentPlaylist->clear();
+//                db.clearPlaylist(playlistId);
+//                auto randPlaylist=db.randomizedPlaylist();
 
-                for(JTrack t:*randPlaylist){
-                    //add playlist to db
-                    db.addTrackToPlaylist(t,playlistId);
-                    currentPlaylist->append(t);
-                }
-                delete randPlaylist;
-            }
+//                for(JTrack t:*randPlaylist){
+//                    //add playlist to db
+//                    db.addTrackToPlaylist(t,playlistId);
+//                    currentPlaylist->append(t);
+//                }
+//                delete randPlaylist;
+//            }
 
+            return *db.randomizedPlaylist();
             break;
         }
 
 
         }
-        QThread::msleep(500);
 
-        return *currentPlaylist;
+
+        return *db.fetchPlaylistTracksFromRepo(playlistId);;
 
     });
 

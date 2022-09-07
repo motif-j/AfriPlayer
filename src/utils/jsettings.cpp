@@ -4,7 +4,7 @@ JSettings::JSettings(QObject *parent)
     : QObject{parent}
 {
 
-    settings=new QSettings("AfrikTek","QPlayer");
+    settings=new QSettings("AfrikTek","AfriPlayer");
 }
 
 int JSettings::getRepeatMode() const

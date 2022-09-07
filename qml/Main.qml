@@ -13,7 +13,7 @@ import "./ui"
 App {
 
 
-visibility: "Maximized"
+    visibility: "Maximized"
 
     // You get free licenseKeys from https://felgo.com/licenseKey
     // With a licenseKey you can:
@@ -22,6 +22,7 @@ visibility: "Maximized"
     //  * Add plugins to monetize, analyze & improve your apps (available with the Pro Licenses)
     //licenseKey: "<generate one from https://felgo.com/licenseKey>"
 
+    uiScale: Theme.isDesktop?1.7:1.0
     onInitTheme: {
         Theme.colors.backgroundColor=JColors.backgroundColor
         Theme.colors.textColor="#ffffff"

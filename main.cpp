@@ -54,9 +54,9 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    // QCoreApplication::setOrganizationName("AfrikTek");
-    // QCoreApplication::setOrganizationDomain("afriktek.com");
-    // QCoreApplication::setApplicationName("Tausi");
+     QCoreApplication::setOrganizationName("AfrikTek");
+     QCoreApplication::setOrganizationDomain("afriktek.com");
+     QCoreApplication::setApplicationName("AfriPlayer");
 
     // VlcCommon::setPluginPath(app.applicationDirPath()+"plugins");
 
